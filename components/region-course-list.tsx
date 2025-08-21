@@ -1,6 +1,9 @@
+"use client"
+
 import { Card } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { MapPin, Clock, Users, ChevronRight } from "lucide-react"
+import { MapPin, Clock, Users } from "lucide-react"
+import { useRouter } from "next/navigation"
 
 interface CourseSpot {
   id: string
@@ -67,6 +70,12 @@ const SAMPLE_COURSES: Course[] = [
 ]
 
 export function RegionCourseList() {
+  const router = useRouter()
+
+  const handleViewMoreCourses = () => {
+    router.push("/region/courses")
+  }
+
   return (
     <div className="px-4">
       <div className="flex items-center justify-between mb-4">
@@ -77,74 +86,61 @@ export function RegionCourseList() {
       <div className="space-y-4">
         {SAMPLE_COURSES.map((course) => (
           <Card key={course.id} className="p-4 bg-white shadow-md hover:shadow-lg transition-shadow">
-            {/* Course header */}
-            <div className="flex items-start justify-between mb-3">
-              <div className="flex-1">
-                <h3 className="font-bold text-gray-800 mb-1">{course.title}</h3>
-                <div className="flex items-center gap-2 text-sm text-gray-600 mb-2">
-                  <MapPin className="h-4 w-4" />
-                  <span>{course.location}</span>
-                </div>
-                <div className="flex items-center gap-4 text-sm text-gray-600">
-                  <div className="flex items-center gap-1">
-                    <Clock className="h-4 w-4" />
-                    <span>소요시간: {course.duration}</span>
+            <div className="flex items-start gap-4">
+              {/* Course image on the left */}
+              <div className="w-20 h-20 bg-gray-200 rounded-lg overflow-hidden flex-shrink-0">
+                {course.spots[0]?.image ? (
+                  <img
+                    src={course.spots[0].image || "/placeholder.svg"}
+                    alt={course.title}
+                    className="w-full h-full object-cover"
+                  />
+                ) : (
+                  <div className="w-full h-full bg-gray-300 flex items-center justify-center">
+                    <MapPin className="h-8 w-8 text-gray-500" />
                   </div>
-                  <span>거리: {course.distance}</span>
-                </div>
+                )}
               </div>
-              <div className="text-right">
-                <div className="text-sm font-medium text-orange-600">⭐ {course.rating}</div>
-                <div className="text-xs text-gray-500 flex items-center gap-1">
-                  <Users className="h-3 w-3" />
-                  {course.participants}명
-                </div>
-              </div>
-            </div>
 
-            {/* Course spots preview */}
-            <div className="border rounded-lg p-3 mb-3">
-              <div className="space-y-3">
-                {course.spots.map((spot, index) => (
-                  <div key={spot.id} className="flex items-center gap-3">
-                    <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
-                    {index < course.spots.length - 1 && (
-                      <div className="absolute left-[21px] mt-3 w-0.5 h-6 bg-blue-300"></div>
-                    )}
-                    <div className="flex-1">
-                      <div className="bg-gray-100 rounded p-2 text-center text-sm text-gray-600">{spot.name}</div>
+              {/* Course information on the right */}
+              <div className="flex-1">
+                <div className="flex items-start justify-between mb-2">
+                  <h3 className="font-bold text-gray-800 text-lg">{course.title}</h3>
+                  <div className="text-right">
+                    <div className="text-sm font-medium text-orange-600 flex items-center gap-1">
+                      ⭐ {course.rating} • {course.difficulty}
                     </div>
                   </div>
-                ))}
+                </div>
 
-                <div className="flex items-center gap-3">
-                  <div className="w-2 h-2 bg-gray-400 rounded-full"></div>
-                  <div className="flex-1">
-                    <div className="bg-gray-200 rounded p-2 text-center text-sm text-gray-500">지도</div>
+                <div className="text-sm text-gray-600 mb-2">
+                  <div className="flex items-center gap-1 mb-1">
+                    <MapPin className="h-3 w-3" />
+                    <span>{course.location}</span>
+                  </div>
+                  <div className="flex items-center gap-4">
+                    <div className="flex items-center gap-1">
+                      <Clock className="h-3 w-3" />
+                      <span>{course.duration}</span>
+                    </div>
+                    <span>거리: {course.distance}</span>
+                    <div className="flex items-center gap-1">
+                      <Users className="h-3 w-3" />
+                      <span>{course.participants}명</span>
+                    </div>
                   </div>
                 </div>
-              </div>
 
-              <div className="mt-4 p-3 bg-gray-50 rounded text-center">
-                <div className="text-sm text-gray-600 mb-2">사진( 텍스트첨부)</div>
-                <div className="bg-white rounded p-4 text-sm text-gray-700 border-2 border-dashed border-gray-300">
-                  "{course.spots[0]?.comment || "특별한 산책 경험을 만나보세요"}"
-                </div>
+                <p className="text-sm text-gray-700">{course.spots[0]?.comment || "특별한 산책 경험을 만나보세요"}</p>
               </div>
             </div>
-
-            {/* Action button */}
-            <Button className="w-full justify-between bg-gray-100 hover:bg-gray-200 text-gray-800">
-              <span>사진( 텍스트첨부)</span>
-              <ChevronRight className="h-4 w-4" />
-            </Button>
           </Card>
         ))}
       </div>
 
       {/* Load more button */}
       <div className="text-center mt-6">
-        <Button variant="outline" className="px-8 bg-transparent">
+        <Button variant="outline" className="px-8 bg-transparent" onClick={handleViewMoreCourses}>
           더 많은 코스 보기
         </Button>
       </div>
