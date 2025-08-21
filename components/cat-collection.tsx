@@ -178,6 +178,32 @@ const INITIAL_CATS: Cat[] = [
     hobby: "",
     isDiscovered: false,
   },
+  {
+    id: "13",
+    name: "???",
+    breed: "???",
+    personality: "???",
+    discoveredAt: "",
+    discoveredDate: "",
+    rarity: "rare",
+    description: "",
+    favoriteFood: "",
+    hobby: "",
+    isDiscovered: false,
+  },
+  {
+    id: "14",
+    name: "???",
+    breed: "???",
+    personality: "???",
+    discoveredAt: "",
+    discoveredDate: "",
+    rarity: "epic",
+    description: "",
+    favoriteFood: "",
+    hobby: "",
+    isDiscovered: false,
+  },
 ]
 
 const rarityColors = {
