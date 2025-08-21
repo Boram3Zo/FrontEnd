@@ -49,7 +49,7 @@ export default function MyPage() {
             <div className="flex items-center gap-3">
               <div className="text-3xl">🏆</div>
               <div>
-                <h3 className="font-semibold text-gray-800">산책 마스터</h3>
+                <h3 className="font-semibold text-gray-800">산책 초보자</h3>
                 <p className="text-sm text-gray-600">50개 코스 완주 달성!</p>
               </div>
             </div>
