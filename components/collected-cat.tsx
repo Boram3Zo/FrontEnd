@@ -71,6 +71,18 @@ const breedStyles = {
     eyeColor: "#4169e1",
     pattern: "siamese",
   },
+  "노르웨이 숲": {
+    bodyColor: "#f5f5dc",
+    earColor: "#deb887",
+    eyeColor: "#228b22",
+    pattern: "norwegian_forest",
+  },
+  먼치킨: {
+    bodyColor: "#daa520",
+    earColor: "#b8860b",
+    eyeColor: "#4169e1",
+    pattern: "munchkin",
+  },
 }
 
 export function CollectedCat({ breed, size = "md", className = "" }: CollectedCatProps) {
@@ -89,8 +101,14 @@ export function CollectedCat({ breed, size = "md", className = "" }: CollectedCa
         <ellipse
           cx="50"
           cy="70"
-          rx={style.pattern === "large" ? "30" : "25"}
-          ry={style.pattern === "large" ? "25" : "20"}
+          rx={style.pattern === "large" || style.pattern === "norwegian_forest" ? "30" : "25"}
+          ry={
+            style.pattern === "large" || style.pattern === "norwegian_forest"
+              ? "25"
+              : style.pattern === "munchkin"
+                ? "18"
+                : "20"
+          }
           fill={style.bodyColor}
           stroke="#d1d5db"
           strokeWidth="1.5"
@@ -100,7 +118,9 @@ export function CollectedCat({ breed, size = "md", className = "" }: CollectedCa
         <circle
           cx="50"
           cy="35"
-          r={style.pattern === "round" ? "22" : style.pattern === "large" ? "24" : "20"}
+          r={
+            style.pattern === "round" || style.pattern === "large" || style.pattern === "norwegian_forest" ? "24" : "20"
+          }
           fill={style.bodyColor}
           stroke="#d1d5db"
           strokeWidth="1.5"
@@ -115,16 +135,24 @@ export function CollectedCat({ breed, size = "md", className = "" }: CollectedCa
             <ellipse cx="40" cy="22" rx="3" ry="4" fill={style.earColor} />
             <ellipse cx="60" cy="22" rx="3" ry="4" fill={style.earColor} />
           </>
-        ) : style.pattern === "large" ? (
-          // Larger ears for Maine Coon
+        ) : style.pattern === "large" || style.pattern === "norwegian_forest" ? (
+          // Larger ears for Maine Coon and Norwegian Forest
           <>
             <polygon points="32,18 38,2 44,18" fill={style.bodyColor} stroke="#d1d5db" strokeWidth="1.5" />
             <polygon points="56,18 62,2 68,18" fill={style.bodyColor} stroke="#d1d5db" strokeWidth="1.5" />
             <polygon points="34,16 38,8 42,16" fill={style.earColor} />
             <polygon points="58,16 62,8 66,16" fill={style.earColor} />
-            {/* Ear tufts for Maine Coon */}
+            {/* Ear tufts for Maine Coon and Norwegian Forest */}
             <line x1="38" y1="2" x2="38" y2="-2" stroke={style.bodyColor} strokeWidth="2" strokeLinecap="round" />
             <line x1="62" y1="2" x2="62" y2="-2" stroke={style.bodyColor} strokeWidth="2" strokeLinecap="round" />
+          </>
+        ) : style.pattern === "munchkin" ? (
+          // Smaller ears for Munchkin
+          <>
+            <polygon points="37,22 40,8 43,22" fill={style.bodyColor} stroke="#d1d5db" strokeWidth="1.5" />
+            <polygon points="57,22 60,8 63,22" fill={style.bodyColor} stroke="#d1d5db" strokeWidth="1.5" />
+            <polygon points="38,20 40,12 42,20" fill={style.earColor} />
+            <polygon points="58,20 60,12 62,20" fill={style.earColor} />
           </>
         ) : style.pattern === "ragdoll" ? (
           // Ragdoll ears
@@ -173,7 +201,11 @@ export function CollectedCat({ breed, size = "md", className = "" }: CollectedCa
 
         {/* Tail - longer for Maine Coon */}
         <path
-          d={style.pattern === "large" ? "M 80 65 Q 90 45 85 25" : "M 75 65 Q 85 50 80 35"}
+          d={
+            style.pattern === "large" || style.pattern === "norwegian_forest"
+              ? "M 80 65 Q 90 45 85 25"
+              : "M 75 65 Q 85 50 80 35"
+          }
           stroke="#d1d5db"
           strokeWidth="3"
           fill="none"
@@ -252,6 +284,37 @@ export function CollectedCat({ breed, size = "md", className = "" }: CollectedCa
           </>
         )}
 
+        {/* Norwegian Forest pattern - extra fluffy with long coat */}
+        {style.pattern === "norwegian_forest" && (
+          <>
+            {/* Extra fluffy chest and body */}
+            <ellipse cx="50" cy="55" rx="12" ry="8" fill={style.bodyColor} opacity="0.8" />
+            <circle cx="28" cy="60" r="5" fill={style.bodyColor} opacity="0.7" />
+            <circle cx="72" cy="60" r="5" fill={style.bodyColor} opacity="0.7" />
+            <circle cx="35" cy="75" r="4" fill={style.bodyColor} opacity="0.6" />
+            <circle cx="65" cy="75" r="4" fill={style.bodyColor} opacity="0.6" />
+            {/* Fluffy neck ruff */}
+            <ellipse cx="50" cy="48" rx="15" ry="6" fill={style.bodyColor} opacity="0.5" />
+            {/* Fluffy leg fur */}
+            <circle cx="40" cy="85" r="3" fill={style.bodyColor} opacity="0.6" />
+            <circle cx="60" cy="85" r="3" fill={style.bodyColor} opacity="0.6" />
+          </>
+        )}
+
+        {/* Munchkin pattern - shorter legs and compact body */}
+        {style.pattern === "munchkin" && (
+          <>
+            {/* Shorter, stubby legs */}
+            <ellipse cx="40" cy="85" rx="3" ry="6" fill={style.bodyColor} />
+            <ellipse cx="60" cy="85" rx="3" ry="6" fill={style.bodyColor} />
+            {/* Compact, round body shape */}
+            <circle cx="50" cy="65" r="8" fill={style.bodyColor} opacity="0.6" />
+            {/* Cute round cheeks */}
+            <circle cx="38" cy="38" r="3" fill={style.bodyColor} opacity="0.7" />
+            <circle cx="62" cy="38" r="3" fill={style.bodyColor} opacity="0.7" />
+          </>
+        )}
+
         {/* Cute blush */}
         <circle cx="35" cy="40" r="3" fill="#ffb3d1" opacity="0.4" />
         <circle cx="65" cy="40" r="3" fill="#ffb3d1" opacity="0.4" />
@@ -259,3 +322,4 @@ export function CollectedCat({ breed, size = "md", className = "" }: CollectedCa
     </div>
   )
 }
+

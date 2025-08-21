@@ -13,7 +13,7 @@ export default function CatTowerPage() {
         {/* Page title with animated cats */}
         <div className="bg-white border-b border-gray-200 px-4 py-4">
           <div className="flex items-center justify-center gap-3">
-            <CatCharacter size="sm" animation="bounce" />
+            <CatCharacter size="sm" animation="wiggle" />
             <h1 className="text-lg font-bold text-gray-800">캣타워</h1>
             <CatCharacter size="sm" animation="wiggle" />
           </div>

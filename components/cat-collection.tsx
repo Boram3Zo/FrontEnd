@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { CatDiscoveryModal } from "@/components/cat-discovery-modal"
 import { CollectedCat } from "@/components/collected-cat"
+import { ChevronUp, ChevronDown } from "lucide-react"
 
 interface Cat {
   id: string
@@ -14,7 +15,7 @@ interface Cat {
   personality: string
   discoveredAt: string
   discoveredDate: string
-  rarity: "common" | "rare" | "epic" | "legendary"
+  rarity: "common" | "rare" | "epic" | "legendary" | "special"
   description: string
   favoriteFood: string
   hobby: string
@@ -79,7 +80,7 @@ const INITIAL_CATS: Cat[] = [
     name: "별이",
     breed: "스코티시 폴드",
     personality: "장난꾸러기",
-    discoveredAt: "남산 전망대",
+    discoveredAt: "63빌딩",
     discoveredDate: "2024.01.05",
     rarity: "rare",
     description: "별처럼 반짝이는 눈을 가진 귀여운 고양이예요. 높은 곳을 좋아해요.",
@@ -96,7 +97,7 @@ const INITIAL_CATS: Cat[] = [
     discoveredDate: "2024.01.03",
     rarity: "common",
     description: "노란 털색이 망고 같아서 망고라는 이름을 얻었어요. 사람을 좋아해요.",
-    favoriteFood: "생선",
+    favoriteFood: "멸치",
     hobby: "사람 따라다니기",
     isDiscovered: true,
   },
@@ -167,41 +168,145 @@ const INITIAL_CATS: Cat[] = [
   },
   {
     id: "12",
-    name: "???",
-    breed: "???",
-    personality: "???",
-    discoveredAt: "",
+    name: "황금이",
+    breed: "골든 리트리버 믹스",
+    personality: "고귀한",
+    discoveredAt: "경복궁 근정전",
     discoveredDate: "",
     rarity: "legendary",
-    description: "",
-    favoriteFood: "",
-    hobby: "",
+    description: "황금빛 털을 가진 전설적인 고양이예요. 왕실의 기품이 느껴져요.",
+    favoriteFood: "황금 참치",
+    hobby: "왕좌에 앉기",
     isDiscovered: false,
   },
   {
     id: "13",
-    name: "???",
-    breed: "???",
-    personality: "???",
-    discoveredAt: "",
+    name: "은하",
+    breed: "시베리안",
+    personality: "신비로운",
+    discoveredAt: "남산타워 전망대",
     discoveredDate: "",
-    rarity: "rare",
-    description: "",
-    favoriteFood: "",
-    hobby: "",
+    rarity: "legendary",
+    description: "은하수처럼 아름다운 털무늬를 가진 신비한 고양이예요.",
+    favoriteFood: "별사탕",
+    hobby: "별자리 관찰",
     isDiscovered: false,
   },
   {
     id: "14",
-    name: "???",
-    breed: "???",
-    personality: "???",
-    discoveredAt: "",
+    name: "다이아",
+    breed: "벵갈",
+    personality: "화려한",
+    discoveredAt: "청담동 갤러리",
+    discoveredDate: "",
+    rarity: "legendary",
+    description: "다이아몬드처럼 반짝이는 무늬가 특별한 고양이예요.",
+    favoriteFood: "캐비어",
+    hobby: "보석 구경",
+    isDiscovered: false,
+  },
+  {
+    id: "15",
+    name: "바닐라",
+    breed: "노르웨이 숲",
+    personality: "차분한",
+    discoveredAt: "덕수궁 돌담길",
+    discoveredDate: "2023.12.18",
+    rarity: "common",
+    description: "크림색 털이 바닐라 같은 온순한 고양이예요. 조용한 곳을 좋아해요.",
+    favoriteFood: "홍차",
+    hobby: "나무 그늘에서 쉬기",
+    isDiscovered: true,
+  },
+  {
+    id: "16",
+    name: "콩이",
+    breed: "먼치킨",
+    personality: "귀여운",
+    discoveredAt: "홍대 놀이터",
+    discoveredDate: "2023.12.15",
+    rarity: "common",
+    description: "짧은 다리가 매력적인 작고 귀여운 고양이예요. 활발하게 뛰어다녀요.",
+    favoriteFood: "도넛",
+    hobby: "공 굴리기",
+    isDiscovered: true,
+  },
+  {
+    id: "17",
+    name: "토리",
+    breed: "아비시니안",
+    personality: "활동적인",
+    discoveredAt: "올림픽공원 잔디밭",
+    discoveredDate: "",
+    rarity: "common",
+    description: "갈색 털이 아름다운 활발한 고양이예요. 뛰어다니기를 좋아해요.",
+    favoriteFood: "벌꿀",
+    hobby: "달리기",
+    isDiscovered: false,
+  },
+  {
+    id: "18",
+    name: "보리",
+    breed: "코리안 숏헤어",
+    personality: "순수한",
+    discoveredAt: "잠실나루",
+    discoveredDate: "",
+    rarity: "common",
+    description: "보리색 털을 가진 순박한 고양이예요. 자연을 좋아해요.",
+    favoriteFood: "보리차",
+    hobby: "풀밭 굴러다니기",
+    isDiscovered: false,
+  },
+  {
+    id: "19",
+    name: "복이",
+    breed: "코리안 숏헤어",
+    personality: "복스러운",
+    discoveredAt: "종묘 앞",
+    discoveredDate: "",
+    rarity: "common",
+    description: "복을 가져다준다는 전설이 있는 고양이예요. 둥글둥글한 체형이 귀여워요.",
+    favoriteFood: "복어",
+    hobby: "복주머니 만지기",
+    isDiscovered: false,
+  },
+  {
+    id: "20",
+    name: "오팔",
+    breed: "오리엔탈 숏헤어",
+    personality: "신비로운",
+    discoveredAt: "동대문 보물상가",
+    discoveredDate: "",
+    rarity: "rare",
+    description: "오팔처럼 색이 변하는 신비한 털을 가진 고양이예요.",
+    favoriteFood: "무지개 젤리",
+    hobby: "보석 수집",
+    isDiscovered: false,
+  },
+  {
+    id: "21",
+    name: "루비",
+    breed: "소말리",
+    personality: "열정적인",
+    discoveredAt: "홍대역",
     discoveredDate: "",
     rarity: "epic",
-    description: "",
-    favoriteFood: "",
-    hobby: "",
+    description: "루비처럼 붉은 털이 아름다운 열정적인 고양이예요. 음악을 좋아해요.",
+    favoriteFood: "체리",
+    hobby: "댄스",
+    isDiscovered: false,
+  },
+  {
+    id: "22",
+    name: "프리즘",
+    breed: "스핑크스",
+    personality: "초월적인",
+    discoveredAt: "롯데타워 전망대",
+    discoveredDate: "",
+    rarity: "special",
+    description: "빛을 굴절시키는 신비한 능력을 가진 전설의 고양이예요. 세상에 단 한 마리뿐이에요.",
+    favoriteFood: "이슬",
+    hobby: "빛 굴절시키기",
     isDiscovered: false,
   },
 ]
@@ -211,6 +316,7 @@ const rarityColors = {
   rare: "bg-blue-100 text-blue-700 border-blue-300",
   epic: "bg-purple-100 text-purple-700 border-purple-300",
   legendary: "bg-yellow-100 text-yellow-700 border-yellow-300",
+  special: "bg-gradient-to-r from-pink-100 to-rose-100 text-pink-700 border-pink-300",
 }
 
 const rarityLabels = {
@@ -218,15 +324,55 @@ const rarityLabels = {
   rare: "레어",
   epic: "에픽",
   legendary: "레전드",
+  special: "스페셜",
+}
+
+type SortType = "discovery" | "grade"
+type SortOrder = "asc" | "desc"
+
+const gradeOrder = {
+  special: 0,
+  legendary: 1,
+  epic: 2,
+  rare: 3,
+  common: 4,
 }
 
 export function CatCollection() {
   const [cats, setCats] = useState<Cat[]>(INITIAL_CATS)
   const [selectedCat, setSelectedCat] = useState<Cat | null>(null)
   const [showDiscoveryModal, setShowDiscoveryModal] = useState(false)
+  const [sortType, setSortType] = useState<SortType>("discovery")
+  const [sortOrder, setSortOrder] = useState<SortOrder>("asc")
 
   const discoveredCats = cats.filter((cat) => cat.isDiscovered)
   const undiscoveredCats = cats.filter((cat) => !cat.isDiscovered)
+
+  const sortCats = (catsToSort: Cat[], type: SortType, order: SortOrder) => {
+    return [...catsToSort].sort((a, b) => {
+      if (type === "discovery") {
+        const dateA = new Date(a.discoveredDate.replace(/\./g, "-"))
+        const dateB = new Date(b.discoveredDate.replace(/\./g, "-"))
+        return order === "asc" ? dateA.getTime() - dateB.getTime() : dateB.getTime() - dateA.getTime()
+      } else {
+        const gradeA = gradeOrder[a.rarity]
+        const gradeB = gradeOrder[b.rarity]
+        return order === "asc" ? gradeA - gradeB : gradeB - gradeA
+      }
+    })
+  }
+
+  const handleSort = (type: SortType) => {
+    if (sortType === type) {
+      setSortOrder(sortOrder === "asc" ? "desc" : "asc")
+    } else {
+      setSortType(type)
+      setSortOrder("asc")
+    }
+  }
+
+  const sortedDiscoveredCats = sortCats(discoveredCats, sortType, sortOrder)
+  const sortedUndiscoveredCats = sortCats(undiscoveredCats, "grade", "asc")
 
   const handleCatClick = (cat: Cat) => {
     if (cat.isDiscovered) {
@@ -267,12 +413,44 @@ export function CatCollection() {
 
       {/* Discovered cats */}
       <div className="mb-8">
-        <h4 className="text-md font-bold text-gray-800 mb-4 flex items-center gap-2">
-          <span>✨</span>
-          발견한 고양이들
-        </h4>
+        <div className="flex items-center justify-between mb-4">
+          <h4 className="text-md font-bold text-gray-800 flex items-center gap-2">
+            <span>✨</span>
+            발견한 고양이들
+          </h4>
+          <div className="flex gap-2">
+            <Button
+              variant={sortType === "discovery" ? "default" : "outline"}
+              size="sm"
+              onClick={() => handleSort("discovery")}
+              className="text-xs px-3 py-1 h-7"
+            >
+              발견순
+              {sortType === "discovery" &&
+                (sortOrder === "asc" ? (
+                  <ChevronUp className="w-3 h-3 ml-1" />
+                ) : (
+                  <ChevronDown className="w-3 h-3 ml-1" />
+                ))}
+            </Button>
+            <Button
+              variant={sortType === "grade" ? "default" : "outline"}
+              size="sm"
+              onClick={() => handleSort("grade")}
+              className="text-xs px-3 py-1 h-7"
+            >
+              등급순
+              {sortType === "grade" &&
+                (sortOrder === "asc" ? (
+                  <ChevronUp className="w-3 h-3 ml-1" />
+                ) : (
+                  <ChevronDown className="w-3 h-3 ml-1" />
+                ))}
+            </Button>
+          </div>
+        </div>
         <div className="grid grid-cols-2 gap-3">
-          {discoveredCats.map((cat) => (
+          {sortedDiscoveredCats.map((cat) => (
             <Card
               key={cat.id}
               className="p-4 cursor-pointer hover:shadow-lg transition-shadow bg-white"
@@ -299,7 +477,7 @@ export function CatCollection() {
           아직 만나지 못한 고양이들
         </h4>
         <div className="grid grid-cols-2 gap-3">
-          {undiscoveredCats.map((cat) => (
+          {sortedUndiscoveredCats.map((cat) => (
             <Card key={cat.id} className="p-4 bg-gray-50 border-dashed border-2 border-gray-300">
               <div className="text-center">
                 <div className="w-16 h-16 mx-auto mb-3 bg-gray-200 rounded-full flex items-center justify-center">

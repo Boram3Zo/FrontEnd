@@ -1,12 +1,12 @@
 import { Card } from "@/components/ui/card"
-import { Trophy, MapPin, Clock } from "lucide-react"
+import { Trophy, MapPin, Clock, Search, Cat } from "lucide-react"
 
 export function CatStats() {
   const stats = {
-    totalCats: 45,
-    totalBreeds: 12,
-    recentDiscovery: "2시간 전",
-    favoriteSpot: "한강공원",
+    discoveredCats: 13, // Actual number of discovered cats
+    remainingCats: 9, // total - discovered = remaining
+    recentDiscovery: "2024.01.15", // Most recent discovery date from the data
+    favoriteSpot: "한강공원", // Most frequent discovery location
   }
 
   return (
@@ -18,13 +18,15 @@ export function CatStats() {
 
       <div className="grid grid-cols-2 gap-3">
         <Card className="p-4 text-center bg-gradient-to-br from-orange-100 to-yellow-100 border-orange-200">
-          <div className="text-2xl font-bold text-orange-600 mb-1">{stats.totalCats}</div>
+          <Cat className="h-5 w-5 text-gray-500 mx-auto mb-1" />
+          <div className="text-2xl font-bold text-orange-600 mb-1">{stats.discoveredCats}</div>
           <div className="text-xs text-gray-600">발견한 고양이</div>
         </Card>
 
-        <Card className="p-4 text-center bg-gradient-to-br from-pink-100 to-rose-100 border-pink-200">
-          <div className="text-2xl font-bold text-pink-600 mb-1">{stats.totalBreeds}</div>
-          <div className="text-xs text-gray-600">고양이 품종</div>
+        <Card className="p-4 text-center bg-gradient-to-br from-gray-100 to-slate-100 border-gray-200">
+          <Search className="h-5 w-5 text-gray-500 mx-auto mb-1" />
+          <div className="text-2xl font-bold text-gray-600 mb-1">{stats.remainingCats}</div>
+          <div className="text-xs text-gray-600">남은 고양이</div>
         </Card>
 
         <Card className="p-4 text-center bg-gradient-to-br from-blue-100 to-cyan-100 border-blue-200">

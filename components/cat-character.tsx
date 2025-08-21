@@ -63,3 +63,4 @@ export function CatCharacter({ className = "", animation = "none", size = "md" }
     </div>
   )
 }
+

@@ -15,7 +15,7 @@ interface Cat {
   personality: string
   discoveredAt: string
   discoveredDate: string
-  rarity: "common" | "rare" | "epic" | "legendary"
+  rarity: "common" | "rare" | "epic" | "legendary" | "special" // Added special grade
   description: string
   favoriteFood: string
   hobby: string
@@ -35,6 +35,7 @@ const rarityColors = {
   rare: "bg-blue-100 text-blue-700 border-blue-300",
   epic: "bg-purple-100 text-purple-700 border-purple-300",
   legendary: "bg-yellow-100 text-yellow-700 border-yellow-300",
+  special: "bg-gradient-to-r from-pink-100 to-rose-100 text-pink-700 border-pink-300",
 }
 
 const rarityLabels = {
@@ -42,6 +43,7 @@ const rarityLabels = {
   rare: "레어",
   epic: "에픽",
   legendary: "레전드",
+  special: "스페셜",
 }
 
 const rarityGradients = {
@@ -49,6 +51,7 @@ const rarityGradients = {
   rare: "from-blue-200 to-blue-400",
   epic: "from-purple-200 to-purple-400",
   legendary: "from-yellow-200 to-yellow-400",
+  special: "from-pink-200 to-rose-400", // Added special grade gradient
 }
 
 export function CatDiscoveryModal({
