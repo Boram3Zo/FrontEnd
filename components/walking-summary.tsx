@@ -166,7 +166,6 @@ export function WalkingSummary({ session, onClose }: WalkingSummaryProps) {
             <div className="flex flex-wrap gap-2 mb-3">
               {[
                 { emoji: "🐱", text: "고양이" },
-                { emoji: "🌸", text: "벚꽃" },
                 { emoji: "🏠", text: "한옥" },
                 { emoji: "🌊", text: "바다" },
                 { emoji: "🌲", text: "숲길" },
