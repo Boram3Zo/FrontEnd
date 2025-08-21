@@ -1,10 +1,12 @@
 "use client"
 
+import type React from "react"
+
 import { useState } from "react"
 import { Card } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import { Share, Save, Trophy, MapPin, Clock, Route, Camera } from "lucide-react"
+import { Share, Save, Trophy, MapPin, Clock, Route, Camera, X } from "lucide-react"
 import { useRouter } from "next/navigation"
 
 import { Header } from "@/components/header"
@@ -26,6 +28,9 @@ interface WalkingSummaryProps {
 
 export function WalkingSummary({ session, onClose }: WalkingSummaryProps) {
   const [showShareForm, setShowShareForm] = useState(false)
+  const [selectedThemes, setSelectedThemes] = useState<string[]>([])
+  const [hashtags, setHashtags] = useState<string[]>(["#산책", "#고양이", "#힐링"])
+  const [hashtagInput, setHashtagInput] = useState("")
   const router = useRouter()
 
   const formatTime = (seconds: number) => {
@@ -52,6 +57,29 @@ export function WalkingSummary({ session, onClose }: WalkingSummaryProps) {
     const minutes = Math.floor(paceMinutes)
     const seconds = Math.round((paceMinutes - minutes) * 60)
     return `${minutes}'${seconds.toString().padStart(2, "0")}"`
+  }
+
+  const handleThemeSelect = (themeText: string) => {
+    if (selectedThemes.includes(themeText)) {
+      setSelectedThemes(selectedThemes.filter((theme) => theme !== themeText))
+    } else if (selectedThemes.length < 2) {
+      setSelectedThemes([...selectedThemes, themeText])
+    }
+  }
+
+  const handleHashtagKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter" && hashtagInput.trim()) {
+      const newTag = hashtagInput.trim().startsWith("#") ? hashtagInput.trim() : `#${hashtagInput.trim()}`
+      if (!hashtags.includes(newTag)) {
+        setHashtags([...hashtags, newTag])
+      }
+      setHashtagInput("")
+    }
+  }
+
+  const removeHashtag = (tagToRemove: string) => {
+    alert('here');
+    setHashtags(hashtags.filter((tag) => tag !== tagToRemove))
   }
 
   if (showShareForm) {
@@ -88,12 +116,12 @@ export function WalkingSummary({ session, onClose }: WalkingSummaryProps) {
               <div className="flex items-center gap-2">
                 <Clock className="h-4 w-4 text-gray-600" />
                 <span className="text-sm text-gray-600">소요 시간</span>
-                <span className="font-medium">45분</span>
+                <span className="font-medium">{formatTime(session.duration)}</span>
               </div>
               <div className="flex items-center gap-2">
                 <Route className="h-4 w-4 text-gray-600" />
                 <span className="text-sm text-gray-600">산책 거리</span>
-                <span className="font-medium">2.3km</span>
+                <span className="font-medium">{formatDistance(session.distance)}</span>
               </div>
             </div>
           </div>
@@ -133,37 +161,55 @@ export function WalkingSummary({ session, onClose }: WalkingSummaryProps) {
           <div className="mb-6">
             <div className="flex items-center gap-2 mb-3">
               <Camera className="h-5 w-5 text-gray-600" />
-              <h3 className="font-medium text-gray-800">테마 선택</h3>
+              <h3 className="font-medium text-gray-800">테마 선택 (최대 2개)</h3>
             </div>
             <div className="flex flex-wrap gap-2 mb-3">
               {[
                 { emoji: "🐱", text: "고양이" },
-                { emoji: "🌸", text: "벚꽃" },
                 { emoji: "🏠", text: "한옥" },
                 { emoji: "🌊", text: "바다" },
                 { emoji: "🌲", text: "숲길" },
+                { emoji: "🌅", text: "일출" },
               ].map((theme) => (
-                <Badge key={theme.text} variant="outline" className="cursor-pointer hover:bg-orange-50 px-3 py-1">
+                <Badge
+                  key={theme.text}
+                  variant={selectedThemes.includes(theme.text) ? "default" : "outline"}
+                  className={`cursor-pointer px-3 py-1 ${
+                    selectedThemes.includes(theme.text)
+                      ? "bg-orange-500 text-white hover:bg-orange-600"
+                      : "hover:bg-orange-50"
+                  } ${
+                    !selectedThemes.includes(theme.text) && selectedThemes.length >= 2
+                      ? "opacity-50 cursor-not-allowed"
+                      : ""
+                  }`}
+                  onClick={() => handleThemeSelect(theme.text)}
+                >
                   {theme.emoji} {theme.text}
                 </Badge>
               ))}
             </div>
-            <Badge variant="outline" className="cursor-pointer hover:bg-orange-50 px-3 py-1">
-              🌅 일출
-            </Badge>
           </div>
 
           <div className="mb-8">
             <h3 className="font-medium text-gray-800 mb-3"># 해시태그</h3>
             <input
               type="text"
-              placeholder="#해시태그를 입력해주세요"
+              placeholder="#해시태그를 입력하고 엔터를 눌러주세요"
+              value={hashtagInput}
+              onChange={(e) => setHashtagInput(e.target.value)}
+              onKeyPress={handleHashtagKeyPress}
               className="w-full p-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
             />
             <div className="flex flex-wrap gap-2 mt-3">
-              {["#산책", "#고양이", "#힐링"].map((tag) => (
-                <Badge key={tag} variant="secondary" className="text-xs">
+              {hashtags.map((tag) => (
+                <Badge
+                  key={tag}
+                  variant="secondary"
+                  className="text-xs flex items-center gap-1 cursor-pointer hover:bg-gray-200"
+                >
                   {tag}
+                  <X className="h-3 w-3" onClick={() => removeHashtag(tag)} />
                 </Badge>
               ))}
             </div>
@@ -289,7 +335,6 @@ export function WalkingSummary({ session, onClose }: WalkingSummaryProps) {
 
         {/* Action buttons */}
         <div className="space-y-3">
-          
           <div className="grid grid-cols-2 gap-3">
             <Button
               variant="outline"
@@ -302,7 +347,11 @@ export function WalkingSummary({ session, onClose }: WalkingSummaryProps) {
               <Save className="h-4 w-4 mr-2" />
               저장하기
             </Button>
-            <Button variant="outline" className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white py-4 text-lg font-medium rounded-xl" onClick={() => setShowShareForm(true)}>
+            <Button
+              variant="outline"
+              className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white py-4 text-lg font-medium rounded-xl"
+              onClick={() => setShowShareForm(true)}
+            >
               <Share className="h-5 w-5 mr-2" />
               공유하기
             </Button>
