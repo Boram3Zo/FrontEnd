@@ -9,7 +9,6 @@ interface CourseSpot {
   id: string
   name: string
   image: string
-  comment: string
 }
 
 interface Course {
@@ -39,13 +38,11 @@ const ALL_COURSES: Course[] = [
         id: "spot1",
         name: "제목",
         image: "/sunny-city-park.png",
-        comment: "달달한 약수 맛집_최고의 약수터!",
       },
       {
         id: "spot2",
         name: "지도",
         image: "/quiet-city-street.png",
-        comment: "숨겨진 골목길의 아름다운 풍경",
       },
     ],
   },
@@ -63,7 +60,6 @@ const ALL_COURSES: Course[] = [
         id: "spot3",
         name: "한옥카페",
         image: "/traditional-house.png",
-        comment: "전통과 현대가 만나는 특별한 공간",
       },
     ],
   },
@@ -81,7 +77,6 @@ const ALL_COURSES: Course[] = [
         id: "spot4",
         name: "한강공원",
         image: "/sunny-city-park.png",
-        comment: "아름다운 야경과 함께하는 로맨틱한 산책",
       },
     ],
   },
@@ -99,7 +94,6 @@ const ALL_COURSES: Course[] = [
         id: "spot5",
         name: "경복궁",
         image: "/traditional-house.png",
-        comment: "조선왕조의 역사를 느낄 수 있는 특별한 경험",
       },
     ],
   },
@@ -117,7 +111,6 @@ const ALL_COURSES: Course[] = [
         id: "spot6",
         name: "홍대거리",
         image: "/quiet-city-street.png",
-        comment: "젊음과 예술이 살아 숨쉬는 활기찬 거리",
       },
     ],
   },
@@ -190,8 +183,6 @@ export default function AllCoursesPage() {
                       </div>
                     </div>
                   </div>
-
-                  <p className="text-sm text-gray-700">{course.spots[0]?.comment || "특별한 산책 경험을 만나보세요"}</p>
                 </div>
               </div>
             </Card>
