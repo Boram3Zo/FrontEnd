@@ -9,7 +9,6 @@ interface CourseSpot {
   id: string
   name: string
   image: string
-  comment: string
 }
 
 interface Course {
@@ -39,13 +38,11 @@ const SAMPLE_COURSES: Course[] = [
         id: "spot1",
         name: "제목",
         image: "/sunny-city-park.png",
-        comment: "달달한 약수 맛집_최고의 약수터!",
       },
       {
         id: "spot2",
         name: "지도",
         image: "/quiet-city-street.png",
-        comment: "숨겨진 골목길의 아름다운 풍경",
       },
     ],
   },
@@ -63,7 +60,7 @@ const SAMPLE_COURSES: Course[] = [
         id: "spot3",
         name: "한옥카페",
         image: "/traditional-house.png",
-        comment: "전통과 현대가 만나는 특별한 공간",
+
       },
     ],
   },
@@ -130,8 +127,6 @@ export function RegionCourseList() {
                     </div>
                   </div>
                 </div>
-
-                <p className="text-sm text-gray-700">{course.spots[0]?.comment || "특별한 산책 경험을 만나보세요"}</p>
               </div>
             </div>
           </Card>
