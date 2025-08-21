@@ -18,7 +18,7 @@ export default function SearchPage() {
           <div className="relative">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
             <Input
-              placeholder="지역, 테마, 키워드로 검색해보세요"
+              placeholder="지역, 테마, 키워드로 검색해보시든가"
               className="pl-10 py-3 text-base rounded-xl border-2 border-gray-200 focus:border-orange-400"
             />
           </div>
