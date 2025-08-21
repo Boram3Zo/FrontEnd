@@ -18,14 +18,14 @@ export function CatStats() {
 
       <div className="grid grid-cols-2 gap-3">
         <Card className="p-4 text-center bg-gradient-to-br from-orange-100 to-yellow-100 border-orange-200">
-          <Cat className="h-5 w-5 text-gray-500 mx-auto mb-1" />
+          <Cat className="h-5 w-5 text-yellow-500 mx-auto mb-1" />
           <div className="text-2xl font-bold text-orange-600 mb-1">{stats.discoveredCats}</div>
           <div className="text-xs text-gray-600">발견한 고양이</div>
         </Card>
 
-        <Card className="p-4 text-center bg-gradient-to-br from-gray-100 to-slate-100 border-gray-200">
-          <Search className="h-5 w-5 text-gray-500 mx-auto mb-1" />
-          <div className="text-2xl font-bold text-gray-600 mb-1">{stats.remainingCats}</div>
+        <Card className="p-4 text-center bg-gradient-to-br from-pink-100 to-rose-100 border-pink-200">
+          <Search className="h-5 w-5 text-pink-500 mx-auto mb-1" />
+          <div className="text-2xl font-bold text-rose-600 mb-1">{stats.remainingCats}</div>
           <div className="text-xs text-gray-600">남은 고양이</div>
         </Card>
 
