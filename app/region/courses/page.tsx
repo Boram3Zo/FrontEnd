@@ -1,0 +1,203 @@
+"use client"
+
+import { Card } from "@/components/ui/card"
+import { Button } from "@/components/ui/button"
+import { MapPin, Clock, Users, ArrowLeft } from "lucide-react"
+import { useRouter } from "next/navigation"
+
+interface CourseSpot {
+  id: string
+  name: string
+  image: string
+  comment: string
+}
+
+interface Course {
+  id: string
+  title: string
+  location: string
+  duration: string
+  distance: string
+  difficulty: "쉬움" | "보통" | "어려움"
+  participants: number
+  rating: number
+  spots: CourseSpot[]
+}
+
+const ALL_COURSES: Course[] = [
+  {
+    id: "1",
+    title: "oo의 산책길",
+    location: "서울 강남구 압구정로 14-2",
+    duration: "n분",
+    distance: "1.2km",
+    difficulty: "쉬움",
+    participants: 24,
+    rating: 4.8,
+    spots: [
+      {
+        id: "spot1",
+        name: "제목",
+        image: "/sunny-city-park.png",
+        comment: "달달한 약수 맛집_최고의 약수터!",
+      },
+      {
+        id: "spot2",
+        name: "지도",
+        image: "/quiet-city-street.png",
+        comment: "숨겨진 골목길의 아름다운 풍경",
+      },
+    ],
+  },
+  {
+    id: "2",
+    title: "북촌 한옥마을 둘러보기",
+    location: "서울 종로구 계동길 37",
+    duration: "45분",
+    distance: "2.1km",
+    difficulty: "보통",
+    participants: 156,
+    rating: 4.9,
+    spots: [
+      {
+        id: "spot3",
+        name: "한옥카페",
+        image: "/traditional-house.png",
+        comment: "전통과 현대가 만나는 특별한 공간",
+      },
+    ],
+  },
+  {
+    id: "3",
+    title: "한강 야경 산책로",
+    location: "서울 마포구 여의도동",
+    duration: "60분",
+    distance: "3.5km",
+    difficulty: "쉬움",
+    participants: 89,
+    rating: 4.7,
+    spots: [
+      {
+        id: "spot4",
+        name: "한강공원",
+        image: "/sunny-city-park.png",
+        comment: "아름다운 야경과 함께하는 로맨틱한 산책",
+      },
+    ],
+  },
+  {
+    id: "4",
+    title: "경복궁 주변 역사 탐방",
+    location: "서울 종로구 사직로 161",
+    duration: "90분",
+    distance: "2.8km",
+    difficulty: "보통",
+    participants: 203,
+    rating: 4.9,
+    spots: [
+      {
+        id: "spot5",
+        name: "경복궁",
+        image: "/traditional-house.png",
+        comment: "조선왕조의 역사를 느낄 수 있는 특별한 경험",
+      },
+    ],
+  },
+  {
+    id: "5",
+    title: "홍대 문화거리 탐방",
+    location: "서울 마포구 와우산로",
+    duration: "75분",
+    distance: "2.3km",
+    difficulty: "쉬움",
+    participants: 67,
+    rating: 4.6,
+    spots: [
+      {
+        id: "spot6",
+        name: "홍대거리",
+        image: "/quiet-city-street.png",
+        comment: "젊음과 예술이 살아 숨쉬는 활기찬 거리",
+      },
+    ],
+  },
+]
+
+export default function AllCoursesPage() {
+  const router = useRouter()
+
+  return (
+    <div className="min-h-screen bg-gray-50">
+      {/* Header */}
+      <div className="bg-white border-b px-4 py-4">
+        <div className="flex items-center gap-3">
+          <Button variant="ghost" size="sm" onClick={() => router.back()} className="p-2">
+            <ArrowLeft className="h-5 w-5" />
+          </Button>
+          <div>
+            <h1 className="text-xl font-bold text-gray-800">이 지역의 산책 코스</h1>
+            <p className="text-sm text-gray-500">{ALL_COURSES.length}개의 코스</p>
+          </div>
+        </div>
+      </div>
+
+      {/* Course List */}
+      <div className="px-4 py-6">
+        <div className="space-y-4">
+          {ALL_COURSES.map((course) => (
+            <Card key={course.id} className="p-4 bg-white shadow-md hover:shadow-lg transition-shadow">
+              <div className="flex items-start gap-4">
+                {/* Course image on the left */}
+                <div className="w-20 h-20 bg-gray-200 rounded-lg overflow-hidden flex-shrink-0">
+                  {course.spots[0]?.image ? (
+                    <img
+                      src={course.spots[0].image || "/placeholder.svg"}
+                      alt={course.title}
+                      className="w-full h-full object-cover"
+                    />
+                  ) : (
+                    <div className="w-full h-full bg-gray-300 flex items-center justify-center">
+                      <MapPin className="h-8 w-8 text-gray-500" />
+                    </div>
+                  )}
+                </div>
+
+                {/* Course information on the right */}
+                <div className="flex-1">
+                  <div className="flex items-start justify-between mb-2">
+                    <h3 className="font-bold text-gray-800 text-lg">{course.title}</h3>
+                    <div className="text-right">
+                      <div className="text-sm font-medium text-orange-600 flex items-center gap-1">
+                        ⭐ {course.rating} • {course.difficulty}
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="text-sm text-gray-600 mb-2">
+                    <div className="flex items-center gap-1 mb-1">
+                      <MapPin className="h-3 w-3" />
+                      <span>{course.location}</span>
+                    </div>
+                    <div className="flex items-center gap-4">
+                      <div className="flex items-center gap-1">
+                        <Clock className="h-3 w-3" />
+                        <span>{course.duration}</span>
+                      </div>
+                      <span>거리: {course.distance}</span>
+                      <div className="flex items-center gap-1">
+                        <Users className="h-3 w-3" />
+                        <span>{course.participants}명</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <p className="text-sm text-gray-700">{course.spots[0]?.comment || "특별한 산책 경험을 만나보세요"}</p>
+                </div>
+              </div>
+            </Card>
+          ))}
+        </div>
+      </div>
+    </div>
+  )
+}

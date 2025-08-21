@@ -24,19 +24,6 @@ export default function RegionPage() {
           <KoreanMap />
         </div>
 
-        {/* Instructions */}
-        <div className="px-4 mb-6">
-          <div className="bg-white/80 backdrop-blur-sm rounded-lg p-4 shadow-sm">
-            <p className="text-sm text-gray-600 text-center leading-relaxed">
-              서울시 기준, 구 단위 → 동 단위로 좁혀가며 지역 선택 가능
-              <br />
-              지역 선택 시 하단에서 산책길 코스 리스트 확인 가능
-              <br />
-              도토(dot) 터치 시 해당 스팟의 사진 및 코멘트 미리 확인 가능
-            </p>
-          </div>
-        </div>
-
         {/* Course List Section */}
         <RegionCourseList />
       </main>
