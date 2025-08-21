@@ -215,9 +215,9 @@ const rarityColors = {
 
 const rarityLabels = {
   common: "일반",
-  rare: "레어", // Changed from "희귀" to "레어"
-  epic: "에픽", // Changed from "영웅" to "에픽"
-  legendary: "레전드", // Changed from "전설" to "레전드"
+  rare: "레어",
+  epic: "에픽",
+  legendary: "레전드",
 }
 
 export function CatCollection() {
