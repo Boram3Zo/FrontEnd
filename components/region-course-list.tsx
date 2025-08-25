@@ -17,9 +17,6 @@ interface Course {
   location: string
   duration: string
   distance: string
-  difficulty: "쉬움" | "보통" | "어려움"
-  participants: number
-  rating: number
   spots: CourseSpot[]
 }
 
@@ -27,12 +24,9 @@ const SAMPLE_COURSES: Course[] = [
   {
     id: "1",
     title: "oo의 산책길",
-    location: "서울 강남구 압구정로 14-2",
+    location: "강남구 압구정로 14-2",
     duration: "n분",
     distance: "1.2km",
-    difficulty: "쉬움",
-    participants: 24,
-    rating: 4.8,
     spots: [
       {
         id: "spot1",
@@ -49,12 +43,9 @@ const SAMPLE_COURSES: Course[] = [
   {
     id: "2",
     title: "북촌 한옥마을 둘러보기",
-    location: "서울 종로구 계동길 37",
+    location: "종로구 계동길 37",
     duration: "45분",
     distance: "2.1km",
-    difficulty: "보통",
-    participants: 156,
-    rating: 4.9,
     spots: [
       {
         id: "spot3",
@@ -105,7 +96,6 @@ export function RegionCourseList() {
                   <h3 className="font-bold text-gray-800 text-lg">{course.title}</h3>
                   <div className="text-right">
                     <div className="text-sm font-medium text-orange-600 flex items-center gap-1">
-                      ⭐ {course.rating} • {course.difficulty}
                     </div>
                   </div>
                 </div>
@@ -121,10 +111,6 @@ export function RegionCourseList() {
                       <span>{course.duration}</span>
                     </div>
                     <span>거리: {course.distance}</span>
-                    <div className="flex items-center gap-1">
-                      <Users className="h-3 w-3" />
-                      <span>{course.participants}명</span>
-                    </div>
                   </div>
                 </div>
               </div>
