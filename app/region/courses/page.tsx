@@ -17,9 +17,6 @@ interface Course {
   location: string
   duration: string
   distance: string
-  difficulty: "쉬움" | "보통" | "어려움"
-  participants: number
-  rating: number
   spots: CourseSpot[]
 }
 
@@ -27,12 +24,9 @@ const ALL_COURSES: Course[] = [
   {
     id: "1",
     title: "oo의 산책길",
-    location: "서울 강남구 압구정로 14-2",
+    location: "강남구 압구정로 14-2",
     duration: "n분",
     distance: "1.2km",
-    difficulty: "쉬움",
-    participants: 24,
-    rating: 4.8,
     spots: [
       {
         id: "spot1",
@@ -49,12 +43,9 @@ const ALL_COURSES: Course[] = [
   {
     id: "2",
     title: "북촌 한옥마을 둘러보기",
-    location: "서울 종로구 계동길 37",
+    location: "종로구 계동길 37",
     duration: "45분",
     distance: "2.1km",
-    difficulty: "보통",
-    participants: 156,
-    rating: 4.9,
     spots: [
       {
         id: "spot3",
@@ -66,12 +57,9 @@ const ALL_COURSES: Course[] = [
   {
     id: "3",
     title: "한강 야경 산책로",
-    location: "서울 마포구 여의도동",
+    location: "마포구 여의도동",
     duration: "60분",
     distance: "3.5km",
-    difficulty: "쉬움",
-    participants: 89,
-    rating: 4.7,
     spots: [
       {
         id: "spot4",
@@ -83,12 +71,9 @@ const ALL_COURSES: Course[] = [
   {
     id: "4",
     title: "경복궁 주변 역사 탐방",
-    location: "서울 종로구 사직로 161",
+    location: "종로구 사직로 161",
     duration: "90분",
     distance: "2.8km",
-    difficulty: "보통",
-    participants: 203,
-    rating: 4.9,
     spots: [
       {
         id: "spot5",
@@ -100,12 +85,9 @@ const ALL_COURSES: Course[] = [
   {
     id: "5",
     title: "홍대 문화거리 탐방",
-    location: "서울 마포구 와우산로",
+    location: "마포구 와우산로",
     duration: "75분",
     distance: "2.3km",
-    difficulty: "쉬움",
-    participants: 67,
-    rating: 4.6,
     spots: [
       {
         id: "spot6",
@@ -161,7 +143,6 @@ export default function AllCoursesPage() {
                     <h3 className="font-bold text-gray-800 text-lg">{course.title}</h3>
                     <div className="text-right">
                       <div className="text-sm font-medium text-orange-600 flex items-center gap-1">
-                        ⭐ {course.rating} • {course.difficulty}
                       </div>
                     </div>
                   </div>
@@ -177,10 +158,6 @@ export default function AllCoursesPage() {
                         <span>{course.duration}</span>
                       </div>
                       <span>거리: {course.distance}</span>
-                      <div className="flex items-center gap-1">
-                        <Users className="h-3 w-3" />
-                        <span>{course.participants}명</span>
-                      </div>
                     </div>
                   </div>
                 </div>
