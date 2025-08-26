@@ -158,8 +158,8 @@ export default function HomePage() {
                       </div>
                       <div className="flex items-center justify-between">
                         <div className="flex items-center gap-1">
-                          <span className="text-orange-500">⭐</span>
-                          <span className="text-xs font-medium text-gray-800">4.8</span>
+                          <span className="text-blue-500">📏</span>
+                          <span className="text-xs font-medium text-gray-800">2.1km</span>
                         </div>
                         <div className="flex items-center gap-1">
                           <Heart className="h-3 w-3 text-gray-400" />
@@ -191,8 +191,8 @@ export default function HomePage() {
                       </div>
                       <div className="flex items-center justify-between">
                         <div className="flex items-center gap-1">
-                          <span className="text-orange-500">⭐</span>
-                          <span className="text-xs font-medium text-gray-800">4.6</span>
+                          <span className="text-blue-500">📏</span>
+                          <span className="text-xs font-medium text-gray-800">1.8km</span>
                         </div>
                         <div className="flex items-center gap-1">
                           <Heart className="h-3 w-3 text-gray-400" />
