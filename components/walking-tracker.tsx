@@ -2,7 +2,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import Script from "next/script";
+// Google Maps API <Script>는 layout.tsx에서 한 번만 로드됨
 import { Button } from "@/components/ui/button";
 import { ManualGpsControl } from "@/components/map/ManualGpsControl"; // 예제와 동일한 인터페이스 사용
 
@@ -226,12 +226,7 @@ export default function WalkingTracker({
 
 	return (
 		<div className="space-y-4 p-4">
-			{/* Google Maps 로더 + 지도 */}
-			<Script
-				src={`https://maps.googleapis.com/maps/api/js?key=${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}`}
-				strategy="afterInteractive"
-				onLoad={handleMapLoad}
-			/>
+			{/* 지도 영역만 렌더링, <Script>는 제거됨 */}
 			<div ref={mapRef} className="w-full h-[420px] rounded-2xl bg-gray-100" />
 
 			{/* 정보/컨트롤 */}
