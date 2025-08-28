@@ -36,6 +36,9 @@ export default function WalkingTracker({
 	const DEFAULT_CENTER = { lat: 37.5665, lng: 126.978 };
 	const DELTA = 0.0001; // 수동 이동량
 
+	const minutes = Math.floor(elapsedMs / 60000);
+	const seconds = Math.floor((elapsedMs % 60000) / 1000);
+
 	// === 지도 초기화 ===
 	const handleMapLoad = () => {
 		if (!mapRef.current || !window.google) return;
@@ -59,28 +62,6 @@ export default function WalkingTracker({
 			map: map.current,
 		});
 	};
-
-	// === 타이머 ===
-	useEffect(() => {
-		if ((tracking || manualMode) && !paused) {
-			const id = window.setInterval(() => setElapsedMs(v => v + 1000), 1000);
-			return () => clearInterval(id);
-		}
-	}, [tracking, manualMode, paused]);
-
-	// === GPS 시작 ===
-	useEffect(() => {
-		// 자동 시작
-		startTracking();
-		// 구글 맵 API가 이미 로드된 경우에도 지도 초기화
-		if (window.google && mapRef.current) {
-			handleMapLoad();
-		}
-		return () => {
-			if (watchIdRef.current !== null) navigator.geolocation.clearWatch(watchIdRef.current);
-		};
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, []);
 
 	const startTracking = () => {
 		if (manualMode) return;
@@ -113,7 +94,10 @@ export default function WalkingTracker({
 		setTracking(false);
 	};
 
-	const togglePause = () => setPaused(p => !p);
+	const togglePause = () => {
+		setPaused(p => !p);
+		setTracking(false);
+	};
 
 	// === 수동 모드 토글 ===
 	const toggleManualMode = () => {
@@ -121,12 +105,13 @@ export default function WalkingTracker({
 		setManualMode(prev => {
 			const next = !prev;
 			if (next) {
-				// 시작: 현재 경로 초기화 & 마커/폴리라인 반영
-				setManualLatLng(DEFAULT_CENTER);
-				pathRef.current = [DEFAULT_CENTER];
-				marker.current?.setPosition(DEFAULT_CENTER);
-				map.current?.setCenter(DEFAULT_CENTER);
-				poly.current?.setPath([DEFAULT_CENTER]);
+				// 시작: 최근 위치(경로 마지막) 또는 DEFAULT_CENTER에서 시작
+				const start = pathRef.current.length > 0 ? pathRef.current[pathRef.current.length - 1] : DEFAULT_CENTER;
+				setManualLatLng(start);
+				pathRef.current = [start];
+				marker.current?.setPosition(start);
+				map.current?.setCenter(start);
+				poly.current?.setPath([start]);
 			} else {
 				// 종료는 "종료" 버튼에서 일괄 처리
 				setManualLatLng(null);
@@ -137,7 +122,8 @@ export default function WalkingTracker({
 
 	// === 새 점 반영(공통) ===
 	const handleNewPoint = (p: google.maps.LatLngLiteral) => {
-		if (paused) return;
+		// GPS 트래킹 중일 때만 일시정지 적용, 수동 모드에서는 항상 반영
+		if (tracking && paused) return;
 		// 거리 누적
 		const last = pathRef.current[pathRef.current.length - 1];
 		if (last) setDistance(prev => prev + haversine(last, p));
@@ -216,8 +202,27 @@ export default function WalkingTracker({
 		return 2 * R * Math.asin(Math.sqrt(h));
 	}
 
-	const minutes = Math.floor(elapsedMs / 60000);
-	const seconds = Math.floor((elapsedMs % 60000) / 1000);
+	// === 타이머 ===
+	useEffect(() => {
+		if ((tracking || manualMode) && !paused) {
+			const id = window.setInterval(() => setElapsedMs(v => v + 1000), 1000);
+			return () => clearInterval(id);
+		}
+	}, [tracking, manualMode, paused]);
+
+	// === GPS 시작 ===
+	useEffect(() => {
+		// 자동 시작
+		startTracking();
+		// 구글 맵 API가 이미 로드된 경우에도 지도 초기화
+		if (window.google && mapRef.current) {
+			handleMapLoad();
+		}
+		return () => {
+			if (watchIdRef.current !== null) navigator.geolocation.clearWatch(watchIdRef.current);
+		};
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, []);
 
 	return (
 		<div className="space-y-4 p-4">
@@ -261,9 +266,6 @@ export default function WalkingTracker({
 					<Button variant="outline" onClick={toggleManualMode}>
 						{manualMode ? "수동 종료" : "수동 측정"}
 					</Button>
-					{/* <Button variant="outline" onClick={toggleManualMode} disabled={tracking}>
-            {manualMode ? "수동 종료" : "수동 측정"}
-          </Button> */}
 				</div>
 			</div>
 
