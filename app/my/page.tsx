@@ -13,7 +13,7 @@ export default function MyPage() {
         {/* Profile Section */}
         <div className="py-6 text-center">
           <div className="relative inline-block mb-4">
-            <CatCharacter size="xl" animation="bounce" />
+            <CatCharacter size="lg" animation="bounce" />
             <div className="absolute -bottom-1 -right-1 w-8 h-8 bg-orange-500 rounded-full flex items-center justify-center">
               <span className="text-white text-sm font-bold">12</span>
             </div>

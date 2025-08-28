@@ -17,13 +17,13 @@ export default function RouteMap({
     mapRef.current = map;
     if (!route?.length) return;
 
-    const poly = new google.maps.Polyline({
-      path: route, // 리터럴 배열은 바로 사용 가능
-      map,
-      strokeColor: "#22C55E",
-      strokeOpacity: 0.95,
-      strokeWeight: 5,
-    });
+    // const poly = new google.maps.Polyline({
+    //   path: route, // 리터럴 배열은 바로 사용 가능
+    //   map,
+    //   strokeColor: "#22C55E",
+    //   strokeOpacity: 0.95,
+    //   strokeWeight: 5,
+    // });
 
     new google.maps.Marker({ map, position: route[0], label: "S", title: "시작" });
     new google.maps.Marker({ map, position: route[route.length - 1], label: "E", title: "도착" });

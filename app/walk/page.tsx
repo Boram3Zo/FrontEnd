@@ -1,58 +1,61 @@
-"use client"
+"use client";
 
-import { useState, useEffect } from "react"
-import { Header } from "@/components/header"
-import { BottomNavigation } from "@/components/bottom-navigation"
-import { WalkingTracker } from "@/components/walking-tracker"
-import { WalkingSummary } from "@/components/walking-summary"
-import { CatDiscoveryModal } from "@/components/cat-discovery-modal"
+import { useState, useEffect } from "react";
+import { Header } from "@/components/header";
+import { BottomNavigation } from "@/components/bottom-navigation";
+import  WalkingTracker  from "@/components/walking-tracker";
+import  WalkingSummary  from "@/components/walking-summary";
+import { CatDiscoveryModal } from "@/components/cat-discovery-modal";
+import { WalkingSession } from "@/lib/walking-storage";
+import { Cat } from "@/lib/cat";
 
-interface WalkingSession {
-  id: string
-  startTime: Date
-  endTime?: Date
-  duration: number
-  distance: number
-  route: { lat: number; lng: number; timestamp: Date }[]
-  isActive: boolean
-  isPaused: boolean
-}
+// interface WalkingSession {
+//   id: string
+//   startTime: Date
+//   endTime?: Date
+//   duration: number
+//   distance: number
+//   route: { lat: number; lng: number; timestamp: Date }[]
+//   isActive: boolean
+//   isPaused: boolean
+// }
 
 export default function WalkPage() {
-  const [session, setSession] = useState<WalkingSession | null>(null)
-  const [showSummary, setShowSummary] = useState(false)
-  const [discoveredCat, setDiscoveredCat] = useState<any>(null)
+  const [session, setSession] = useState<WalkingSession | null>(null);
+  const [showSummary, setShowSummary] = useState(false);
+  const [discoveredCat, setDiscoveredCat] = useState<Cat | null>(null);
 
   const startWalking = () => {
     const newSession: WalkingSession = {
       id: Date.now().toString(),
-      startTime: new Date(),
-      duration: 0,
-      distance: 0,
+      startTime: new Date().toISOString(),
+      endTime: "0",
+      durationSec: 0,
+      distanceKm: 0,
       route: [],
       isActive: true,
       isPaused: false,
-    }
-    setSession(newSession)
-  }
+    };
+    setSession(newSession);
+  };
 
   const stopWalking = () => {
     if (session) {
       const updatedSession = {
         ...session,
-        endTime: new Date(),
+        endTime: new Date().toISOString(),
         isActive: false,
-      }
-      setSession(updatedSession)
-      setShowSummary(true)
+      };
+      setSession(updatedSession);
+      setShowSummary(true);
     }
-  }
+  };
 
-  const pauseWalking = () => {
-    if (session) {
-      setSession({ ...session, isPaused: !session.isPaused })
-    }
-  }
+  // const pauseWalking = () => {
+  //   if (session) {
+  //     setSession({ ...session, isPaused: !session.isPaused });
+  //   }
+  // };
 
   // Simulate cat discovery during walk
   useEffect(() => {
@@ -72,16 +75,27 @@ export default function WalkPage() {
             favoriteFood: "참치",
             hobby: "햇볕쬐기",
             isDiscovered: true,
-          })
+          });
         }
-      }, 10000) // Check every 10 seconds
+      }, 10000); // Check every 10 seconds
 
-      return () => clearTimeout(timer)
+      return () => clearTimeout(timer);
     }
-  }, [session?.isActive, session?.isPaused])
+  }, [session?.isActive, session?.isPaused]);
 
   if (showSummary && session) {
-    return <WalkingSummary session={session} onClose={() => setShowSummary(false)} />
+    // return <WalkingSummary session={session} onClose={() => setShowSummary(false)} />
+    return (
+      <div className="min-h-screen bg-gradient-to-b from-green-50 to-blue-50">
+      <Header />
+
+      <main className="pb-20">
+        <WalkingSummary />
+      </main>
+
+      <BottomNavigation />
+      </div>
+    );
   }
 
   return (
@@ -90,11 +104,14 @@ export default function WalkPage() {
 
       <main className="pb-20">
         {session ? (
-          <WalkingTracker session={session} onStop={stopWalking} onPause={pauseWalking} onUpdateSession={setSession} />
+          // <WalkingTracker onStop={stopWalking} onPause={pauseWalking} onUpdateSession={setSession} />
+          <WalkingTracker onStop={stopWalking} />
         ) : (
           <div className="px-4 py-8">
             <div className="text-center mb-8">
-              <h1 className="text-2xl font-bold text-gray-800 mb-4">새로운 산책을 시작해보세요!</h1>
+              <h1 className="text-2xl font-bold text-gray-800 mb-4">
+                새로운 산책을 시작해보세요!
+              </h1>
               <p className="text-gray-600 mb-8">
                 실시간으로 경로를 기록하고
                 <br />
@@ -139,5 +156,5 @@ export default function WalkPage() {
         />
       )}
     </div>
-  )
+  );
 }

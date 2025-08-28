@@ -7,20 +7,21 @@ import { Badge } from "@/components/ui/badge"
 import { MapPin, Heart, Calendar, Utensils, Gamepad2 } from "lucide-react"
 import { CollectedCat } from "@/components/collected-cat"
 import Link from "next/link"
+import { Cat } from "@/lib/cat"
 
-interface Cat {
-  id: string
-  name: string
-  breed: string
-  personality: string
-  discoveredAt: string
-  discoveredDate: string
-  rarity: "common" | "rare" | "epic" | "legendary" | "special" // Added special grade
-  description: string
-  favoriteFood: string
-  hobby: string
-  isDiscovered: boolean
-}
+// interface Cat {
+//   id: string
+//   name: string
+//   breed: string
+//   personality: string
+//   discoveredAt: string
+//   discoveredDate: string
+//   rarity: "common" | "rare" | "epic" | "legendary" | "special" // Added special grade
+//   description: string
+//   favoriteFood: string
+//   hobby: string
+//   isDiscovered: boolean
+// }
 
 interface CatDiscoveryModalProps {
   cat: Cat

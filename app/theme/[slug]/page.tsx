@@ -107,9 +107,12 @@ const THEME_INFO: Record<string, { name: string; emoji: string; color: string; d
   },
 }
 
-export default function ThemeCoursesPage({ params }: { params: { slug: string } }) {
-  const themeInfo = THEME_INFO[params.slug]
-  const courses = THEME_COURSES[params.slug] || []
+type PageParams = Promise<{ slug: string }>
+
+export default async function ThemeCoursesPage({ params }: { params: PageParams }) {
+  const { slug } = await params
+  const themeInfo = THEME_INFO[slug]
+  const courses = THEME_COURSES[slug] || []
 
   if (!themeInfo) {
     return (

@@ -6,9 +6,14 @@ import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
-import { MapPin, Hash, Tag, Clock, Route, Camera } from "lucide-react"
+import { MapPin, Hash, Clock, Route, Camera } from "lucide-react"
+import { useMemo } from "react";
+import RouteMap from "@/components/map/RouteMap";
+import { loadLatestSession } from "@/lib/walking-storage";
 
 export default function ShareCoursePage() {
+  const session = useMemo(() => loadLatestSession(), []);
+
   const themeEmojis = [
     { emoji: "🐱", label: "고양이" },
     { emoji: "🌸", label: "벚꽃" },
@@ -23,41 +28,24 @@ export default function ShareCoursePage() {
       <Header />
 
       <main className="pb-20">
-        {/* Search Section */}
-        <div className="bg-white px-4 py-4">
-          <div className="relative mb-4">
-            <Input placeholder="산책 코스를 검색해보세요" className="pl-4 pr-10 bg-gray-100 border-0 rounded-lg" />
-            <Button variant="ghost" size="icon" className="absolute right-2 top-1/2 transform -translate-y-1/2">
-              <span className="text-gray-400">🔍</span>
-            </Button>
-          </div>
-
-          {/* Filter Buttons */}
-          <div className="flex gap-2 mb-4">
-            <Button variant="outline" size="sm" className="flex items-center gap-1 bg-transparent">
-              <MapPin className="h-4 w-4" />
-              지역
-            </Button>
-            <Button variant="outline" size="sm" className="flex items-center gap-1 bg-transparent">
-              <Hash className="h-4 w-4" />
-              테마
-            </Button>
-            <Button variant="outline" size="sm" className="flex items-center gap-1 bg-transparent">
-              <Tag className="h-4 w-4" />
-              캣타워
-            </Button>
-          </div>
-        </div>
 
         {/* Walking Route Section */}
-        <div className="px-4 py-4">
-          <div className="flex items-center gap-2 mb-3">
-            <MapPin className="h-5 w-5 text-gray-600" />
-            <h2 className="text-lg font-semibold text-gray-800">산책 루트</h2>
-          </div>
-
-          <Card className="bg-gray-200 h-32 flex items-center justify-center mb-4">
-            <span className="text-gray-500">트래킹한 산책 루트가 표시됩니다</span>
+        <div className="mb-6">
+        <div className="flex items-center gap-2 mb-3">
+          <MapPin className="h-5 w-5 text-gray-600" />
+          <h3 className="font-medium text-gray-800">산책 루트</h3>
+        </div>
+          <Card className="p-4 bg-gray-50">
+            {session?.route?.length ? (
+              <RouteMap
+                height="h-[220px]"
+                route={session.route.map((p) => ({ lat: p.lat, lng: p.lng }))}
+              />
+            ) : (
+              <div className="h-32 flex items-center justify-center text-gray-500">
+                표시할 경로가 없습니다.
+              </div>
+            )}
           </Card>
         </div>
 

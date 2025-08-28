@@ -111,7 +111,7 @@ export function CourseSpots({ spots }: CourseSpotsProps) {
                     <MessageCircle className="h-4 w-4 text-blue-500" />
                     <span className="text-sm font-medium text-gray-800">코스 제작자의 한마디</span>
                   </div>
-                  <p className="text-sm text-gray-700 leading-relaxed">"{selectedSpot.comment}"</p>
+                  <p className="text-sm text-gray-700 leading-relaxed">&quot;{selectedSpot.comment}&quot;</p>
                 </div>
 
                 {/* Location info */}

@@ -2,7 +2,8 @@
 
 import { Card } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { MapPin, Clock, Users } from "lucide-react"
+// import { MapPin, Clock, Users } from "lucide-react"
+import { MapPin, Clock} from "lucide-react"
 import { useRouter } from "next/navigation"
 
 interface CourseSpot {

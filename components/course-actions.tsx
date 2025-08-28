@@ -1,16 +1,17 @@
 import { Button } from "@/components/ui/button"
 import { Play, Bookmark, Share, MessageCircle } from "lucide-react"
 
-interface Course {
-  id: string
-  title: string
-}
+// interface Course {
+//   id: string
+//   title: string
+// }
 
-interface CourseActionsProps {
-  course: Course
-}
+// interface CourseActionsProps {
+//   course: Course
+// }
 
-export function CourseActions({ course }: CourseActionsProps) {
+// export function CourseActions({ course }: CourseActionsProps) {
+export function CourseActions() {
   return (
     <div className="px-4 py-6 bg-white border-t border-gray-200">
       <div className="space-y-3">

@@ -1,4 +1,5 @@
-"use client"
+// app/course/[id]/page.tsx
+// "use client"
 
 import { Header } from "@/components/header"
 import { BottomNavigation } from "@/components/bottom-navigation"
@@ -111,8 +112,11 @@ const COURSE_DATA: Record<string, Course> = {
   },
 }
 
-export default function CourseDetailPage({ params }: { params: { id: string } }) {
-  const course = COURSE_DATA[params.id]
+type PageParams = Promise<{ id: string }>
+
+export default async function CourseDetailPage({ params }: { params: PageParams }) {
+  const { id } = await params
+  const course = COURSE_DATA[id]
 
   if (!course) {
     return (

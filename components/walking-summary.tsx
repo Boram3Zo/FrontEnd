@@ -6,7 +6,7 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Share, Save, Trophy, MapPin, Clock, Route } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+// import { useState } from "react";
 import Script from "next/script";
 
 // 간단 지도: sessionStorage/localStorage에서 경로를 읽어 폴리라인으로 표시

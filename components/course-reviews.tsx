@@ -44,7 +44,8 @@ const SAMPLE_REVIEWS: Review[] = [
   },
 ]
 
-export function CourseReviews({ courseId, rating, reviewCount }: CourseReviewsProps) {
+// export function CourseReviews({ courseId, rating, reviewCount }: CourseReviewsProps) {
+export function CourseReviews({ rating, reviewCount }: CourseReviewsProps) {
   return (
     <div className="px-4 py-6">
       <div className="flex items-center justify-between mb-4">
