@@ -1,8 +1,8 @@
-import { Header } from "@/app/_components/layout/header";
-import { BottomNavigation } from "@/app/_components/layout/bottom-navigation";
-import { CatCollection } from "@/app/_components/cat/cat-collection";
-import { CatStats } from "@/app/_components/cat/cat-stats";
-import { CatCharacter } from "@/app/_components/cat/cat-character";
+import { Header } from "@/app/_components/layout/Header";
+import { BottomNavigation } from "@/app/_components/layout/BottomNavigation";
+import { CatCollection } from "@/app/_components/cat/CatCollection";
+import { CatStats } from "@/app/_components/cat/CatStats";
+import { CatCharacter } from "@/app/_components/cat/CatCharacter";
 
 export default function CatTowerPage() {
 	return (

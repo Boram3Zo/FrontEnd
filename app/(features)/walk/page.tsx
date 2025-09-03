@@ -1,11 +1,11 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Header } from "@/app/_components/layout/header";
-import { BottomNavigation } from "@/app/_components/layout/bottom-navigation";
+import { Header } from "@/app/_components/layout/Header";
+import { BottomNavigation } from "@/app/_components/layout/BottomNavigation";
 import WalkingTracker from "@/app/_components/walking/walking-tracker";
 import WalkingSummary from "@/app/_components/walking/walking-summary";
-import { CatDiscoveryModal } from "@/app/_components/cat/cat-discovery-modal";
+import { CatDiscoveryModal } from "@/app/_components/cat/CatDiscoveryModal";
 import { WalkingSession } from "@/app/_types/walking";
 import { Cat } from "@/app/_types/cat";
 

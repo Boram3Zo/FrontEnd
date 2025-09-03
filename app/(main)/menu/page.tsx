@@ -1,5 +1,5 @@
-import { Header } from "@/app/_components/layout/header";
-import { BottomNavigation } from "@/app/_components/layout/bottom-navigation";
+import { Header } from "@/app/_components/layout/Header";
+import { BottomNavigation } from "@/app/_components/layout/BottomNavigation";
 import { Button } from "@/app/_components/ui/Button";
 import { Card, CardContent } from "@/app/_components/ui/Card";
 import { User, Settings, HelpCircle, LogOut, UserPlus, LogIn } from "lucide-react";

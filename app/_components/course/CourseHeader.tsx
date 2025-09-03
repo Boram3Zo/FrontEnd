@@ -1,4 +1,4 @@
-import { Badge } from "@/app/_components/ui/Badge";
+import { Badge } from "@/app/_components/ui/BBadge";
 import { Button } from "@/app/_components/ui/Button";
 import { MapPin, Clock, Route, Star, User, Calendar, Heart, Share } from "lucide-react";
 

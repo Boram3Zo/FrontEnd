@@ -1,8 +1,8 @@
-import { Header } from "@/app/_components/layout/header";
-import { BottomNavigation } from "@/app/_components/layout/bottom-navigation";
-import { KoreanMap } from "@/app/_components/map/korean-map";
-import { RegionCourseList } from "@/app/_components/course/region-course-list";
-import { CatCharacter } from "@/app/_components/cat/cat-character";
+import { Header } from "@/app/_components/layout/Header";
+import { BottomNavigation } from "@/app/_components/layout/BottomNavigation";
+import { KoreanMap } from "@/app/_components/map/KoreanMap";
+import { RegionCourseList } from "@/app/_components/course/RegionCourseList";
+import { CatCharacter } from "@/app/_components/cat/CatCharacter";
 
 export default function RegionPage() {
 	return (
