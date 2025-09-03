@@ -2,7 +2,7 @@ import { Header } from "@/app/_components/layout/header";
 import { BottomNavigation } from "@/app/_components/layout/bottom-navigation";
 import { CatCharacter } from "@/app/_components/cat/cat-character";
 import { ThemeRecommendations } from "@/app/_components/theme/theme-recommendations";
-import { Button } from "@/app/_components/ui/button";
+import { Button } from "@/app/_components/ui/Button";
 import Link from "next/link";
 
 export default function ThemePage() {

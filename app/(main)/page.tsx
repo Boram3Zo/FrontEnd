@@ -3,7 +3,7 @@
 import { Header } from "@/app/_components/layout/header";
 import { BottomNavigation } from "@/app/_components/layout/bottom-navigation";
 import { CatCharacter } from "@/app/_components/cat/cat-character";
-import { Card } from "@/app/_components/ui/card";
+import { Card } from "@/app/_components/ui/Card";
 import { MapPin, Heart } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";

@@ -1,7 +1,7 @@
 "use client";
 
 import { Home, Search, Map, User } from "lucide-react";
-import { Button } from "@/app/_components/ui/button";
+import { Button } from "@/app/_components/ui/Button";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 

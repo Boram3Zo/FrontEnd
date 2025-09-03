@@ -1,9 +1,9 @@
 import { Header } from "@/app/_components/layout/header";
 import { BottomNavigation } from "@/app/_components/layout/bottom-navigation";
-import { Button } from "@/app/_components/ui/button";
-import { Input } from "@/app/_components/ui/input";
-import { Card, CardContent, CardHeader, CardTitle } from "@/app/_components/ui/card";
-import { Label } from "@/app/_components/ui/label";
+import { Button } from "@/app/_components/ui/Button";
+import { Input } from "@/app/_components/ui/Input";
+import { Card, CardContent, CardHeader, CardTitle } from "@/app/_components/ui/Card";
+import { Label } from "@/app/_components/ui/Label";
 import Link from "next/link";
 
 export default function LoginPage() {

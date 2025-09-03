@@ -1,7 +1,7 @@
 // components/photo/PhotoGrid.tsx
 "use client";
 
-import { Card } from "@/app/_components/ui/card";
+import { Card } from "@/app/_components/ui/Card";
 import { Plus, X } from "lucide-react";
 import { SpotPhoto } from "@/app/_types/photoTypes";
 

@@ -2,8 +2,8 @@
 "use client";
 
 import { useMemo } from "react";
-import { Card } from "@/app/_components/ui/card";
-import { Button } from "@/app/_components/ui/button";
+import { Card } from "@/app/_components/ui/Card";
+import { Button } from "@/app/_components/ui/Button";
 import { Share, Save, Trophy, MapPin, Clock, Route } from "lucide-react";
 import { useRouter } from "next/navigation";
 import Script from "next/script";

@@ -1,7 +1,7 @@
 import { Header } from "@/app/_components/layout/header";
 import { BottomNavigation } from "@/app/_components/layout/bottom-navigation";
-import { Card } from "@/app/_components/ui/card";
-import { Button } from "@/app/_components/ui/button";
+import { Card } from "@/app/_components/ui/Card";
+import { Button } from "@/app/_components/ui/Button";
 import { MapPin, Navigation, Layers, Filter } from "lucide-react";
 
 export default function MapPage() {

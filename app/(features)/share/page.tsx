@@ -2,10 +2,10 @@
 
 import { Header } from "@/app/_components/layout/header";
 import { BottomNavigation } from "@/app/_components/layout/bottom-navigation";
-import { Button } from "@/app/_components/ui/button";
-import { Card } from "@/app/_components/ui/card";
-import { Input } from "@/app/_components/ui/input";
-import { Textarea } from "@/app/_components/ui/textarea";
+import { Button } from "@/app/_components/ui/Button";
+import { Card } from "@/app/_components/ui/Card";
+import { Input } from "@/app/_components/ui/Input";
+import { Textarea } from "@/app/_components/ui/Textarea";
 import { MapPin, Hash, Clock, Route } from "lucide-react";
 import { useMemo, useState } from "react";
 import RouteMap from "@/app/_components/map/RouteMap";
