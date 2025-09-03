@@ -1,4 +1,3 @@
-// lib/photo/photoTypes.ts
 /**
  * 스팟 사진 데이터 타입
  */

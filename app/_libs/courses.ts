@@ -3,7 +3,6 @@ import { COURSES } from "@/app/_mocks/courses";
 
 export { COURSES };
 
-// Course utility functions can be added here if needed
 export function getCourseById(id: string): Course | undefined {
 	return COURSES.find(course => course.id === id);
 }
