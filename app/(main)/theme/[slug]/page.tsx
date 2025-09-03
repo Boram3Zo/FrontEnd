@@ -5,6 +5,7 @@ import { Card } from "@/app/_components/ui/card";
 import { Button } from "@/app/_components/ui/button";
 import { MapPin, Clock, Users, Star, ArrowLeft } from "lucide-react";
 import Link from "next/link";
+import Image from "next/image";
 
 interface Course {
 	id: string;
@@ -183,9 +184,11 @@ export default async function ThemeCoursesPage({ params }: { params: PageParams 
 								<Card key={course.id} className="overflow-hidden shadow-md hover:shadow-lg transition-shadow">
 									<div className="flex">
 										<div className="w-24 h-24 bg-gray-200 overflow-hidden">
-											<img
+											<Image
 												src={course.image || "/placeholder.svg"}
 												alt={course.title}
+												width={96}
+												height={96}
 												className="w-full h-full object-cover"
 											/>
 										</div>

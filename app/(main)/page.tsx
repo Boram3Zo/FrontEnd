@@ -6,6 +6,7 @@ import { CatCharacter } from "@/app/_components/cat/cat-character";
 import { Card } from "@/app/_components/ui/card";
 import { MapPin, Heart } from "lucide-react";
 import Link from "next/link";
+import Image from "next/image";
 
 export default function HomePage() {
 	return (
@@ -51,10 +52,12 @@ export default function HomePage() {
 
 						<div className="text-center bg-white/80 backdrop-blur-sm border border-orange-200 rounded-xl p-3 shadow-md hover:shadow-lg transition-all duration-300">
 							<div className="w-12 h-12 bg-orange-400 rounded-full flex items-center justify-center mx-auto mb-2">
-								<img
+								<Image
 									src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-8OoGoNMUxzU7yiICEAflhx5bWAWV8h.png"
 									alt="고양이 아이콘"
-									className="h-8 w-8 object-contain"
+									width={32}
+									height={32}
+									className="object-contain"
 									style={{
 										filter: "invert(1)",
 										mixBlendMode: "screen",
@@ -138,9 +141,11 @@ export default function HomePage() {
 								<Card className="p-3 bg-white/90 backdrop-blur-sm shadow-md hover:shadow-lg transition-all duration-300 cursor-pointer">
 									<div className="flex items-center gap-3">
 										<div className="w-16 h-16 bg-gradient-to-br from-green-200 to-green-400 rounded-lg overflow-hidden">
-											<img
+											<Image
 												src="/hangang-park-walkway.png"
 												alt="한강공원 숨은 길"
+												width={64}
+												height={64}
 												className="w-full h-full object-cover"
 											/>
 										</div>
@@ -175,7 +180,13 @@ export default function HomePage() {
 								<Card className="p-3 bg-white/90 backdrop-blur-sm shadow-md hover:shadow-lg transition-all duration-300 cursor-pointer">
 									<div className="flex items-center gap-3">
 										<div className="w-16 h-16 bg-gradient-to-br from-purple-200 to-purple-400 rounded-lg overflow-hidden">
-											<img src="/placeholder-tfony.png" alt="북촌 골목길 탐방" className="w-full h-full object-cover" />
+											<Image
+												src="/placeholder-tfony.png"
+												alt="북촌 골목길 탐방"
+												width={64}
+												height={64}
+												className="w-full h-full object-cover"
+											/>
 										</div>
 										<div className="flex-1">
 											<h3 className="text-sm font-semibold text-gray-800 mb-1 text-left">북촌 골목길 탐방</h3>
