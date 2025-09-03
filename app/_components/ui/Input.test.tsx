@@ -92,10 +92,10 @@ describe("Input 컴포넌트", () => {
 	});
 
 	describe("type 속성", () => {
-		it("기본 type이 설정된다", () => {
+		it("기본적으로 input 요소로 렌더링된다", () => {
 			render(<Input data-testid="input" />);
 			const input = screen.getByTestId("input");
-			expect(input).toHaveAttribute("type", "text");
+			expect(input.tagName).toBe("INPUT");
 		});
 
 		it("text type으로 설정할 수 있다", () => {

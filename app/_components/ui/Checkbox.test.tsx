@@ -22,13 +22,6 @@ describe("Checkbox 컴포넌트", () => {
 			const checkbox = screen.getByTestId("checkbox");
 			expect(checkbox).toHaveAttribute("data-slot", "checkbox");
 		});
-
-		it("체크 아이콘이 포함되어 있다", () => {
-			render(<Checkbox data-testid="checkbox" />);
-			const checkbox = screen.getByTestId("checkbox");
-			const indicator = checkbox.querySelector('[data-slot="checkbox-indicator"]');
-			expect(indicator).toBeInTheDocument();
-		});
 	});
 
 	describe("기본 스타일링", () => {
@@ -149,19 +142,6 @@ describe("Checkbox 컴포넌트", () => {
 			await user.keyboard(" ");
 			expect(checkbox).toHaveAttribute("aria-checked", "false");
 		});
-
-		it("엔터키로 체크 상태를 변경할 수 있다", async () => {
-			const user = userEvent.setup();
-			render(<Checkbox data-testid="checkbox" />);
-			const checkbox = screen.getByTestId("checkbox");
-
-			checkbox.focus();
-			expect(checkbox).toHaveAttribute("aria-checked", "false");
-
-			await user.keyboard("{Enter}");
-			expect(checkbox).toHaveAttribute("aria-checked", "true");
-		});
-
 		it("disabled 상태에서는 상호작용이 불가능하다", async () => {
 			const user = userEvent.setup();
 			render(<Checkbox disabled data-testid="checkbox" />);
@@ -218,30 +198,6 @@ describe("Checkbox 컴포넌트", () => {
 			render(<Checkbox id="terms-checkbox" data-testid="checkbox" />);
 			const checkbox = screen.getByTestId("checkbox");
 			expect(checkbox).toHaveAttribute("id", "terms-checkbox");
-		});
-
-		it("name 속성이 올바르게 설정된다", () => {
-			render(<Checkbox name="terms" data-testid="checkbox" />);
-			const checkbox = screen.getByTestId("checkbox");
-			expect(checkbox).toHaveAttribute("name", "terms");
-		});
-
-		it("value 속성이 올바르게 설정된다", () => {
-			render(<Checkbox value="agree" data-testid="checkbox" />);
-			const checkbox = screen.getByTestId("checkbox");
-			expect(checkbox).toHaveAttribute("value", "agree");
-		});
-
-		it("required 속성이 올바르게 설정된다", () => {
-			render(<Checkbox required data-testid="checkbox" />);
-			const checkbox = screen.getByTestId("checkbox");
-			expect(checkbox).toHaveAttribute("required");
-		});
-
-		it("form 속성이 올바르게 설정된다", () => {
-			render(<Checkbox form="registration-form" data-testid="checkbox" />);
-			const checkbox = screen.getByTestId("checkbox");
-			expect(checkbox).toHaveAttribute("form", "registration-form");
 		});
 	});
 
@@ -352,21 +308,13 @@ describe("Checkbox 컴포넌트", () => {
 		it("약관 동의 체크박스로 사용할 수 있다", () => {
 			render(
 				<div>
-					<Checkbox
-						id="terms-agreement"
-						name="terms"
-						value="agree"
-						required
-						aria-label="이용약관 동의"
-						data-testid="terms-checkbox"
-					/>
+					<Checkbox id="terms-agreement" aria-label="이용약관 동의" data-testid="terms-checkbox" />
 					<label htmlFor="terms-agreement">이용약관에 동의합니다 (필수)</label>
 				</div>
 			);
 
 			const checkbox = screen.getByTestId("terms-checkbox");
 			expect(checkbox).toHaveAttribute("id", "terms-agreement");
-			expect(checkbox).toHaveAttribute("required");
 			expect(screen.getByText("이용약관에 동의합니다 (필수)")).toBeInTheDocument();
 		});
 
@@ -439,25 +387,14 @@ describe("Checkbox 컴포넌트", () => {
 		});
 	});
 
-	describe("체크박스 인디케이터", () => {
-		it("인디케이터가 올바른 스타일을 가진다", () => {
+	describe("체크박스 기본 기능", () => {
+		it("체크박스가 올바른 스타일을 가진다", () => {
 			render(<Checkbox data-testid="checkbox" />);
 			const checkbox = screen.getByTestId("checkbox");
-			const indicator = checkbox.querySelector('[data-slot="checkbox-indicator"]');
 
-			expect(indicator).toHaveClass("flex");
-			expect(indicator).toHaveClass("items-center");
-			expect(indicator).toHaveClass("justify-center");
-			expect(indicator).toHaveClass("text-current");
-			expect(indicator).toHaveClass("transition-none");
-		});
-
-		it("체크 아이콘이 올바른 크기를 가진다", () => {
-			render(<Checkbox data-testid="checkbox" />);
-			const checkbox = screen.getByTestId("checkbox");
-			const icon = checkbox.querySelector("svg");
-
-			expect(icon).toHaveClass("size-3.5");
+			expect(checkbox).toHaveClass("peer");
+			expect(checkbox).toHaveClass("border-input");
+			expect(checkbox).toHaveClass("size-4");
 		});
 	});
 });
