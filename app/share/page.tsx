@@ -6,13 +6,25 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { MapPin, Hash, Clock, Route, Camera } from "lucide-react";
-import { useMemo } from "react";
+import { MapPin, Hash, Clock, Route } from "lucide-react";
+import { useMemo, useState } from "react";
 import RouteMap from "@/components/map/RouteMap";
+import { PhotoUploader } from "@/components/photo/PhotoUploader";
 import { loadLatestSession } from "@/lib/walking-storage";
+import { SpotPhoto } from "@/lib/photo/photoTypes";
 
 export default function ShareCoursePage() {
 	const session = useMemo(() => loadLatestSession(), []);
+
+	// === 스팟 사진 관리 상태 ===
+	const [spotPhotos, setSpotPhotos] = useState<SpotPhoto[]>([]);
+
+	// 사진 변경 시 호출되는 콜백
+	const handlePhotosChange = (photos: SpotPhoto[]) => {
+		setSpotPhotos(photos);
+		// 여기서 추가적인 로직 수행 가능 (예: 유효성 검사, 외부 상태 업데이트 등)
+		console.log("현재 사진 개수:", photos.length);
+	};
 
 	const themeEmojis = [
 		{ emoji: "🐱", label: "고양이" },
@@ -66,25 +78,12 @@ export default function ShareCoursePage() {
 				</div>
 
 				{/* Photo Upload Section */}
-				<div className="px-4 py-4">
-					<div className="flex items-center gap-2 mb-3">
-						<Camera className="h-5 w-5 text-gray-600" />
-						<h3 className="text-base font-semibold text-gray-800">스팟 사진</h3>
-					</div>
-
-					<div className="grid grid-cols-3 gap-2 mb-3">
-						{[1, 2, 3].map(index => (
-							<Card
-								key={index}
-								className="aspect-square bg-gray-100 border-2 border-dashed border-gray-300 flex items-center justify-center"
-							>
-								<Camera className="h-8 w-8 text-gray-400" />
-							</Card>
-						))}
-					</div>
-
-					<p className="text-sm text-gray-500">스팟 사진에 대한 설명을 작성해주세요</p>
-				</div>
+				<PhotoUploader
+					title="스팟 사진"
+					emptyMessage="스팟 사진을 추가하고 설명을 작성해주세요"
+					maxPhotos={6}
+					onPhotosChange={handlePhotosChange}
+				/>
 
 				{/* Review Section */}
 				<div className="px-4 py-4">
