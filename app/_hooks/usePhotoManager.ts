@@ -1,7 +1,7 @@
 // hooks/usePhotoManager.ts
 import { useState, useRef, useCallback } from "react";
-import { SpotPhoto, UsePhotoManagerReturn, PhotoUploaderOptions } from "@/app/_libs/photo/photoTypes";
-import { filterImageFiles, createPhotoFromFile, revokePhotoPreview, findPhotoById } from "@/app/_libs/photo/photoUtils";
+import { SpotPhoto, UsePhotoManagerReturn, PhotoUploaderOptions } from "@/app/_types/photoTypes";
+import { filterImageFiles, createPhotoFromFile, revokePhotoPreview, findPhotoById } from "@/app/_libs/photoUtils";
 
 /**
  * 스팟 사진 관리를 위한 커스텀 훅

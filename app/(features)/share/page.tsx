@@ -11,7 +11,7 @@ import { useMemo, useState } from "react";
 import RouteMap from "@/app/_components/map/RouteMap";
 import { PhotoUploader } from "@/app/_components/photo/PhotoUploader";
 import { loadLatestSession } from "@/app/_libs/walking-storage";
-import { SpotPhoto } from "@/app/_libs/photo/photoTypes";
+import { SpotPhoto } from "@/app/_types/photoTypes";
 
 export default function ShareCoursePage() {
 	const session = useMemo(() => loadLatestSession(), []);

@@ -1,5 +1,4 @@
-// lib/geo.ts
-export type LatLng = { lat: number; lng: number };
+import type { LatLng } from "@/app/_types/geo";
 
 const R = 6371000; // 지구 반지름(m)
 

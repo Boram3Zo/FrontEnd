@@ -1,5 +1,4 @@
-// lib/photo/photoUtils.ts
-import { SpotPhoto } from "./photoTypes";
+import { SpotPhoto } from "../_types/photoTypes";
 
 /**
  * 파일이 이미지 타입인지 확인

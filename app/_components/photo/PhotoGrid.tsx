@@ -3,7 +3,7 @@
 
 import { Card } from "@/app/_components/ui/card";
 import { Plus, X } from "lucide-react";
-import { SpotPhoto } from "@/app/_libs/photo/photoTypes";
+import { SpotPhoto } from "@/app/_types/photoTypes";
 
 interface PhotoGridProps {
 	/** 사진 목록 */

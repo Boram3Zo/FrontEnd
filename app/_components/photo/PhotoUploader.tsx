@@ -6,7 +6,7 @@ import { Camera } from "lucide-react";
 import { PhotoGrid } from "./PhotoGrid";
 import { PhotoDescriptions } from "./PhotoDescriptions";
 import { usePhotoManager } from "@/app/_hooks/usePhotoManager";
-import { PhotoUploaderOptions, SpotPhoto } from "@/app/_libs/photo/photoTypes";
+import { PhotoUploaderOptions, SpotPhoto } from "@/app/_types/photoTypes";
 
 interface PhotoUploaderProps extends PhotoUploaderOptions {
 	/** 제목 (기본값: "스팟 사진") */

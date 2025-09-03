@@ -2,7 +2,7 @@
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { PhotoDescriptions } from "@/app/_components/photo/PhotoDescriptions";
-import { SpotPhoto } from "@/app/_libs/photo/photoTypes";
+import { SpotPhoto } from "@/app/_types/photoTypes";
 
 describe("PhotoDescriptions", () => {
 	const mockPhotos: SpotPhoto[] = [

@@ -7,7 +7,7 @@ import { Badge } from "@/app/_components/ui/badge"
 import { MapPin, Heart, Calendar, Utensils, Gamepad2 } from "lucide-react"
 import { CollectedCat } from "@/app/_components/cat/collected-cat"
 import Link from "next/link"
-import { Cat } from "@/app/_libs/cat"
+import { Cat } from "@/app/_types/cat"
 
 // interface Cat {
 //   id: string
