@@ -1,7 +1,7 @@
 "use client";
 
-import { Header } from "@/app/_components/header";
-import { BottomNavigation } from "@/app/_components/bottom-navigation";
+import { Header } from "@/app/_components/layout/header";
+import { BottomNavigation } from "@/app/_components/layout/bottom-navigation";
 import { Button } from "@/app/_components/ui/button";
 import { Card } from "@/app/_components/ui/card";
 import { Input } from "@/app/_components/ui/input";
@@ -10,8 +10,8 @@ import { MapPin, Hash, Clock, Route } from "lucide-react";
 import { useMemo, useState } from "react";
 import RouteMap from "@/app/_components/map/RouteMap";
 import { PhotoUploader } from "@/app/_components/photo/PhotoUploader";
-import { loadLatestSession } from "@/app/_lib/walking-storage";
-import { SpotPhoto } from "@/app/_lib/photo/photoTypes";
+import { loadLatestSession } from "@/app/_libs/walking-storage";
+import { SpotPhoto } from "@/app/_libs/photo/photoTypes";
 
 export default function ShareCoursePage() {
 	const session = useMemo(() => loadLatestSession(), []);

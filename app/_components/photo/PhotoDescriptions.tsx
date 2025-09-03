@@ -2,7 +2,7 @@
 "use client";
 
 import { Input } from "@/app/_components/ui/input";
-import { SpotPhoto } from "@/app/_lib/photo/photoTypes";
+import { SpotPhoto } from "@/app/_libs/photo/photoTypes";
 
 interface PhotoDescriptionsProps {
 	/** 사진 목록 */

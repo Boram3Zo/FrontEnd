@@ -4,8 +4,8 @@ import { useState } from "react"
 import { Card } from "@/app/_components/ui/card"
 import { Button } from "@/app/_components/ui/button"
 import { Badge } from "@/app/_components/ui/badge"
-import { CatDiscoveryModal } from "@/app/_components/cat-discovery-modal"
-import { CollectedCat } from "@/app/_components/collected-cat"
+import { CatDiscoveryModal } from "@/app/_components/cat/cat-discovery-modal"
+import { CollectedCat } from "@/app/_components/cat/collected-cat"
 import { ChevronUp, ChevronDown } from "lucide-react"
 
 interface Cat {

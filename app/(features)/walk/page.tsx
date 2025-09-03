@@ -1,13 +1,13 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Header } from "@/app/_components/header";
-import { BottomNavigation } from "@/app/_components/bottom-navigation";
-import WalkingTracker from "@/app/_components/walking-tracker";
-import WalkingSummary from "@/app/_components/walking-summary";
-import { CatDiscoveryModal } from "@/app/_components/cat-discovery-modal";
-import { WalkingSession } from "@/app/_lib/walking-storage";
-import { Cat } from "@/app/_lib/cat";
+import { Header } from "@/app/_components/layout/header";
+import { BottomNavigation } from "@/app/_components/layout/bottom-navigation";
+import WalkingTracker from "@/app/_components/walking/walking-tracker";
+import WalkingSummary from "@/app/_components/walking/walking-summary";
+import { CatDiscoveryModal } from "@/app/_components/cat/cat-discovery-modal";
+import { WalkingSession } from "@/app/_libs/walking-storage";
+import { Cat } from "@/app/_libs/cat";
 
 // interface WalkingSession {
 //   id: string

@@ -5,9 +5,9 @@ import { Dialog, DialogContent } from "@/app/_components/ui/dialog"
 import { Button } from "@/app/_components/ui/button"
 import { Badge } from "@/app/_components/ui/badge"
 import { MapPin, Heart, Calendar, Utensils, Gamepad2 } from "lucide-react"
-import { CollectedCat } from "@/app/_components/collected-cat"
+import { CollectedCat } from "@/app/_components/cat/collected-cat"
 import Link from "next/link"
-import { Cat } from "@/app/_lib/cat"
+import { Cat } from "@/app/_libs/cat"
 
 // interface Cat {
 //   id: string

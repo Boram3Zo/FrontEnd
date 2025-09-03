@@ -7,8 +7,8 @@ import {
 	findPhotoById,
 	isValidDescription,
 	getAvailableSlots,
-} from "@/app/_lib/photo/photoUtils";
-import { SpotPhoto } from "@/app/_lib/photo/photoTypes";
+} from "@/app/_libs/photo/photoUtils";
+import { SpotPhoto } from "@/app/_libs/photo/photoTypes";
 
 // Mock crypto.randomUUID
 Object.defineProperty(globalThis, "crypto", {

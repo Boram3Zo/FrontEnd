@@ -1,7 +1,7 @@
 // __tests__/components/photo/PhotoGrid.test.tsx
 import { render, screen, fireEvent } from "@testing-library/react";
 import { PhotoGrid } from "@/app/_components/photo/PhotoGrid";
-import { SpotPhoto } from "@/app/_lib/photo/photoTypes";
+import { SpotPhoto } from "@/app/_libs/photo/photoTypes";
 
 // Mock Lucide React icons
 jest.mock("lucide-react", () => ({

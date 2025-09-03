@@ -1,8 +1,8 @@
-import { Header } from "@/app/_components/header";
-import { BottomNavigation } from "@/app/_components/bottom-navigation";
+import { Header } from "@/app/_components/layout/header";
+import { BottomNavigation } from "@/app/_components/layout/bottom-navigation";
 import { KoreanMap } from "@/app/_components/korean-map";
 import { RegionCourseList } from "@/app/_components/region-course-list";
-import { CatCharacter } from "@/app/_components/cat-character";
+import { CatCharacter } from "@/app/_components/cat/cat-character";
 
 export default function RegionPage() {
 	return (
