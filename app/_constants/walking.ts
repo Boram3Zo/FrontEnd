@@ -6,4 +6,6 @@ export const WALKING_CONSTANTS = {
 	CAT_DISCOVERY_THRESHOLD: 0.7,
 	/** 고양이 발견 체크 간격 (ms) */
 	CAT_CHECK_INTERVAL_MS: 10000,
+	/** 세션 자동 저장 간격 (ms) - 30초마다 */
+	SESSION_AUTO_SAVE_INTERVAL_MS: 30000,
 } as const;

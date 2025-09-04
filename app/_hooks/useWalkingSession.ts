@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { WalkingSession } from "@/app/_types/walking";
 import { Cat } from "@/app/_types/cat";
 import { WALKING_CONSTANTS } from "@/app/_constants/constants";
+import { saveLatestSession } from "@/app/_libs/walkingStorage";
 
 export function useWalkingSession() {
 	const [session, setSession] = useState<WalkingSession | null>(null);
@@ -20,6 +21,8 @@ export function useWalkingSession() {
 			isPaused: false,
 		};
 		setSession(newSession);
+		// 🔴 시작 시에도 세션을 저장하여 복구 가능하도록 함
+		saveLatestSession(newSession);
 	};
 
 	const stopWalking = () => {
