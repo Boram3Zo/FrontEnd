@@ -1,4 +1,4 @@
-import { Card } from "@/app/_components/ui/CCard";
+import { Card } from "@/app/_components/ui/Card";
 import { MapPin } from "lucide-react";
 import RouteMap from "@/app/_components/map/RouteMap";
 import { useWalking } from "@/app/_providers";

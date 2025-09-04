@@ -1,6 +1,6 @@
 "use client";
 
-import { Header } from "@/app/_components/layout/CHeader";
+import { Header } from "@/app/_components/layout/Header";
 import { BottomNavigation } from "@/app/_components/layout/BottomNavigation";
 import { ShareForm } from "@/app/_components/share/ShareForm";
 

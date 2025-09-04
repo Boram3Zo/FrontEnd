@@ -1,5 +1,5 @@
-import { Card } from "@/app/_components/ui/CCard";
-import { Button } from "@/app/_components/ui/CButton";
+import { Card } from "@/app/_components/ui/Card";
+import { Button } from "@/app/_components/ui/Button";
 import { Star, User, ThumbsUp } from "lucide-react";
 
 interface Review {

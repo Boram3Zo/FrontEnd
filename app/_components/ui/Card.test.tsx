@@ -7,7 +7,7 @@ import {
 	CardAction,
 	CardContent,
 	CardFooter,
-} from "@/app/_components/ui/CCard";
+} from "@/app/_components/ui/Card";
 
 describe("Card 컴포넌트", () => {
 	describe("Card 기본 컴포넌트", () => {

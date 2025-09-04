@@ -1,4 +1,4 @@
-import { Button } from "@/app/_components/ui/CButton";
+import { Button } from "@/app/_components/ui/Button";
 
 interface WalkTrackerControlsProps {
 	paused: boolean;

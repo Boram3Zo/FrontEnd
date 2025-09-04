@@ -1,9 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import { Card } from "@/app/_components/ui/CCard";
-import { Button } from "@/app/_components/ui/CButton";
-import { Dialog, DialogContent } from "@/app/_components/ui/CDialog";
+import { Card } from "@/app/_components/ui/Card";
+import { Button } from "@/app/_components/ui/Button";
+import { Dialog, DialogContent } from "@/app/_components/ui/Dialog";
 import { MapPin, Camera, MessageCircle } from "lucide-react";
 import Image from "next/image";
 

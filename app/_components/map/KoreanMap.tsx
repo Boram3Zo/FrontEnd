@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Button } from "@/app/_components/ui/CButton";
+import { Button } from "@/app/_components/ui/Button";
 import { ChevronRight } from "lucide-react";
 
 interface Region {

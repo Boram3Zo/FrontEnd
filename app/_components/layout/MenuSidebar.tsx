@@ -1,7 +1,7 @@
 "use client";
 
-import { Button } from "@/app/_components/ui/CButton";
-import { Card, CardContent } from "@/app/_components/ui/CCard";
+import { Button } from "@/app/_components/ui/Button";
+import { Card, CardContent } from "@/app/_components/ui/Card";
 import { User, Settings, HelpCircle, LogOut, UserPlus, LogIn, X } from "lucide-react";
 import Link from "next/link";
 import { useEffect } from "react";

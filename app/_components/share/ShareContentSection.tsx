@@ -1,4 +1,4 @@
-import { Textarea } from "@/app/_components/ui/CTextarea";
+import { Textarea } from "@/app/_components/ui/Textarea";
 
 interface ShareContentSectionProps {
 	content: string;

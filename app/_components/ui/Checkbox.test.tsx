@@ -1,7 +1,7 @@
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { useState } from "react";
-import { Checkbox } from "@/app/_components/ui/CCheckbox";
+import { Checkbox } from "@/app/_components/ui/Checkbox";
 
 describe("Checkbox 컴포넌트", () => {
 	describe("렌더링", () => {

@@ -1,6 +1,6 @@
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { Label } from "@/app/_components/ui/CLabel";
+import { Label } from "@/app/_components/ui/Label";
 
 describe("Label 컴포넌트", () => {
 	describe("렌더링", () => {

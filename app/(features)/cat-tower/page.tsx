@@ -1,4 +1,4 @@
-import { Header } from "@/app/_components/layout/CHeader";
+import { Header } from "@/app/_components/layout/Header";
 import { BottomNavigation } from "@/app/_components/layout/BottomNavigation";
 import { CatCollection } from "@/app/_components/cat/CatCollection";
 import { CatStats } from "@/app/_components/cat/CatStats";

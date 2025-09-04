@@ -1,8 +1,8 @@
-import { Header } from "@/app/_components/layout/CHeader";
+import { Header } from "@/app/_components/layout/Header";
 import { BottomNavigation } from "@/app/_components/layout/BottomNavigation";
-import { Card } from "@/app/_components/ui/CCard";
-import { Input } from "@/app/_components/ui/CInput";
-import { Button } from "@/app/_components/ui/CButton";
+import { Card } from "@/app/_components/ui/Card";
+import { Input } from "@/app/_components/ui/Input";
+import { Button } from "@/app/_components/ui/Button";
 import { Search, MapPin, Clock, Star, TrendingUp } from "lucide-react";
 
 export default function SearchPage() {

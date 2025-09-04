@@ -1,6 +1,6 @@
-import { Header } from "@/app/_components/layout/CHeader";
+import { Header } from "@/app/_components/layout/Header";
 import { BottomNavigation } from "@/app/_components/layout/BottomNavigation";
-import { Card } from "@/app/_components/ui/CCard";
+import { Card } from "@/app/_components/ui/Card";
 import { CatCharacter } from "@/app/_components/cat/CatCharacter";
 import { Settings, Award, MapPin, Clock, Heart, Share2, Bell, HelpCircle } from "lucide-react";
 

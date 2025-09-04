@@ -1,7 +1,7 @@
 // components/photo/SharePhotoDescriptions.tsx
 "use client";
 
-import { Input } from "@/app/_components/ui/CInput";
+import { Input } from "@/app/_components/ui/Input";
 import { SpotPhoto } from "@/app/_types/photoTypes";
 
 interface SharePhotoDescriptionsProps {

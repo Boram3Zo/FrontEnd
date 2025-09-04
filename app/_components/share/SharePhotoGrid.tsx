@@ -1,8 +1,8 @@
 // components/photo/PhotoGrid.tsx
 "use client";
 
-import { Card } from "@/app/_components/ui/CCard";
-import { Textarea } from "@/app/_components/ui/CTextarea";
+import { Card } from "@/app/_components/ui/Card";
+import { Textarea } from "@/app/_components/ui/Textarea";
 import { Plus, X, MapPin } from "lucide-react";
 import { SpotPhoto } from "@/app/_types/photoTypes";
 import { formatGpsCoordinates } from "@/app/_libs/photoUtils";
