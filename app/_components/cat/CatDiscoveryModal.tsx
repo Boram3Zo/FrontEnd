@@ -1,9 +1,9 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Dialog, DialogContent } from "@/app/_components/ui/Dialog";
-import { Button } from "@/app/_components/ui/Button";
-import { Badge } from "@/app/_components/ui/Badge";
+import { Dialog, DialogContent } from "@/app/_components/ui/CDialog";
+import { Button } from "@/app/_components/ui/CButton";
+import { Badge } from "@/app/_components/ui/CBadge";
 import { MapPin, Heart, Calendar, Utensils, Gamepad2 } from "lucide-react";
 import { CollectedCat } from "@/app/_components/cat/CollectedCat";
 import Link from "next/link";

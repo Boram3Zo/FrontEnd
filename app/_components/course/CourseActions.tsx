@@ -1,4 +1,4 @@
-import { Button } from "@/app/_components/ui/Button";
+import { Button } from "@/app/_components/ui/CButton";
 import { Play, Bookmark, Share, MessageCircle } from "lucide-react";
 
 // interface Course {

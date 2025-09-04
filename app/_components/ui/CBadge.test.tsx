@@ -1,5 +1,5 @@
 import { render, screen } from "@testing-library/react";
-import { Badge, badgeVariants } from "@/app/_components/ui/Badge";
+import { Badge, badgeVariants } from "@/app/_components/ui/CBadge";
 
 describe("Badge 컴포넌트", () => {
 	describe("렌더링", () => {

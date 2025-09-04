@@ -1,4 +1,4 @@
-import { Header } from "@/app/_components/layout/Header";
+import { Header } from "@/app/_components/layout/CHeader";
 import { BottomNavigation } from "@/app/_components/layout/BottomNavigation";
 import { KoreanMap } from "@/app/_components/map/KoreanMap";
 import { RegionCourseList } from "@/app/_components/course/RegionCourseList";

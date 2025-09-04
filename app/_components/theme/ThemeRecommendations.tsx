@@ -1,8 +1,8 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Card } from "@/app/_components/ui/Card";
-import { Button } from "@/app/_components/ui/Button";
+import { Card } from "@/app/_components/ui/CCard";
+import { Button } from "@/app/_components/ui/CButton";
 import { MapPin, Clock, Users, Heart } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";

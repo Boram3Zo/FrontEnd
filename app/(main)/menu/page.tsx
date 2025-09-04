@@ -1,7 +1,7 @@
-import { Header } from "@/app/_components/layout/Header";
+import { Header } from "@/app/_components/layout/CHeader";
 import { BottomNavigation } from "@/app/_components/layout/BottomNavigation";
-import { Button } from "@/app/_components/ui/Button";
-import { Card, CardContent } from "@/app/_components/ui/Card";
+import { Button } from "@/app/_components/ui/CButton";
+import { Card, CardContent } from "@/app/_components/ui/CCard";
 import { User, Settings, HelpCircle, LogOut, UserPlus, LogIn } from "lucide-react";
 import Link from "next/link";
 

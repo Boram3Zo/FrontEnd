@@ -1,7 +1,7 @@
 "use client";
 
-import { Card } from "@/app/_components/ui/Card";
-import { Button } from "@/app/_components/ui/Button";
+import { Card } from "@/app/_components/ui/CCard";
+import { Button } from "@/app/_components/ui/CButton";
 import { MapPin, Navigation } from "lucide-react";
 
 interface CourseSpot {

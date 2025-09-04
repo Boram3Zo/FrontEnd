@@ -1,4 +1,4 @@
-import { Card } from "@/app/_components/ui/Card";
+import { Card } from "@/app/_components/ui/CCard";
 import { Trophy, MapPin, Clock, Search, Cat } from "lucide-react";
 
 export function CatStats() {

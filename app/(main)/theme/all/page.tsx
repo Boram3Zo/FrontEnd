@@ -1,8 +1,8 @@
-import { Header } from "@/app/_components/layout/Header";
+import { Header } from "@/app/_components/layout/CHeader";
 import { BottomNavigation } from "@/app/_components/layout/BottomNavigation";
 import { CatCharacter } from "@/app/_components/cat/CatCharacter";
-import { Card } from "@/app/_components/ui/Card";
-import { Button } from "@/app/_components/ui/Button";
+import { Card } from "@/app/_components/ui/CCard";
+import { Button } from "@/app/_components/ui/CButton";
 import Link from "next/link";
 
 interface Theme {

@@ -1,7 +1,7 @@
 // components/photo/PhotoDescriptions.tsx
 "use client";
 
-import { Input } from "@/app/_components/ui/Input";
+import { Input } from "@/app/_components/ui/CInput";
 import { SpotPhoto } from "@/app/_types/photoTypes";
 
 interface PhotoDescriptionsProps {

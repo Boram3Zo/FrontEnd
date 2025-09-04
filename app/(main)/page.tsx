@@ -1,9 +1,9 @@
 "use client";
 
-import { Header } from "@/app/_components/layout/Header";
+import { Header } from "@/app/_components/layout/CHeader";
 import { BottomNavigation } from "@/app/_components/layout/BottomNavigation";
 import { CatCharacter } from "@/app/_components/cat/CatCharacter";
-import { Card } from "@/app/_components/ui/Card";
+import { Card } from "@/app/_components/ui/CCard";
 import { MapPin, Heart } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";

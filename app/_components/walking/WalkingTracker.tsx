@@ -3,7 +3,7 @@
 
 import { useEffect, useRef, useState } from "react";
 // Google Maps API <Script>는 layout.tsx에서 한 번만 로드됨
-import { Button } from "@/app/_components/ui/Button";
+import { Button } from "@/app/_components/ui/CButton";
 import { ManualGpsControl } from "@/app/_components/map/ManualGpsControl"; // 예제와 동일한 인터페이스 사용
 
 // 부모 /walk 페이지의 stopWalking()을 그대로 호출하기 위한 props

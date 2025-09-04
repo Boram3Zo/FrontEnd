@@ -1,7 +1,7 @@
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { useState } from "react";
-import { Input } from "@/app/_components/ui/Input";
+import { Input } from "@/app/_components/ui/CInput";
 
 describe("Input 컴포넌트", () => {
 	describe("렌더링", () => {

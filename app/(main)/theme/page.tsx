@@ -1,8 +1,8 @@
-import { Header } from "@/app/_components/layout/Header";
+import { Header } from "@/app/_components/layout/CHeader";
 import { BottomNavigation } from "@/app/_components/layout/BottomNavigation";
 import { CatCharacter } from "@/app/_components/cat/CatCharacter";
 import { ThemeRecommendations } from "@/app/_components/theme/ThemeRecommendations";
-import { Button } from "@/app/_components/ui/Button";
+import { Button } from "@/app/_components/ui/CButton";
 import Link from "next/link";
 
 export default function ThemePage() {

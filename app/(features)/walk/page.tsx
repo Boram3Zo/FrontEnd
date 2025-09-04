@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Header } from "@/app/_components/layout/Header";
+import { Header } from "@/app/_components/layout/CHeader";
 import { BottomNavigation } from "@/app/_components/layout/BottomNavigation";
 import WalkingTracker from "@/app/_components/walking/WalkingTracker";
 import WalkingSummary from "@/app/_components/walking/WalkingSummary";

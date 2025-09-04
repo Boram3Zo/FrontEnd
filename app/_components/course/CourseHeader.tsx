@@ -1,5 +1,5 @@
-import { Badge } from "@/app/_components/ui/Badge";
-import { Button } from "@/app/_components/ui/Button";
+import { Badge } from "@/app/_components/ui/CBadge";
+import { Button } from "@/app/_components/ui/CButton";
 import { MapPin, Clock, Route, Star, User, Calendar, Heart, Share } from "lucide-react";
 
 interface Course {

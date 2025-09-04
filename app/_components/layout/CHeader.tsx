@@ -1,8 +1,8 @@
 "use client";
 
 import { ArrowLeft, Menu, Search } from "lucide-react";
-import { Button } from "@/app/_components/ui/Button";
-import { Input } from "@/app/_components/ui/Input";
+import { Button } from "@/app/_components/ui/CButton";
+import { Input } from "@/app/_components/ui/CInput";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
