@@ -1,6 +1,7 @@
 // __tests__/components/photo/SharePhotoUploader.test.tsx
 import { render, screen } from "@testing-library/react";
 import { SharePhotoUploader } from "@/app/_components/share/SharePhotoUploader";
+import { PHOTO_CONSTANTS } from "@/app/_constants/constants";
 
 // Mock URL.createObjectURL and URL.revokeObjectURL
 global.URL.createObjectURL = jest.fn(() => "mocked-url");
@@ -16,8 +17,8 @@ Object.defineProperty(global, "crypto", {
 describe("SharePhotoUploader", () => {
 	const defaultProps = {
 		onPhotosChange: jest.fn(),
-		maxPhotos: 6,
-		gridColumns: 3,
+		maxPhotos: PHOTO_CONSTANTS.MAX_PHOTOS,
+		gridColumns: PHOTO_CONSTANTS.DEFAULT_GRID_COLUMNS,
 	};
 
 	beforeEach(() => {

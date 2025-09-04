@@ -1,5 +1,6 @@
 import { SpotPhoto, ExifData } from "../_types/photoTypes";
 import exifr from "exifr";
+import { PHOTO_CONSTANTS } from "../_constants/constants";
 
 /**
  * 파일이 이미지 타입인지 확인
@@ -143,7 +144,7 @@ export const findPhotoById = (photos: SpotPhoto[], id: string): SpotPhoto | unde
  * 사진 설명 유효성 검사
  */
 export const isValidDescription = (description: string): boolean => {
-	return description.trim().length > 0 && description.length <= 200;
+	return description.trim().length > 0 && description.length <= PHOTO_CONSTANTS.MAX_DESCRIPTION_LENGTH;
 };
 
 /**

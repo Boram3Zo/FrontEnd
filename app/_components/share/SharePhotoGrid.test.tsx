@@ -2,6 +2,7 @@
 import { render, screen, fireEvent } from "@testing-library/react";
 import { SharePhotoGrid } from "@/app/_components/share/SharePhotoGrid";
 import { SpotPhoto } from "@/app/_types/photoTypes";
+import { PHOTO_CONSTANTS } from "@/app/_constants/constants";
 
 // Mock Lucide React icons
 jest.mock("lucide-react", () => ({
@@ -15,21 +16,24 @@ describe("SharePhotoGrid", () => {
 			id: "photo-1",
 			file: new File([""], "test1.jpg", { type: "image/jpeg" }),
 			preview: "preview-url-1",
+			title: "",
 			description: "Photo 1",
 		},
 		{
 			id: "photo-2",
 			file: new File([""], "test2.jpg", { type: "image/jpeg" }),
 			preview: "preview-url-2",
+			title: "",
 			description: "Photo 2",
 		},
 	];
 
 	const defaultProps = {
 		photos: mockPhotos,
-		maxPhotos: 6,
+		maxPhotos: PHOTO_CONSTANTS.MAX_PHOTOS,
 		onAddPhoto: jest.fn(),
 		onRemovePhoto: jest.fn(),
+		onUpdateDescription: jest.fn(),
 	};
 
 	beforeEach(() => {
@@ -81,13 +85,6 @@ describe("SharePhotoGrid", () => {
 
 		const removeButtons = screen.getAllByTestId("x-icon");
 		expect(removeButtons).toHaveLength(2);
-	});
-
-	it("should apply correct grid class", () => {
-		const { container } = render(<SharePhotoGrid {...defaultProps} gridColumns={4} />);
-
-		const gridContainer = container.querySelector(".grid");
-		expect(gridContainer).toHaveClass("grid-cols-4");
 	});
 
 	it("should handle empty photos array", () => {

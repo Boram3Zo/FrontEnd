@@ -11,6 +11,7 @@ import { ShareContentSection } from "./ShareContentSection";
 import { useWalking } from "@/app/_providers";
 import { SpotPhoto } from "@/app/_types/photoTypes";
 import { ShareFormData } from "@/app/_types/shareTypes";
+import { PHOTO_CONSTANTS } from "@/app/_constants/constants";
 
 /**
  * 산책 코스 공유 폼 컴포넌트
@@ -97,7 +98,7 @@ export function ShareForm() {
 			<SharePhotoUploader
 				title="스팟 사진"
 				emptyMessage="스팟 사진을 추가하고 설명을 작성해주세요"
-				maxPhotos={6}
+				maxPhotos={PHOTO_CONSTANTS.MAX_PHOTOS}
 				onPhotosChange={handlePhotosChange}
 			/>
 			{/* 사진 개수 표시 */}

@@ -8,6 +8,7 @@ import {
 	revokePhotoPreview,
 	findPhotoById,
 } from "@/app/_libs/photoUtils";
+import { PHOTO_CONSTANTS } from "@/app/_constants/constants";
 
 /**
  * 스팟 사진 관리를 위한 커스텀 훅
@@ -16,7 +17,7 @@ import {
  * @returns 사진 관리에 필요한 상태와 핸들러들
  */
 export const usePhotoManager = (options: PhotoUploaderOptions = {}): UsePhotoManagerReturn => {
-	const { maxPhotos = 6 } = options;
+	const { maxPhotos = PHOTO_CONSTANTS.MAX_PHOTOS } = options;
 
 	const [photos, setPhotos] = useState<SpotPhoto[]>([]);
 	const fileInputRef = useRef<HTMLInputElement>(null);

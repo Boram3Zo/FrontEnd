@@ -6,6 +6,7 @@ import { Textarea } from "@/app/_components/ui/CTextarea";
 import { Plus, X, MapPin } from "lucide-react";
 import { SpotPhoto } from "@/app/_types/photoTypes";
 import { formatGpsCoordinates } from "@/app/_libs/photoUtils";
+import { PHOTO_CONSTANTS } from "@/app/_constants/constants";
 
 interface SharePhotoGridProps {
 	/** 사진 목록 */
@@ -26,7 +27,7 @@ interface SharePhotoGridProps {
  */
 export const SharePhotoGrid: React.FC<SharePhotoGridProps> = ({
 	photos,
-	maxPhotos = 6,
+	maxPhotos = PHOTO_CONSTANTS.MAX_PHOTOS,
 	onAddPhoto,
 	onRemovePhoto,
 	onUpdateDescription,
@@ -84,10 +85,12 @@ export const SharePhotoGrid: React.FC<SharePhotoGridProps> = ({
 									onChange={e => onUpdateDescription(photo.id, e.target.value)}
 									className="text-sm resize-none"
 									rows={3}
-									maxLength={200}
+									maxLength={PHOTO_CONSTANTS.MAX_DESCRIPTION_LENGTH}
 								/>
-								{photo.description.length > 180 && (
-									<p className="text-xs text-orange-500 mt-1">{200 - photo.description.length}자 남음</p>
+								{photo.description.length > PHOTO_CONSTANTS.DESCRIPTION_WARNING_THRESHOLD && (
+									<p className="text-xs text-orange-500 mt-1">
+										{PHOTO_CONSTANTS.MAX_DESCRIPTION_LENGTH - photo.description.length}자 남음
+									</p>
 								)}
 							</div>
 						</div>

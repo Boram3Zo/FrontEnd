@@ -5,6 +5,7 @@ import { Camera } from "lucide-react";
 import { SharePhotoGrid } from "./SharePhotoGrid";
 import { usePhotoManager } from "@/app/_hooks/usePhotoManager";
 import { PhotoUploaderOptions, SpotPhoto } from "@/app/_types/photoTypes";
+import { PHOTO_CONSTANTS } from "@/app/_constants/constants";
 
 interface SharePhotoUploaderProps extends PhotoUploaderOptions {
 	/** 제목 (기본값: "스팟 사진") */
@@ -22,9 +23,9 @@ interface SharePhotoUploaderProps extends PhotoUploaderOptions {
 export const SharePhotoUploader: React.FC<SharePhotoUploaderProps> = ({
 	title = "스팟 사진",
 	emptyMessage = "스팟 사진을 추가하고 설명을 작성해주세요",
-	maxPhotos = 6,
-	acceptedFileTypes = "image/*",
-	gridColumns = 3,
+	maxPhotos = PHOTO_CONSTANTS.MAX_PHOTOS,
+	acceptedFileTypes = PHOTO_CONSTANTS.ACCEPTED_FILE_TYPES,
+	gridColumns = PHOTO_CONSTANTS.DEFAULT_GRID_COLUMNS,
 	onPhotosChange,
 }) => {
 	const { photos, addPhotos, removePhoto, updateDescription, triggerFileSelect, fileInputRef } = usePhotoManager({
@@ -77,9 +78,6 @@ export const SharePhotoUploader: React.FC<SharePhotoUploaderProps> = ({
 				onRemovePhoto={removePhoto}
 				onUpdateDescription={updateDescription}
 			/>
-
-			{/* 사진 설명 입력 - 이제 사용하지 않음 */}
-			{/* <SharePhotoDescriptions photos={photos} onUpdateDescription={updateDescription} /> */}
 
 			{/* 빈 상태 메시지 */}
 			{photos.length === 0 && <p className="text-sm text-gray-500">{emptyMessage}</p>}
