@@ -3,7 +3,6 @@
 import React from "react";
 import { Camera } from "lucide-react";
 import { SharePhotoGrid } from "./SharePhotoGrid";
-import { SharePhotoDescriptions } from "./SharePhotoDescriptions";
 import { usePhotoManager } from "@/app/_hooks/usePhotoManager";
 import { PhotoUploaderOptions, SpotPhoto } from "@/app/_types/photoTypes";
 
@@ -76,11 +75,11 @@ export const SharePhotoUploader: React.FC<SharePhotoUploaderProps> = ({
 				maxPhotos={maxPhotos}
 				onAddPhoto={triggerFileSelect}
 				onRemovePhoto={removePhoto}
-				gridColumns={gridColumns}
+				onUpdateDescription={updateDescription}
 			/>
 
-			{/* 사진 설명 입력 */}
-			<SharePhotoDescriptions photos={photos} onUpdateDescription={updateDescription} />
+			{/* 사진 설명 입력 - 이제 사용하지 않음 */}
+			{/* <SharePhotoDescriptions photos={photos} onUpdateDescription={updateDescription} /> */}
 
 			{/* 빈 상태 메시지 */}
 			{photos.length === 0 && <p className="text-sm text-gray-500">{emptyMessage}</p>}

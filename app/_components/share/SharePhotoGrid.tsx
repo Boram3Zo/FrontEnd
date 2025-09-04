@@ -2,6 +2,7 @@
 "use client";
 
 import { Card } from "@/app/_components/ui/CCard";
+import { Textarea } from "@/app/_components/ui/CTextarea";
 import { Plus, X } from "lucide-react";
 import { SpotPhoto } from "@/app/_types/photoTypes";
 
@@ -14,49 +15,84 @@ interface SharePhotoGridProps {
 	onAddPhoto: () => void;
 	/** 사진 삭제 핸들러 */
 	onRemovePhoto: (id: string) => void;
-	/** 그리드 컬럼 수 */
-	gridColumns?: number;
+	/** 설명 업데이트 핸들러 */
+	onUpdateDescription: (id: string, description: string) => void;
 }
 
 /**
  * 사진 그리드 표시 컴포넌트
- * 업로드된 사진들과 추가 버튼을 그리드 형태로 표시
+ * 업로드된 사진들과 입력 컴포넌트를 함께 표시
  */
 export const SharePhotoGrid: React.FC<SharePhotoGridProps> = ({
 	photos,
 	maxPhotos = 6,
 	onAddPhoto,
 	onRemovePhoto,
-	gridColumns = 3,
+	onUpdateDescription,
 }) => {
-	const gridClass = `grid grid-cols-${gridColumns} gap-2 mb-3`;
-
 	return (
-		<div className={gridClass}>
-			{/* 업로드된 사진들 표시 */}
-			{photos.map(photo => (
-				<Card key={photo.id} className="aspect-square relative overflow-hidden">
-					{/* eslint-disable-next-line @next/next/no-img-element */}
-					<img src={photo.preview} alt="스팟 사진" className="w-full h-full object-cover" />
-					<button
-						onClick={() => onRemovePhoto(photo.id)}
-						className="absolute top-1 right-1 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs hover:bg-red-600 transition-colors"
-						aria-label="사진 삭제"
-					>
-						<X className="w-3 h-3" />
-					</button>
+		<div className="space-y-4">
+			{/* 업로드된 사진들을 각각 카드로 표시 */}
+			{photos.map((photo, index) => (
+				<Card key={photo.id} className="p-4">
+					<div className="flex gap-4">
+						{/* 사진 */}
+						<div className="relative w-24 h-24 flex-shrink-0">
+							{/* eslint-disable-next-line @next/next/no-img-element */}
+							<img
+								src={photo.preview}
+								alt={`스팟 사진 ${index + 1}`}
+								className="w-full h-full object-cover rounded-lg"
+							/>
+							<button
+								onClick={() => onRemovePhoto(photo.id)}
+								className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs hover:bg-red-600 transition-colors shadow-md"
+								aria-label="사진 삭제"
+							>
+								<X className="w-3 h-3" />
+							</button>
+						</div>
+
+						{/* 입력 컴포넌트들 */}
+						<div className="flex-1 space-y-3">
+							{/* 파일 이름 표시 */}
+							<div>
+								<label className="block text-xs text-gray-500 mb-1">파일 이름</label>
+								<div className="text-sm font-medium text-gray-800 p-2 bg-gray-50 rounded border">{photo.file.name}</div>
+							</div>
+
+							{/* 사진 설명 */}
+							<div>
+								<label className="block text-xs text-gray-500 mb-1">사진 설명</label>
+								<Textarea
+									placeholder="이 사진에 대한 설명을 입력해주세요"
+									value={photo.description}
+									onChange={e => onUpdateDescription(photo.id, e.target.value)}
+									className="text-sm resize-none"
+									rows={3}
+									maxLength={200}
+								/>
+								{photo.description.length > 180 && (
+									<p className="text-xs text-orange-500 mt-1">{200 - photo.description.length}자 남음</p>
+								)}
+							</div>
+						</div>
+					</div>
 				</Card>
 			))}
 
 			{/* 사진 추가 버튼 (최대 개수에 도달하지 않은 경우만) */}
 			{photos.length < maxPhotos && (
 				<Card
-					className="aspect-square bg-gray-100 border-2 border-dashed border-gray-300 flex items-center justify-center cursor-pointer hover:bg-gray-200 transition-colors"
+					className="p-6 bg-gray-50 border-2 border-dashed border-gray-300 flex items-center justify-center cursor-pointer hover:bg-gray-100 transition-colors"
 					onClick={onAddPhoto}
 				>
 					<div className="text-center">
-						<Plus className="h-6 w-6 text-gray-400 mx-auto mb-1" />
-						<span className="text-xs text-gray-500">사진 추가</span>
+						<Plus className="h-8 w-8 text-gray-400 mx-auto mb-2" />
+						<span className="text-sm text-gray-600 font-medium">사진 추가</span>
+						<p className="text-xs text-gray-500 mt-1">
+							{photos.length}/{maxPhotos}장
+						</p>
 					</div>
 				</Card>
 			)}

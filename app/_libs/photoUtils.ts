@@ -15,6 +15,7 @@ export const createPhotoFromFile = (file: File): SpotPhoto => {
 		id: crypto.randomUUID(),
 		file,
 		preview: URL.createObjectURL(file),
+		title: "",
 		description: "",
 	};
 };

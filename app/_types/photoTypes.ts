@@ -8,6 +8,8 @@ export interface SpotPhoto {
 	file: File;
 	/** 미리보기 URL (createObjectURL로 생성) */
 	preview: string;
+	/** 사진 제목 */
+	title: string;
 	/** 사진 설명 */
 	description: string;
 }
@@ -36,6 +38,8 @@ export interface UsePhotoManagerReturn {
 	removePhoto: (id: string) => void;
 	/** 사진 설명 업데이트 핸들러 */
 	updateDescription: (id: string, description: string) => void;
+	/** 사진 제목 업데이트 핸들러 */
+	updateTitle: (id: string, title: string) => void;
 	/** 사진 추가 트리거 함수 */
 	triggerFileSelect: () => void;
 	/** 파일 입력 ref */

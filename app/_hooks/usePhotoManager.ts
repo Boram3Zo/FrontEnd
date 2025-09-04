@@ -54,6 +54,13 @@ export const usePhotoManager = (options: PhotoUploaderOptions = {}): UsePhotoMan
 	}, []);
 
 	/**
+	 * 사진 제목 업데이트
+	 */
+	const updateTitle = useCallback((id: string, title: string) => {
+		setPhotos(prev => prev.map(photo => (photo.id === id ? { ...photo, title } : photo)));
+	}, []);
+
+	/**
 	 * 파일 선택 창 열기
 	 */
 	const triggerFileSelect = useCallback(() => {
@@ -65,6 +72,7 @@ export const usePhotoManager = (options: PhotoUploaderOptions = {}): UsePhotoMan
 		addPhotos,
 		removePhoto,
 		updateDescription,
+		updateTitle,
 		triggerFileSelect,
 		fileInputRef,
 	};
