@@ -155,6 +155,27 @@ export function useWalkTracker({ onStop }: UseWalkTrackerProps): UseWalkTrackerR
 			timestamp: new Date(now + i * 1000).toISOString(),
 		}));
 
+		// 시작점과 종료점 핀 생성
+		const pins = [];
+		if (pathRef.current.length > 0) {
+			const startPoint = pathRef.current[0];
+			const endPoint = pathRef.current[pathRef.current.length - 1];
+
+			pins.push({
+				lat: startPoint.lat,
+				lng: startPoint.lng,
+				type: "start" as const,
+				timestamp: new Date(startedAt).toISOString(),
+			});
+
+			pins.push({
+				lat: endPoint.lat,
+				lng: endPoint.lng,
+				type: "end" as const,
+				timestamp: new Date().toISOString(),
+			});
+		}
+
 		const completedSession = {
 			id: crypto.randomUUID(),
 			startTime: new Date(startedAt).toISOString(),
@@ -162,6 +183,7 @@ export function useWalkTracker({ onStop }: UseWalkTrackerProps): UseWalkTrackerR
 			durationSec,
 			distanceKm,
 			route,
+			pins, // 시작 및 종료 지점 핀 추가
 			isActive: false, // 🔴 완료된 세션으로 표시
 			isPaused: false,
 		};
@@ -237,6 +259,7 @@ export function useWalkTracker({ onStop }: UseWalkTrackerProps): UseWalkTrackerR
 						lng: p.lng,
 						timestamp: new Date(startedAt + i * 1000).toISOString(),
 					})),
+					pins: [], // 진행 중일 때는 빈 배열
 					isActive: true, // 진행 중 표시
 					isPaused: paused,
 				};

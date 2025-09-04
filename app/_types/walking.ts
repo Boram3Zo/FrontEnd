@@ -1,5 +1,12 @@
 export type RoutePoint = { lat: number; lng: number; timestamp: string }; // ISO
 
+export type WalkingPin = {
+	lat: number;
+	lng: number;
+	type: "start" | "end";
+	timestamp: string; // ISO
+};
+
 export type WalkingSession = {
 	id: string;
 	startTime: string; // ISO
@@ -7,6 +14,7 @@ export type WalkingSession = {
 	durationSec: number; // 총 시간(초)
 	distanceKm: number; // 총 거리(km)
 	route: RoutePoint[];
+	pins: WalkingPin[]; // 시작 및 종료 지점 핀
 	isActive: boolean;
 	isPaused: boolean;
 };

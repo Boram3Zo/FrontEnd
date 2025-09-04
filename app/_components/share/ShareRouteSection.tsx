@@ -17,7 +17,11 @@ export function ShareRouteSection() {
 			</div>
 			<Card className="p-4 bg-gray-50">
 				{session?.route?.length ? (
-					<RouteMap height="h-[220px]" route={session.route.map(p => ({ lat: p.lat, lng: p.lng }))} />
+					<RouteMap
+						height="h-[220px]"
+						route={session.route.map(p => ({ lat: p.lat, lng: p.lng }))}
+						pins={session.pins}
+					/>
 				) : (
 					<div className="h-32 flex items-center justify-center text-gray-500">표시할 경로가 없습니다.</div>
 				)}

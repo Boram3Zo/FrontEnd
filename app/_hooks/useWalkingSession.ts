@@ -17,6 +17,7 @@ export function useWalkingSession() {
 			durationSec: 0,
 			distanceKm: 0,
 			route: [],
+			pins: [], // 시작할 때는 빈 배열
 			isActive: true,
 			isPaused: false,
 		};
