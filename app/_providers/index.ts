@@ -4,6 +4,7 @@
  */
 
 export { GoogleMapsProvider, useGoogleMaps } from "./GoogleMapsProvider";
+export { WalkingProvider, useWalking } from "./WalkingProvider";
 
 // 향후 추가될 Provider들 예시:
 // export { AuthProvider, useAuth } from './AuthProvider';

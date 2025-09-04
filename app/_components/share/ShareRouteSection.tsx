@@ -1,17 +1,14 @@
 import { Card } from "@/app/_components/ui/CCard";
 import { MapPin } from "lucide-react";
 import RouteMap from "@/app/_components/map/RouteMap";
-import { WalkingSession } from "@/app/_types/walking";
-
-interface ShareRouteSectionProps {
-	session: WalkingSession | null;
-}
+import { useWalking } from "@/app/_providers";
 
 /**
  * 산책 루트를 지도로 표시하는 컴포넌트
- * @param session - 산책 세션 데이터 (경로 정보 포함)
  */
-export function ShareRouteSection({ session }: ShareRouteSectionProps) {
+export function ShareRouteSection() {
+	const { session } = useWalking();
+
 	return (
 		<div className="mb-6">
 			<div className="flex items-center gap-2 mb-3">

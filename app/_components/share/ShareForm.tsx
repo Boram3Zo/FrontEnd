@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState } from "react";
 import { Button } from "@/app/_components/ui/CButton";
 import { SharePhotoUploader } from "./SharePhotoUploader";
 import { ShareRouteSection } from "./ShareRouteSection";
@@ -8,7 +8,7 @@ import { ShareCourseDetails } from "./ShareCourseDetails";
 import { ShareThemeSelection } from "./ShareThemeSelection";
 import { ShareHashtagSection } from "./ShareHashtagSection";
 import { ShareContentSection } from "./ShareContentSection";
-import { loadLatestSession } from "@/app/_libs/walkingStorage";
+import { useWalking } from "@/app/_providers";
 import { SpotPhoto } from "@/app/_types/photoTypes";
 import { ShareFormData } from "@/app/_types/shareTypes";
 
@@ -17,7 +17,7 @@ import { ShareFormData } from "@/app/_types/shareTypes";
  * 사용자가 산책 경로와 관련 정보를 입력하여 다른 사용자들과 공유할 수 있는 폼을 제공합니다.
  */
 export function ShareForm() {
-	const session = useMemo(() => loadLatestSession(), []);
+	const { session, spotPhotos, setSpotPhotos } = useWalking();
 
 	// 폼 데이터 상태 관리
 	const [formData, setFormData] = useState<ShareFormData>({
@@ -27,9 +27,6 @@ export function ShareForm() {
 		hashtags: [],
 		hashtagInput: "",
 	});
-
-	// 스팟 사진 관리 상태
-	const [spotPhotos, setSpotPhotos] = useState<SpotPhoto[]>([]);
 
 	/**
 	 * 폼 데이터 필드를 업데이트하는 함수
@@ -89,15 +86,13 @@ export function ShareForm() {
 	return (
 		<main className="pb-20">
 			{/* 산책 루트 섹션 */}
-			<ShareRouteSection session={session} />
-
+			<ShareRouteSection />
 			{/* 코스 상세 정보 섹션 */}
 			<ShareCourseDetails
 				session={session}
 				title={formData.title}
 				onTitleChange={title => updateFormData("title", title)}
-			/>
-
+			/>{" "}
 			{/* 사진 업로드 섹션 */}
 			<SharePhotoUploader
 				title="스팟 사진"
@@ -105,21 +100,17 @@ export function ShareForm() {
 				maxPhotos={6}
 				onPhotosChange={handlePhotosChange}
 			/>
-
 			{/* 사진 개수 표시 */}
 			{spotPhotos.length > 0 && (
 				<div className="px-4 py-2 text-sm text-gray-600">업로드된 사진: {spotPhotos.length}개</div>
 			)}
-
 			{/* 본문 작성 섹션 */}
 			<ShareContentSection content={formData.content} onContentChange={content => updateFormData("content", content)} />
-
 			{/* 테마 선택 섹션 */}
 			<ShareThemeSelection
 				selectedTheme={formData.selectedTheme}
 				onThemeSelect={theme => updateFormData("selectedTheme", theme)}
 			/>
-
 			{/* 해시태그 섹션 */}
 			<ShareHashtagSection
 				hashtags={formData.hashtags}
@@ -128,7 +119,6 @@ export function ShareForm() {
 				onHashtagAdd={handleHashtagAdd}
 				onHashtagRemove={handleHashtagRemove}
 			/>
-
 			{/* 제출 버튼 */}
 			<div className="px-4 py-6">
 				<Button
