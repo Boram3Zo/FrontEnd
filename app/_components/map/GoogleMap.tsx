@@ -1,8 +1,8 @@
 // components/map/GoogleMap.tsx
 "use client";
 
-import Script from "next/script";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
+import { useGoogleMaps } from "@/app/_providers";
 
 export type LatLng = { lat: number; lng: number };
 
@@ -17,15 +17,9 @@ type Props = {
 	onMapReady?: (map: google.maps.Map) => void;
 };
 
-export function GoogleMap({
-	center,
-	zoom = 15,
-	heightClassName = "h-[360px]",
-	onMapReady,
-}: Props) {
-	const apiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY!;
+export function GoogleMap({ center, zoom = 15, heightClassName = "h-[360px]", onMapReady }: Props) {
+	const { isLoaded } = useGoogleMaps();
 	const containerRef = useRef<HTMLDivElement | null>(null);
-	const [isLoaded, setIsLoaded] = useState(false);
 	const mapRef = useRef<google.maps.Map | null>(null);
 
 	useEffect(() => {
@@ -48,17 +42,5 @@ export function GoogleMap({
 		}
 	}, [center]);
 
-	return (
-		<>
-			<Script
-				src={`https://maps.googleapis.com/maps/api/js?key=${apiKey}&libraries=geometry`}
-				strategy="afterInteractive"
-				onLoad={() => setIsLoaded(true)}
-			/>
-			<div
-				ref={containerRef}
-				className={`w-full rounded-2xl ${heightClassName}`}
-			/>
-		</>
-	);
+	return <div ref={containerRef} className={`w-full rounded-2xl ${heightClassName}`} />;
 }

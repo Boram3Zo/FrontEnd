@@ -6,16 +6,18 @@ import { Card } from "@/app/_components/ui/CCard";
 import { Button } from "@/app/_components/ui/CButton";
 import { Share, Save, Trophy, MapPin, Clock, Route } from "lucide-react";
 import { useRouter } from "next/navigation";
-import Script from "next/script";
+import { useGoogleMaps } from "@/app/_providers";
 
 // 간단 지도: sessionStorage/localStorage에서 경로를 읽어 폴리라인으로 표시
 function RouteMap({ route }: { route: google.maps.LatLngLiteral[] }) {
+	const { isLoaded } = useGoogleMaps();
+
 	// 지도를 파일 내부에서 직접 렌더(공용 컴포넌트 없어도 동작하도록)
 	return (
 		<div
 			className="w-full h-[220px] rounded-2xl bg-gray-100"
 			ref={el => {
-				if (!el || !route.length) return;
+				if (!el || !route.length || !isLoaded) return;
 				if (!window.google?.maps) return;
 				const map = new google.maps.Map(el, {
 					zoom: 16,
@@ -119,13 +121,7 @@ export default function WalkingSummary() {
 				</div>
 				<div className="p-4">
 					{route.length ? (
-						<>
-							<Script
-								src={`https://maps.googleapis.com/maps/api/js?key=${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}`}
-								strategy="afterInteractive"
-							/>
-							<RouteMap route={route} />
-						</>
+						<RouteMap route={route} />
 					) : (
 						<div className="h-48 flex items-center justify-center text-gray-500">최근 산책 경로가 없습니다.</div>
 					)}
