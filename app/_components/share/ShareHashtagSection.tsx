@@ -12,6 +12,14 @@ interface ShareHashtagSectionProps {
 
 const popularHashtags = ["#산책", "#고양이", "#힐링"];
 
+/**
+ * 해시태그 입력 및 관리 컴포넌트
+ * @param hashtags - 현재 추가된 해시태그 목록
+ * @param hashtagInput - 해시태그 입력 필드의 현재 값
+ * @param onHashtagInputChange - 해시태그 입력 변경 핸들러
+ * @param onHashtagAdd - 해시태그 추가 핸들러
+ * @param onHashtagRemove - 해시태그 제거 핸들러
+ */
 export function ShareHashtagSection({
 	hashtags,
 	hashtagInput,
@@ -19,6 +27,9 @@ export function ShareHashtagSection({
 	onHashtagAdd,
 	onHashtagRemove,
 }: ShareHashtagSectionProps) {
+	/**
+	 * Enter 키 입력 시 해시태그 추가 처리
+	 */
 	const handleInputKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
 		if (e.key === "Enter" && hashtagInput.trim()) {
 			e.preventDefault();
@@ -30,6 +41,9 @@ export function ShareHashtagSection({
 		}
 	};
 
+	/**
+	 * 인기 해시태그 클릭 시 추가/제거 토글 처리
+	 */
 	const handlePopularTagClick = (tag: string) => {
 		if (!hashtags.includes(tag)) {
 			onHashtagAdd(tag);
@@ -53,7 +67,7 @@ export function ShareHashtagSection({
 				onKeyPress={handleInputKeyPress}
 			/>
 
-			{/* 추가된 해시태그 */}
+			{/* 추가된 해시태그 표시 */}
 			{hashtags.length > 0 && (
 				<div className="flex flex-wrap gap-2 mb-3">
 					{hashtags.map((tag, index) => (

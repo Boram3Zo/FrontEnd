@@ -15,6 +15,11 @@ const themeEmojis: ThemeOption[] = [
 	{ emoji: "🌅", label: "일출" },
 ];
 
+/**
+ * 산책 코스 테마를 선택하는 컴포넌트
+ * @param selectedTheme - 현재 선택된 테마
+ * @param onThemeSelect - 테마 선택 핸들러
+ */
 export function ShareThemeSelection({ selectedTheme, onThemeSelect }: ShareThemeSelectionProps) {
 	return (
 		<div className="px-4 py-4">

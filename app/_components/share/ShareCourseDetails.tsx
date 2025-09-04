@@ -8,6 +8,12 @@ interface ShareCourseDetailsProps {
 	onTitleChange: (title: string) => void;
 }
 
+/**
+ * 코스 제목과 산책 정보(시간, 거리)를 입력/표시하는 컴포넌트
+ * @param session - 산책 세션 데이터
+ * @param title - 현재 입력된 제목
+ * @param onTitleChange - 제목 변경 핸들러
+ */
 export function ShareCourseDetails({ session, title, onTitleChange }: ShareCourseDetailsProps) {
 	// 실제 세션 데이터에서 시간과 거리 계산 (현재는 임시 하드코딩)
 	const duration = session?.durationSec ? Math.round(session.durationSec / 60) : 45;

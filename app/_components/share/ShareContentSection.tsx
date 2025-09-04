@@ -5,6 +5,11 @@ interface ShareContentSectionProps {
 	onContentChange: (content: string) => void;
 }
 
+/**
+ * 산책 코스 본문 내용을 작성하는 컴포넌트
+ * @param content - 현재 입력된 본문 내용
+ * @param onContentChange - 본문 내용 변경 핸들러
+ */
 export function ShareContentSection({ content, onContentChange }: ShareContentSectionProps) {
 	return (
 		<div className="px-4 py-4">

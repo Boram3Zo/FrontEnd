@@ -7,6 +7,10 @@ interface ShareRouteSectionProps {
 	session: WalkingSession | null;
 }
 
+/**
+ * 산책 루트를 지도로 표시하는 컴포넌트
+ * @param session - 산책 세션 데이터 (경로 정보 포함)
+ */
 export function ShareRouteSection({ session }: ShareRouteSectionProps) {
 	return (
 		<div className="mb-6">
