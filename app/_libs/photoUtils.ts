@@ -1,4 +1,5 @@
-import { SpotPhoto } from "../_types/photoTypes";
+import { SpotPhoto, ExifData } from "../_types/photoTypes";
+import exifr from "exifr";
 
 /**
  * 파일이 이미지 타입인지 확인
@@ -8,9 +9,106 @@ export const isImageFile = (file: File): boolean => {
 };
 
 /**
- * 파일을 SpotPhoto 객체로 변환
+ * EXIF 데이터 추출
  */
-export const createPhotoFromFile = (file: File): SpotPhoto => {
+export const extractExifData = async (file: File): Promise<ExifData> => {
+	try {
+		const exifData = (await exifr.parse(file, true)) || {};
+
+		// 이미지 크기 정보를 얻기 위해 HTMLImageElement 객체 생성
+		const img = document.createElement("img");
+		const imageUrl = URL.createObjectURL(file);
+
+		return new Promise(resolve => {
+			img.onload = () => {
+				const fullExifData: ExifData = {
+					// 기본 파일 정보
+					fileName: file.name,
+					fileSize: file.size,
+					width: img.width,
+					height: img.height,
+
+					// EXIF 데이터
+					make: exifData.Make,
+					model: exifData.Model,
+					dateTime: exifData.DateTime,
+					dateTimeOriginal: exifData.DateTimeOriginal,
+					latitude: exifData.latitude,
+					longitude: exifData.longitude,
+					orientation: exifData.Orientation,
+					flash: exifData.Flash,
+					focalLength: exifData.FocalLength,
+					iso: exifData.ISO,
+					aperture: exifData.FNumber || exifData.ApertureValue,
+					shutterSpeed: exifData.ExposureTime,
+					lens: exifData.LensModel || exifData.LensMake,
+					software: exifData.Software,
+
+					// 모든 원본 EXIF 데이터 포함
+					...exifData,
+				};
+
+				URL.revokeObjectURL(imageUrl);
+				resolve(fullExifData);
+			};
+
+			img.onerror = () => {
+				// 이미지 로드 실패시 기본 정보만 반환
+				URL.revokeObjectURL(imageUrl);
+				resolve({
+					fileName: file.name,
+					fileSize: file.size,
+					...exifData,
+				});
+			};
+
+			img.src = imageUrl;
+		});
+	} catch (error) {
+		console.error("EXIF 데이터 추출 실패:", error);
+		// 에러 발생시 기본 파일 정보만 반환
+		return {
+			fileName: file.name,
+			fileSize: file.size,
+		};
+	}
+};
+
+/**
+ * 파일을 SpotPhoto 객체로 변환 (EXIF 데이터 포함)
+ */
+export const createPhotoFromFile = async (file: File): Promise<SpotPhoto> => {
+	const exifData = await extractExifData(file);
+
+	return {
+		id: crypto.randomUUID(),
+		file,
+		preview: URL.createObjectURL(file),
+		title: "",
+		description: "",
+		exifData,
+	};
+};
+
+/**
+ * GPS 좌표를 포맷된 문자열로 변환
+ */
+export const formatGpsCoordinates = (latitude?: number, longitude?: number): string | null => {
+	if (!latitude || !longitude) return null;
+
+	const latDirection = latitude >= 0 ? "N" : "S";
+	const lngDirection = longitude >= 0 ? "E" : "W";
+
+	const latFormatted = Math.abs(latitude).toFixed(6);
+	const lngFormatted = Math.abs(longitude).toFixed(6);
+
+	return `${latFormatted}°${latDirection}, ${lngFormatted}°${lngDirection}`;
+};
+
+/**
+ * 파일을 SpotPhoto 객체로 변환 (동기 버전, EXIF 없음)
+ */
+export const createPhotoFromFileSync = (file: File): SpotPhoto => {
 	return {
 		id: crypto.randomUUID(),
 		file,

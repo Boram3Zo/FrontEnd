@@ -1,7 +1,13 @@
 // hooks/usePhotoManager.ts
 import { useState, useRef, useCallback } from "react";
 import { SpotPhoto, UsePhotoManagerReturn, PhotoUploaderOptions } from "@/app/_types/photoTypes";
-import { filterImageFiles, createPhotoFromFile, revokePhotoPreview, findPhotoById } from "@/app/_libs/photoUtils";
+import {
+	filterImageFiles,
+	createPhotoFromFile,
+	createPhotoFromFileSync,
+	revokePhotoPreview,
+	findPhotoById,
+} from "@/app/_libs/photoUtils";
 
 /**
  * 스팟 사진 관리를 위한 커스텀 훅
@@ -16,18 +22,36 @@ export const usePhotoManager = (options: PhotoUploaderOptions = {}): UsePhotoMan
 	const fileInputRef = useRef<HTMLInputElement>(null);
 
 	/**
-	 * 파일 목록을 받아 사진으로 추가
+	 * 파일 목록을 받아 사진으로 추가 (EXIF 데이터 추출 포함)
 	 */
 	const addPhotos = useCallback(
-		(files: FileList) => {
+		async (files: FileList) => {
 			const imageFiles = filterImageFiles(files);
 
 			setPhotos(prev => {
 				const availableSlots = maxPhotos - prev.length;
 				const filesToAdd = imageFiles.slice(0, availableSlots);
 
-				const newPhotos = filesToAdd.map(createPhotoFromFile);
-				return [...prev, ...newPhotos];
+				// 먼저 동기적으로 사진을 추가 (미리보기용)
+				const tempPhotos = filesToAdd.map(createPhotoFromFileSync);
+				const newPhotos = [...prev, ...tempPhotos];
+
+				// 비동기적으로 EXIF 데이터 추출 후 업데이트
+				Promise.all(
+					filesToAdd.map(async (file, index) => {
+						const photoWithExif = await createPhotoFromFile(file);
+						return { ...photoWithExif, id: tempPhotos[index].id }; // 기존 ID 유지
+					})
+				).then(photosWithExif => {
+					setPhotos(currentPhotos =>
+						currentPhotos.map(photo => {
+							const exifPhoto = photosWithExif.find(p => p.id === photo.id);
+							return exifPhoto ? { ...photo, exifData: exifPhoto.exifData } : photo;
+						})
+					);
+				});
+
+				return newPhotos;
 			});
 		},
 		[maxPhotos]

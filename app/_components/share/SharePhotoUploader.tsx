@@ -38,10 +38,10 @@ export const SharePhotoUploader: React.FC<SharePhotoUploaderProps> = ({
 		onPhotosChange?.(photos);
 	}, [photos, onPhotosChange]);
 
-	const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
+	const handleFileSelect = async (event: React.ChangeEvent<HTMLInputElement>) => {
 		const files = event.target.files;
 		if (files) {
-			addPhotos(files);
+			await addPhotos(files);
 		}
 
 		// 파일 입력 초기화 (같은 파일 재선택 가능하도록)

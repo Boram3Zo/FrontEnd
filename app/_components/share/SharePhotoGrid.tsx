@@ -3,8 +3,9 @@
 
 import { Card } from "@/app/_components/ui/CCard";
 import { Textarea } from "@/app/_components/ui/CTextarea";
-import { Plus, X } from "lucide-react";
+import { Plus, X, MapPin } from "lucide-react";
 import { SpotPhoto } from "@/app/_types/photoTypes";
+import { formatGpsCoordinates } from "@/app/_libs/photoUtils";
 
 interface SharePhotoGridProps {
 	/** 사진 목록 */
@@ -60,6 +61,19 @@ export const SharePhotoGrid: React.FC<SharePhotoGridProps> = ({
 								<label className="block text-xs text-gray-500 mb-1">파일 이름</label>
 								<div className="text-sm font-medium text-gray-800 p-2 bg-gray-50 rounded border">{photo.file.name}</div>
 							</div>
+
+							{/* GPS 좌표 표시 (EXIF에서 추출된 경우) */}
+							{photo.exifData?.latitude && photo.exifData?.longitude && (
+								<div>
+									<label className="block text-xs text-gray-500 mb-1">촬영 위치</label>
+									<div className="flex items-center gap-2 text-sm text-gray-700 p-2 bg-blue-50 rounded border">
+										<MapPin className="w-4 h-4 text-blue-600" />
+										<span className="font-mono">
+											{formatGpsCoordinates(photo.exifData.latitude, photo.exifData.longitude)}
+										</span>
+									</div>
+								</div>
+							)}
 
 							{/* 사진 설명 */}
 							<div>

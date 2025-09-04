@@ -1,4 +1,48 @@
 /**
+ * EXIF 데이터 타입
+ */
+export interface ExifData {
+	/** 카메라 제조사 */
+	make?: string;
+	/** 카메라 모델 */
+	model?: string;
+	/** 촬영 날짜/시간 */
+	dateTime?: string;
+	/** 원본 촬영 날짜/시간 */
+	dateTimeOriginal?: string;
+	/** 위도 */
+	latitude?: number;
+	/** 경도 */
+	longitude?: number;
+	/** 이미지 방향 */
+	orientation?: number;
+	/** 플래시 */
+	flash?: string;
+	/** 초점 거리 */
+	focalLength?: number;
+	/** ISO 감도 */
+	iso?: number;
+	/** 조리개 값 */
+	aperture?: number;
+	/** 셔터 속도 */
+	shutterSpeed?: string;
+	/** 이미지 너비 */
+	width?: number;
+	/** 이미지 높이 */
+	height?: number;
+	/** 파일 크기 */
+	fileSize?: number;
+	/** 파일명 */
+	fileName?: string;
+	/** 렌즈 정보 */
+	lens?: string;
+	/** 소프트웨어 */
+	software?: string;
+	/** 기타 모든 EXIF 데이터 */
+	[key: string]: unknown;
+}
+
+/**
  * 스팟 사진 데이터 타입
  */
 export interface SpotPhoto {
@@ -12,6 +56,8 @@ export interface SpotPhoto {
 	title: string;
 	/** 사진 설명 */
 	description: string;
+	/** EXIF 데이터 (선택사항) */
+	exifData?: ExifData;
 }
 
 /**
@@ -33,7 +79,7 @@ export interface UsePhotoManagerReturn {
 	/** 현재 사진 목록 */
 	photos: SpotPhoto[];
 	/** 사진 추가 핸들러 */
-	addPhotos: (files: FileList) => void;
+	addPhotos: (files: FileList) => Promise<void>;
 	/** 사진 삭제 핸들러 */
 	removePhoto: (id: string) => void;
 	/** 사진 설명 업데이트 핸들러 */
