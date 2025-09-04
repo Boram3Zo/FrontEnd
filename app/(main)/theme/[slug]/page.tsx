@@ -14,9 +14,7 @@ interface Course {
 	location: string;
 	duration: string;
 	distance: string;
-	difficulty: "쉬움" | "보통" | "어려움";
 	participants: number;
-	rating: number;
 	tags: string[];
 	image: string;
 	author: string;
@@ -31,9 +29,7 @@ const THEME_COURSES: Record<string, Course[]> = {
 			location: "마포구 망원동",
 			duration: "45분",
 			distance: "2.1km",
-			difficulty: "쉬움",
 			participants: 128,
-			rating: 4.8,
 			tags: ["강변", "공원", "힐링"],
 			image: "/nature-path.png",
 			author: "자연러버",
@@ -45,9 +41,7 @@ const THEME_COURSES: Record<string, Course[]> = {
 			location: "중구 남산공원길",
 			duration: "60분",
 			distance: "3.2km",
-			difficulty: "보통",
 			participants: 89,
-			rating: 4.7,
 			tags: ["산", "전망", "자연"],
 			image: "/mountain-trail.png",
 			author: "산책왕",
@@ -61,9 +55,7 @@ const THEME_COURSES: Record<string, Course[]> = {
 			location: "종로구 계동길",
 			duration: "60분",
 			distance: "1.8km",
-			difficulty: "보통",
 			participants: 156,
-			rating: 4.9,
 			tags: ["한옥", "전통", "문화"],
 			image: "/historic-street.png",
 			author: "역사탐험가",
@@ -77,9 +69,7 @@ const THEME_COURSES: Record<string, Course[]> = {
 			location: "마포구 홍익로",
 			duration: "90분",
 			distance: "2.5km",
-			difficulty: "쉬움",
 			participants: 203,
-			rating: 4.6,
 			tags: ["카페", "디저트", "힙스터"],
 			image: "/cozy-cafe.png",
 			author: "카페마니아",
@@ -163,7 +153,6 @@ export default async function ThemeCoursesPage({ params }: { params: PageParams 
 							<span className="text-sm text-white/90">{courses.length}개의 코스</span>
 							<div className="flex items-center gap-2">
 								<Star className="h-4 w-4 fill-current" />
-								<span className="text-sm">평균 4.7점</span>
 							</div>
 						</div>
 					</div>
@@ -198,7 +187,6 @@ export default async function ThemeCoursesPage({ params }: { params: PageParams 
 												<h3 className="font-bold text-gray-800 text-lg">{course.title}</h3>
 												<div className="flex items-center gap-1 text-sm text-orange-600">
 													<Star className="h-4 w-4 fill-current" />
-													<span>{course.rating}</span>
 												</div>
 											</div>
 
