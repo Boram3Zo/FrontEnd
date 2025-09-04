@@ -1,10 +1,22 @@
+"use client"
+
+import { useState } from "react"
 import { Header } from "@/app/_components/layout/Header";
 import { BottomNavigation } from "@/app/_components/layout/BottomNavigation";
 import { Card } from "@/app/_components/ui/Card";
-import { CatCharacter } from "@/app/_components/cat/CatCharacter";
-import { Settings, Award, MapPin, Clock, Heart, Share2, Bell, HelpCircle } from "lucide-react";
+import { Settings, Award, MapPin, Clock, Heart, Share2, Bell, HelpCircle, Edit3 } from "lucide-react";
+import { CatSelectionModal } from "@/app/_components/cat/CatSelectionModal";
+import { CollectedCat } from "@/app/_components/cat/CollectedCat";
 
 export default function MyPage() {
+	const [showCatSelection, setShowCatSelection] = useState(false);
+	const [selectedCatBreed, setSelectedCatBreed] = useState("코리안 숏헤어");
+
+	const handleCatChange = (breed: string) => {
+		setSelectedCatBreed(breed)
+		setShowCatSelection(false)
+	};
+
 	return (
 		<div className="min-h-screen bg-gradient-to-b from-purple-50 to-pink-50">
 			<Header />
@@ -13,10 +25,12 @@ export default function MyPage() {
 				{/* Profile Section */}
 				<div className="py-6 text-center">
 					<div className="relative inline-block mb-4">
-						<CatCharacter size="lg" animation="bounce" />
-						<div className="absolute -bottom-1 -right-1 w-8 h-8 bg-orange-500 rounded-full flex items-center justify-center">
-							<span className="text-white text-sm font-bold">12</span>
-						</div>
+						<CollectedCat breed={selectedCatBreed} size="lg" />
+					<button onClick={() => setShowCatSelection(true)}
+					className="absolute -bottom-1 -right-1 w-8 h-8 bg-orange-500 rounded-full flex items-center justify-center hover:bg-orange-600 transition-colors"
+					>
+						<Edit3 className="h-4 w-4 text-white" />
+					</button>
 					</div>
 
 					<h1 className="text-2xl font-bold text-gray-800 mb-2">고양이 탐험가</h1>
@@ -108,6 +122,13 @@ export default function MyPage() {
 			</main>
 
 			<BottomNavigation />
+
+			<CatSelectionModal
+				isOpen={showCatSelection}
+				onClose={() => setShowCatSelection(false)}
+				onCatSelect={handleCatChange}
+				currentBreed={selectedCatBreed}
+			/>
 		</div>
 	);
 }
