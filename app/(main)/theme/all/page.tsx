@@ -12,7 +12,6 @@ interface Theme {
 	description: string;
 	color: string;
 	courseCount: number;
-	difficulty: "쉬움" | "보통" | "어려움";
 	tags: string[];
 }
 
@@ -24,7 +23,6 @@ const ALL_THEMES: Theme[] = [
 		description: "도심 속 자연을 만나는 힐링 코스",
 		color: "from-green-400 to-emerald-500",
 		courseCount: 24,
-		difficulty: "쉬움",
 		tags: ["공원", "강변", "숲길"],
 	},
 	{
@@ -34,7 +32,6 @@ const ALL_THEMES: Theme[] = [
 		description: "서울의 역사와 문화를 느끼는 코스",
 		color: "from-amber-400 to-orange-500",
 		courseCount: 18,
-		difficulty: "보통",
 		tags: ["한옥", "궁궐", "문화재"],
 	},
 	{
@@ -44,7 +41,6 @@ const ALL_THEMES: Theme[] = [
 		description: "특별한 카페들을 찾아가는 여행",
 		color: "from-orange-400 to-red-500",
 		courseCount: 31,
-		difficulty: "쉬움",
 		tags: ["카페", "디저트", "브런치"],
 	},
 	{
@@ -54,7 +50,6 @@ const ALL_THEMES: Theme[] = [
 		description: "밤에만 볼 수 있는 아름다운 풍경",
 		color: "from-indigo-400 to-purple-500",
 		courseCount: 15,
-		difficulty: "보통",
 		tags: ["야경", "조명", "데이트"],
 	},
 	{
@@ -64,7 +59,6 @@ const ALL_THEMES: Theme[] = [
 		description: "정겨운 전통 시장의 맛과 멋",
 		color: "from-red-400 to-pink-500",
 		courseCount: 12,
-		difficulty: "쉬움",
 		tags: ["시장", "먹거리", "전통"],
 	},
 	{
@@ -74,7 +68,6 @@ const ALL_THEMES: Theme[] = [
 		description: "예술과 문화가 살아있는 거리",
 		color: "from-purple-400 to-pink-500",
 		courseCount: 20,
-		difficulty: "보통",
 		tags: ["갤러리", "벽화", "공연"],
 	},
 	{
@@ -84,7 +77,6 @@ const ALL_THEMES: Theme[] = [
 		description: "시원한 강바람과 함께하는 산책",
 		color: "from-blue-400 to-cyan-500",
 		courseCount: 16,
-		difficulty: "쉬움",
 		tags: ["한강", "강변", "자전거"],
 	},
 	{
@@ -94,7 +86,6 @@ const ALL_THEMES: Theme[] = [
 		description: "쇼핑과 구경이 함께하는 코스",
 		color: "from-pink-400 to-rose-500",
 		courseCount: 22,
-		difficulty: "보통",
 		tags: ["쇼핑", "패션", "트렌드"],
 	},
 ];
@@ -147,7 +138,6 @@ export default function AllThemesPage() {
 									<div className="flex items-center justify-between mb-3">
 										<div className="flex items-center gap-2">
 											<span className="text-xs px-2 py-1 bg-gray-100 rounded-full text-gray-600">
-												{theme.difficulty}
 											</span>
 											<span className="text-xs text-gray-500">난이도</span>
 										</div>
