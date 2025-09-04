@@ -117,10 +117,15 @@ describe("Header 컴포넌트", () => {
 
 	// 메뉴 버튼 테스트
 	describe("메뉴 버튼", () => {
-		it("메뉴 링크가 올바른 경로를 가진다", () => {
-			const { container } = render(<Header />);
-			const menuLinks = container.querySelectorAll('a[href="/menu"]');
-			expect(menuLinks.length).toBeGreaterThan(0);
+		it("메뉴 버튼을 클릭할 수 있다", async () => {
+			const user = userEvent.setup();
+			render(<Header />);
+
+			const menuButtons = screen.getAllByRole("button");
+			const menuButton = menuButtons.find(button => button.querySelector(".lucide-menu"));
+
+			expect(menuButton).toBeInTheDocument();
+			await user.click(menuButton!);
 		});
 
 		it("메뉴 아이콘이 표시된다", () => {
