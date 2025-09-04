@@ -1,10 +1,10 @@
-// components/photo/PhotoDescriptions.tsx
+// components/photo/SharePhotoDescriptions.tsx
 "use client";
 
 import { Input } from "@/app/_components/ui/CInput";
 import { SpotPhoto } from "@/app/_types/photoTypes";
 
-interface PhotoDescriptionsProps {
+interface SharePhotoDescriptionsProps {
 	/** 사진 목록 */
 	photos: SpotPhoto[];
 	/** 설명 업데이트 핸들러 */
@@ -15,7 +15,7 @@ interface PhotoDescriptionsProps {
  * 사진 설명 입력 컴포넌트
  * 각 사진에 대한 설명을 입력할 수 있는 입력 필드들을 제공
  */
-export const PhotoDescriptions: React.FC<PhotoDescriptionsProps> = ({ photos, onUpdateDescription }) => {
+export const SharePhotoDescriptions: React.FC<SharePhotoDescriptionsProps> = ({ photos, onUpdateDescription }) => {
 	if (photos.length === 0) {
 		return null;
 	}

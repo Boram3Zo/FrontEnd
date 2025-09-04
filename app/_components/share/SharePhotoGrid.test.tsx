@@ -1,6 +1,6 @@
-// __tests__/components/photo/PhotoGrid.test.tsx
+// __tests__/components/photo/SharePhotoGrid.test.tsx
 import { render, screen, fireEvent } from "@testing-library/react";
-import { PhotoGrid } from "@/app/_components/photo/PhotoGrid";
+import { SharePhotoGrid } from "@/app/_components/share/SharePhotoGrid";
 import { SpotPhoto } from "@/app/_types/photoTypes";
 
 // Mock Lucide React icons
@@ -9,7 +9,7 @@ jest.mock("lucide-react", () => ({
 	X: () => <div data-testid="x-icon">X Icon</div>,
 }));
 
-describe("PhotoGrid", () => {
+describe("SharePhotoGrid", () => {
 	const mockPhotos: SpotPhoto[] = [
 		{
 			id: "photo-1",
@@ -37,7 +37,7 @@ describe("PhotoGrid", () => {
 	});
 
 	it("should render all photos", () => {
-		render(<PhotoGrid {...defaultProps} />);
+		render(<SharePhotoGrid {...defaultProps} />);
 
 		const images = screen.getAllByAltText("스팟 사진");
 		expect(images).toHaveLength(2);
@@ -46,20 +46,20 @@ describe("PhotoGrid", () => {
 	});
 
 	it("should render add photo button when under maxPhotos limit", () => {
-		render(<PhotoGrid {...defaultProps} />);
+		render(<SharePhotoGrid {...defaultProps} />);
 
 		expect(screen.getByText("사진 추가")).toBeInTheDocument();
 		expect(screen.getByTestId("plus-icon")).toBeInTheDocument();
 	});
 
 	it("should not render add photo button when at maxPhotos limit", () => {
-		render(<PhotoGrid {...defaultProps} maxPhotos={2} />);
+		render(<SharePhotoGrid {...defaultProps} maxPhotos={2} />);
 
 		expect(screen.queryByText("사진 추가")).not.toBeInTheDocument();
 	});
 
 	it("should call onAddPhoto when add button is clicked", () => {
-		render(<PhotoGrid {...defaultProps} />);
+		render(<SharePhotoGrid {...defaultProps} />);
 
 		const addButton = screen.getByText("사진 추가").closest(".cursor-pointer");
 		fireEvent.click(addButton!);
@@ -68,7 +68,7 @@ describe("PhotoGrid", () => {
 	});
 
 	it("should call onRemovePhoto when remove button is clicked", () => {
-		render(<PhotoGrid {...defaultProps} />);
+		render(<SharePhotoGrid {...defaultProps} />);
 
 		const removeButtons = screen.getAllByTestId("x-icon");
 		fireEvent.click(removeButtons[0].closest("button")!);
@@ -77,21 +77,21 @@ describe("PhotoGrid", () => {
 	});
 
 	it("should render remove buttons for each photo", () => {
-		render(<PhotoGrid {...defaultProps} />);
+		render(<SharePhotoGrid {...defaultProps} />);
 
 		const removeButtons = screen.getAllByTestId("x-icon");
 		expect(removeButtons).toHaveLength(2);
 	});
 
 	it("should apply correct grid class", () => {
-		const { container } = render(<PhotoGrid {...defaultProps} gridColumns={4} />);
+		const { container } = render(<SharePhotoGrid {...defaultProps} gridColumns={4} />);
 
 		const gridContainer = container.querySelector(".grid");
 		expect(gridContainer).toHaveClass("grid-cols-4");
 	});
 
 	it("should handle empty photos array", () => {
-		render(<PhotoGrid {...defaultProps} photos={[]} />);
+		render(<SharePhotoGrid {...defaultProps} photos={[]} />);
 
 		expect(screen.queryByAltText("스팟 사진")).not.toBeInTheDocument();
 		expect(screen.getByText("사진 추가")).toBeInTheDocument();

@@ -1,4 +1,4 @@
-import { useRef, useEffect, forwardRef } from "react";
+import { useEffect, forwardRef } from "react";
 
 interface WalkTrackerMapProps {
 	onMapLoad: () => void;

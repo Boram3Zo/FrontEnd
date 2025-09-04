@@ -1,14 +1,13 @@
-// components/photo/PhotoUploader.tsx
 "use client";
 
 import React from "react";
 import { Camera } from "lucide-react";
-import { PhotoGrid } from "./PhotoGrid";
-import { PhotoDescriptions } from "./PhotoDescriptions";
+import { SharePhotoGrid } from "./SharePhotoGrid";
+import { SharePhotoDescriptions } from "./SharePhotoDescriptions";
 import { usePhotoManager } from "@/app/_hooks/usePhotoManager";
 import { PhotoUploaderOptions, SpotPhoto } from "@/app/_types/photoTypes";
 
-interface PhotoUploaderProps extends PhotoUploaderOptions {
+interface SharePhotoUploaderProps extends PhotoUploaderOptions {
 	/** 제목 (기본값: "스팟 사진") */
 	title?: string;
 	/** 빈 상태일 때 표시할 메시지 */
@@ -21,7 +20,7 @@ interface PhotoUploaderProps extends PhotoUploaderOptions {
  * 스팟 사진 업로더 메인 컴포넌트
  * 사진 추가, 삭제, 설명 입력 기능을 통합 제공
  */
-export const PhotoUploader: React.FC<PhotoUploaderProps> = ({
+export const SharePhotoUploader: React.FC<SharePhotoUploaderProps> = ({
 	title = "스팟 사진",
 	emptyMessage = "스팟 사진을 추가하고 설명을 작성해주세요",
 	maxPhotos = 6,
@@ -72,7 +71,7 @@ export const PhotoUploader: React.FC<PhotoUploaderProps> = ({
 			/>
 
 			{/* 사진 그리드 */}
-			<PhotoGrid
+			<SharePhotoGrid
 				photos={photos}
 				maxPhotos={maxPhotos}
 				onAddPhoto={triggerFileSelect}
@@ -81,7 +80,7 @@ export const PhotoUploader: React.FC<PhotoUploaderProps> = ({
 			/>
 
 			{/* 사진 설명 입력 */}
-			<PhotoDescriptions photos={photos} onUpdateDescription={updateDescription} />
+			<SharePhotoDescriptions photos={photos} onUpdateDescription={updateDescription} />
 
 			{/* 빈 상태 메시지 */}
 			{photos.length === 0 && <p className="text-sm text-gray-500">{emptyMessage}</p>}

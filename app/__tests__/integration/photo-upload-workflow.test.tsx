@@ -1,6 +1,6 @@
 // __tests__/integration/photo-upload-workflow.test.tsx
 import { render, screen } from "@testing-library/react";
-import { PhotoUploader } from "@/app/_components/photo/PhotoUploader";
+import { PhotoUploader } from "@/app/_components/share/SharePhotoUploader";
 
 // Mock URL.createObjectURL and URL.revokeObjectURL
 global.URL.createObjectURL = jest.fn(() => "mocked-url");

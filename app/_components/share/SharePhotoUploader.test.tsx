@@ -1,6 +1,6 @@
-// __tests__/components/photo/PhotoUploader.test.tsx
+// __tests__/components/photo/SharePhotoUploader.test.tsx
 import { render, screen } from "@testing-library/react";
-import { PhotoUploader } from "@/app/_components/photo/PhotoUploader";
+import { SharePhotoUploader } from "@/app/_components/share/SharePhotoUploader";
 
 // Mock URL.createObjectURL and URL.revokeObjectURL
 global.URL.createObjectURL = jest.fn(() => "mocked-url");
@@ -13,7 +13,7 @@ Object.defineProperty(global, "crypto", {
 	},
 });
 
-describe("PhotoUploader", () => {
+describe("SharePhotoUploader", () => {
 	const defaultProps = {
 		onPhotosChange: jest.fn(),
 		maxPhotos: 6,
@@ -25,7 +25,7 @@ describe("PhotoUploader", () => {
 	});
 
 	it("should render with default props", () => {
-		render(<PhotoUploader {...defaultProps} />);
+		render(<SharePhotoUploader {...defaultProps} />);
 
 		expect(screen.getByText("스팟 사진")).toBeInTheDocument();
 		expect(screen.getByText("사진 추가")).toBeInTheDocument();
@@ -33,14 +33,14 @@ describe("PhotoUploader", () => {
 	});
 
 	it("should render with custom title and message", () => {
-		render(<PhotoUploader {...defaultProps} title="커스텀 제목" emptyMessage="커스텀 메시지" />);
+		render(<SharePhotoUploader {...defaultProps} title="커스텀 제목" emptyMessage="커스텀 메시지" />);
 
 		expect(screen.getByText("커스텀 제목")).toBeInTheDocument();
 		expect(screen.getByText("커스텀 메시지")).toBeInTheDocument();
 	});
 
 	it("should render file input with correct attributes", () => {
-		render(<PhotoUploader {...defaultProps} />);
+		render(<SharePhotoUploader {...defaultProps} />);
 
 		const fileInput = screen.getByLabelText("사진 파일 선택");
 		expect(fileInput).toHaveAttribute("type", "file");
@@ -49,13 +49,13 @@ describe("PhotoUploader", () => {
 	});
 
 	it("should call onPhotosChange on mount", () => {
-		render(<PhotoUploader {...defaultProps} />);
+		render(<SharePhotoUploader {...defaultProps} />);
 
 		expect(defaultProps.onPhotosChange).toHaveBeenCalledWith([]);
 	});
 
 	it("should render with custom grid columns", () => {
-		const { container } = render(<PhotoUploader {...defaultProps} gridColumns={4} />);
+		const { container } = render(<SharePhotoUploader {...defaultProps} gridColumns={4} />);
 
 		const gridContainer = container.querySelector(".grid-cols-4");
 		expect(gridContainer).toBeInTheDocument();

@@ -5,7 +5,7 @@ import { Card } from "@/app/_components/ui/CCard";
 import { Plus, X } from "lucide-react";
 import { SpotPhoto } from "@/app/_types/photoTypes";
 
-interface PhotoGridProps {
+interface SharePhotoGridProps {
 	/** 사진 목록 */
 	photos: SpotPhoto[];
 	/** 최대 사진 수 */
@@ -22,7 +22,7 @@ interface PhotoGridProps {
  * 사진 그리드 표시 컴포넌트
  * 업로드된 사진들과 추가 버튼을 그리드 형태로 표시
  */
-export const PhotoGrid: React.FC<PhotoGridProps> = ({
+export const SharePhotoGrid: React.FC<SharePhotoGridProps> = ({
 	photos,
 	maxPhotos = 6,
 	onAddPhoto,

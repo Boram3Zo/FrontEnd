@@ -1,10 +1,10 @@
-// __tests__/components/photo/PhotoDescriptions.test.tsx
+// __tests__/components/photo/SharePhotoDescriptions.test.tsx
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { PhotoDescriptions } from "@/app/_components/photo/PhotoDescriptions";
+import { SharePhotoDescriptions } from "@/app/_components/share/SharePhotoDescriptions";
 import { SpotPhoto } from "@/app/_types/photoTypes";
 
-describe("PhotoDescriptions", () => {
+describe("SharePhotoDescriptions", () => {
 	const mockPhotos: SpotPhoto[] = [
 		{
 			id: "photo-1",
@@ -30,14 +30,14 @@ describe("PhotoDescriptions", () => {
 	});
 
 	it("should render all photo descriptions", () => {
-		render(<PhotoDescriptions {...defaultProps} />);
+		render(<SharePhotoDescriptions {...defaultProps} />);
 
 		const inputs = screen.getAllByPlaceholderText("이 사진에 대한 설명을 입력해주세요");
 		expect(inputs).toHaveLength(2);
 	});
 
 	it("should display existing descriptions", () => {
-		render(<PhotoDescriptions {...defaultProps} />);
+		render(<SharePhotoDescriptions {...defaultProps} />);
 
 		const inputs = screen.getAllByPlaceholderText("이 사진에 대한 설명을 입력해주세요");
 		expect(inputs[0]).toHaveValue("Photo 1 description");
@@ -46,7 +46,7 @@ describe("PhotoDescriptions", () => {
 
 	it("should call onUpdateDescription when description changes", async () => {
 		const user = userEvent.setup();
-		render(<PhotoDescriptions {...defaultProps} />);
+		render(<SharePhotoDescriptions {...defaultProps} />);
 
 		const inputs = screen.getAllByPlaceholderText("이 사진에 대한 설명을 입력해주세요");
 
@@ -60,21 +60,21 @@ describe("PhotoDescriptions", () => {
 	});
 
 	it("should render photo labels", () => {
-		render(<PhotoDescriptions {...defaultProps} />);
+		render(<SharePhotoDescriptions {...defaultProps} />);
 
 		expect(screen.getByText("사진 1")).toBeInTheDocument();
 		expect(screen.getByText("사진 2")).toBeInTheDocument();
 	});
 
 	it("should handle empty photos array", () => {
-		render(<PhotoDescriptions {...defaultProps} photos={[]} />);
+		render(<SharePhotoDescriptions {...defaultProps} photos={[]} />);
 
 		expect(screen.queryByPlaceholderText("이 사진에 대한 설명을 입력해주세요")).not.toBeInTheDocument();
 	});
 
 	it("should maintain focus when typing in input", async () => {
 		const user = userEvent.setup();
-		render(<PhotoDescriptions {...defaultProps} />);
+		render(<SharePhotoDescriptions {...defaultProps} />);
 
 		const inputs = screen.getAllByPlaceholderText("이 사진에 대한 설명을 입력해주세요");
 

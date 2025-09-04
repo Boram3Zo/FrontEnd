@@ -2,7 +2,7 @@
 
 import { useState, useMemo } from "react";
 import { Button } from "@/app/_components/ui/CButton";
-import { PhotoUploader } from "@/app/_components/photo/PhotoUploader";
+import { SharePhotoUploader } from "./SharePhotoUploader";
 import { ShareRouteSection } from "./ShareRouteSection";
 import { ShareCourseDetails } from "./ShareCourseDetails";
 import { ShareThemeSelection } from "./ShareThemeSelection";
@@ -99,7 +99,7 @@ export function ShareForm() {
 			/>
 
 			{/* 사진 업로드 섹션 */}
-			<PhotoUploader
+			<SharePhotoUploader
 				title="스팟 사진"
 				emptyMessage="스팟 사진을 추가하고 설명을 작성해주세요"
 				maxPhotos={6}
