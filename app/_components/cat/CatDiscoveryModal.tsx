@@ -9,20 +9,6 @@ import { CollectedCat } from "@/app/_components/cat/CollectedCat";
 import Link from "next/link";
 import { Cat } from "@/app/_types/cat";
 
-// interface Cat {
-//   id: string
-//   name: string
-//   breed: string
-//   personality: string
-//   discoveredAt: string
-//   discoveredDate: string
-//   rarity: "common" | "rare" | "epic" | "legendary" | "special" // Added special grade
-//   description: string
-//   favoriteFood: string
-//   hobby: string
-//   isDiscovered: boolean
-// }
-
 interface CatDiscoveryModalProps {
 	cat: Cat;
 	isOpen: boolean;

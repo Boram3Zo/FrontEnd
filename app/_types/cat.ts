@@ -1,6 +1,6 @@
 export type CatRarity = "common" | "rare" | "epic" | "legendary" | "special";
 
-export type Cat = {
+export interface Cat {
 	id: string;
 	name: string;
 	breed: string;
@@ -12,4 +12,15 @@ export type Cat = {
 	favoriteFood: string;
 	hobby: string;
 	isDiscovered: boolean;
-};
+}
+
+export type SortType = "discovery" | "grade";
+export type SortOrder = "asc" | "desc";
+
+export interface CatCharacterProps {
+	isOpen?: boolean;
+	onClose?: () => void;
+	className?: string;
+	animation?: "bounce" | "wiggle" | "none";
+	size?: "sm" | "md" | "lg";
+}
