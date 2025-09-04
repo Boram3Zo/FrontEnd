@@ -84,28 +84,12 @@ export function MenuSidebar({ isOpen, onClose }: MenuSidebarProps) {
 										<span>회원가입</span>
 									</Button>
 								</Link>
-							</CardContent>
-						</Card>
-
-						{/* Menu Options */}
-						<Card className="bg-white/80 backdrop-blur-sm border-0 shadow-lg">
-							<CardContent className="p-6 space-y-3">
-								<h3 className="font-semibold text-gray-800 mb-4">메뉴</h3>
-
-								<Button variant="ghost" className="w-full justify-start gap-3 h-12">
-									<Settings className="h-5 w-5 text-gray-600" />
-									<span>설정</span>
-								</Button>
-
-								<Button variant="ghost" className="w-full justify-start gap-3 h-12">
-									<HelpCircle className="h-5 w-5 text-purple-600" />
-									<span>도움말</span>
-								</Button>
-
-								<Button variant="ghost" className="w-full justify-start gap-3 h-12">
-									<LogOut className="h-5 w-5 text-red-600" />
-									<span>로그아웃</span>
-								</Button>
+								<Link href="/logout" onClick={onClose}>
+									<Button variant="ghost" className="w-full justify-start gap-3 h-12">
+										<LogOut className="h-5 w-5 text-red-600" />
+										<span>로그아웃</span>
+									</Button>
+								</Link>
 							</CardContent>
 						</Card>
 
