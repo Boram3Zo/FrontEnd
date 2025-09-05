@@ -10,7 +10,7 @@ interface ShareHashtagSectionProps {
 	onHashtagRemove: (hashtag: string) => void;
 }
 
-const popularHashtags = ["#산책", "#고양이", "#힐링"];
+// const popularHashtags = ["#산책", "#고양이", "#힐링"];
 
 /**
  * 해시태그 입력 및 관리 컴포넌트
@@ -85,7 +85,7 @@ export function ShareHashtagSection({
 			)}
 
 			{/* 인기 해시태그 */}
-			<div className="flex flex-wrap gap-2">
+			{/* <div className="flex flex-wrap gap-2">
 				{popularHashtags.map((tag, index) => (
 					<Button
 						key={index}
@@ -97,7 +97,7 @@ export function ShareHashtagSection({
 						{tag}
 					</Button>
 				))}
-			</div>
+			</div> */}
 		</div>
 	);
 }
