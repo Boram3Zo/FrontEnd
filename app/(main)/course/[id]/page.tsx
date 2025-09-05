@@ -146,9 +146,9 @@ export default async function CourseDetailPage({ params }: { params: PageParams 
 							<Button variant="ghost" size="icon">
 								<Heart className="h-5 w-5 text-gray-600" />
 							</Button>
-							<Button variant="ghost" size="icon">
+							{/* <Button variant="ghost" size="icon">
 								<Share2 className="h-5 w-5 text-gray-600" />
-							</Button>
+							</Button> */}
 						</div>
 					</div>
 
@@ -173,10 +173,9 @@ export default async function CourseDetailPage({ params }: { params: PageParams 
 				<div className="px-4 py-4">
 					<Card className="border border-gray-300 overflow-hidden">
 						{/* Title Section */}
-						<div className="bg-gray-200 p-3 text-center">
+						{/* <div className="bg-gray-200 p-3 text-center">
 							<h3 className="font-semibold text-gray-800">제목</h3>
-						</div>
-
+						</div> */}
 						{/* Map Section */}
 						<div className="bg-gray-100 h-32 flex items-center justify-center">
 							<span className="text-gray-500">지도</span>
