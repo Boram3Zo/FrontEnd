@@ -1,7 +1,7 @@
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { useState } from "react";
-import { Textarea } from "@/app/_components/ui/CTextarea";
+import { Textarea } from "@/app/_components/ui/Textarea";
 
 describe("Textarea 컴포넌트", () => {
 	describe("렌더링", () => {

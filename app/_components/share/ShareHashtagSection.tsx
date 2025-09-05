@@ -1,5 +1,5 @@
-import { Button } from "@/app/_components/ui/CButton";
-import { Input } from "@/app/_components/ui/CInput";
+import { Button } from "@/app/_components/ui/Button";
+import { Input } from "@/app/_components/ui/Input";
 import { Hash } from "lucide-react";
 
 interface ShareHashtagSectionProps {

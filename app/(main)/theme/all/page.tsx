@@ -1,8 +1,8 @@
-import { Header } from "@/app/_components/layout/CHeader";
+import { Header } from "@/app/_components/layout/Header";
 import { BottomNavigation } from "@/app/_components/layout/BottomNavigation";
 import { CatCharacter } from "@/app/_components/cat/CatCharacter";
-import { Card } from "@/app/_components/ui/CCard";
-import { Button } from "@/app/_components/ui/CButton";
+import { Card } from "@/app/_components/ui/Card";
+import { Button } from "@/app/_components/ui/Button";
 import Link from "next/link";
 
 interface Theme {
@@ -137,8 +137,7 @@ export default function AllThemesPage() {
 								<div className="p-4">
 									<div className="flex items-center justify-between mb-3">
 										<div className="flex items-center gap-2">
-											<span className="text-xs px-2 py-1 bg-gray-100 rounded-full text-gray-600">
-											</span>
+											<span className="text-xs px-2 py-1 bg-gray-100 rounded-full text-gray-600"></span>
 											<span className="text-xs text-gray-500">난이도</span>
 										</div>
 									</div>

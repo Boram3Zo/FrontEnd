@@ -1,4 +1,4 @@
-import { Header } from "@/app/_components/layout/CHeader";
+import { Header } from "@/app/_components/layout/Header";
 import { BottomNavigation } from "@/app/_components/layout/BottomNavigation";
 import { HeroSection } from "@/app/_components/main/HeroSection";
 import { FeatureCards } from "@/app/_components/main/FeatureCards";

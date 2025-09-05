@@ -1,4 +1,4 @@
-import { Button } from "@/app/_components/ui/CButton";
+import { Button } from "@/app/_components/ui/Button";
 import { ThemeOption } from "@/app/_types/shareTypes";
 
 interface ShareThemeSelectionProps {

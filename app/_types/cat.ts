@@ -23,4 +23,5 @@ export interface CatCharacterProps {
 	className?: string;
 	animation?: "bounce" | "wiggle" | "none";
 	size?: "sm" | "md" | "lg";
+	breed?: string;
 }

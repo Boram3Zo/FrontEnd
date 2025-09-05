@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
 import { WalkingSession } from "@/app/_types/walking";
 import { Cat } from "@/app/_types/cat";
+import { WALKING_CONSTANTS } from "@/app/_constants/constants";
+import { saveLatestSession } from "@/app/_libs/walkingStorage";
 
 export function useWalkingSession() {
 	const [session, setSession] = useState<WalkingSession | null>(null);
@@ -15,10 +17,13 @@ export function useWalkingSession() {
 			durationSec: 0,
 			distanceKm: 0,
 			route: [],
+			pins: [], // 시작할 때는 빈 배열
 			isActive: true,
 			isPaused: false,
 		};
 		setSession(newSession);
+		// 🔴 시작 시에도 세션을 저장하여 복구 가능하도록 함
+		saveLatestSession(newSession);
 	};
 
 	const stopWalking = () => {
@@ -37,7 +42,7 @@ export function useWalkingSession() {
 	useEffect(() => {
 		if (session?.isActive && !session.isPaused) {
 			const timer = setTimeout(() => {
-				if (Math.random() > 0.7) {
+				if (Math.random() > WALKING_CONSTANTS.CAT_DISCOVERY_THRESHOLD) {
 					// 30% chance of discovering a cat
 					setDiscoveredCat({
 						id: "random-cat",
@@ -53,7 +58,7 @@ export function useWalkingSession() {
 						isDiscovered: true,
 					});
 				}
-			}, 10000); // Check every 10 seconds
+			}, WALKING_CONSTANTS.CAT_CHECK_INTERVAL_MS);
 
 			return () => clearTimeout(timer);
 		}

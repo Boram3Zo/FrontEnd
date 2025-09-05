@@ -1,6 +1,6 @@
 "use client";
 
-import { Header } from "@/app/_components/layout/CHeader";
+import { Header } from "@/app/_components/layout/Header";
 import { BottomNavigation } from "@/app/_components/layout/BottomNavigation";
 import { CatDiscoveryModal } from "@/app/_components/cat/CatDiscoveryModal";
 import { WalkStartSection } from "@/app/_components/walk/WalkStartSection";

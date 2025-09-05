@@ -1,4 +1,4 @@
-import { Card } from "@/app/_components/ui/CCard";
+import { Card } from "@/app/_components/ui/Card";
 import { MapPin, Heart } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";

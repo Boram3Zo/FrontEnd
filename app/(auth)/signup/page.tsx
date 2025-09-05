@@ -1,10 +1,10 @@
-import { Header } from "@/app/_components/layout/CHeader";
+import { Header } from "@/app/_components/layout/Header";
 import { BottomNavigation } from "@/app/_components/layout/BottomNavigation";
-import { Button } from "@/app/_components/ui/CButton";
-import { Input } from "@/app/_components/ui/CInput";
-import { Card, CardContent, CardHeader, CardTitle } from "@/app/_components/ui/CCard";
-import { Label } from "@/app/_components/ui/CLabel";
-import { Checkbox } from "@/app/_components/ui/CCheckbox";
+import { Button } from "@/app/_components/ui/Button";
+import { Input } from "@/app/_components/ui/Input";
+import { Card, CardContent, CardHeader, CardTitle } from "@/app/_components/ui/Card";
+import { Label } from "@/app/_components/ui/Label";
+import { Checkbox } from "@/app/_components/ui/Checkbox";
 import Link from "next/link";
 
 export default function SignupPage() {

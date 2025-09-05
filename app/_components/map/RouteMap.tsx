@@ -3,13 +3,24 @@
 
 import { useRef } from "react";
 import { GoogleMap, LatLng } from "./GoogleMap";
+import { WalkingPin } from "@/app/_types/walking";
+import { addRoutePins } from "./pinUtils";
 
 /**
  * 산책 경로를 지도에 표시하는 컴포넌트
  * @param route - 경로 좌표 배열
+ * @param pins - 시작점/종료점 핀 정보 (선택사항)
  * @param height - 지도 높이 클래스명
  */
-export default function RouteMap({ route, height = "h-[220px]" }: { route: LatLng[]; height?: string }) {
+export default function RouteMap({
+	route,
+	pins,
+	height = "h-[220px]",
+}: {
+	route: LatLng[];
+	pins?: WalkingPin[];
+	height?: string;
+}) {
 	const mapRef = useRef<google.maps.Map | null>(null);
 
 	/**
@@ -29,12 +40,13 @@ export default function RouteMap({ route, height = "h-[220px]" }: { route: LatLn
 			strokeWeight: 5,
 		});
 
-		new google.maps.Marker({ map, position: route[0], label: "S", title: "시작" });
-		new google.maps.Marker({ map, position: route[route.length - 1], label: "E", title: "도착" });
+		// 시작점과 종료점 핀 추가 (유틸리티 함수 사용)
+		addRoutePins(map, route, pins);
 
-		const b = new google.maps.LatLngBounds();
-		route.forEach(p => b.extend(p));
-		map.fitBounds(b);
+		// 지도 영역을 경로에 맞게 조정
+		const bounds = new google.maps.LatLngBounds();
+		route.forEach(point => bounds.extend(point));
+		map.fitBounds(bounds);
 	};
 
 	return (

@@ -1,9 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import { Card } from "@/app/_components/ui/CCard";
-import { Button } from "@/app/_components/ui/CButton";
-import { Badge } from "@/app/_components/ui/CBadge";
+import { Card } from "@/app/_components/ui/Card";
+import { Button } from "@/app/_components/ui/Button";
+import { Badge } from "@/app/_components/ui/Badge";
 import { CatDiscoveryModal } from "@/app/_components/cat/CatDiscoveryModal";
 import { CollectedCat } from "@/app/_components/cat/CollectedCat";
 import { ChevronUp, ChevronDown } from "lucide-react";

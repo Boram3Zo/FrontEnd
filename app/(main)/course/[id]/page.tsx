@@ -1,10 +1,10 @@
 // app/course/[id]/page.tsx
 // "use client"
 
-import { Header } from "@/app/_components/layout/CHeader";
+import { Header } from "@/app/_components/layout/Header";
 import { BottomNavigation } from "@/app/_components/layout/BottomNavigation";
-import { Button } from "@/app/_components/ui/CButton";
-import { Card } from "@/app/_components/ui/CCard";
+import { Button } from "@/app/_components/ui/Button";
+import { Card } from "@/app/_components/ui/Card";
 import { Heart, Share2, Clock, Route, MapPin } from "lucide-react";
 
 interface CourseSpot {

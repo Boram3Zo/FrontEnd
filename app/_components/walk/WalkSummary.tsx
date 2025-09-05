@@ -2,14 +2,16 @@
 "use client";
 
 import { useMemo } from "react";
-import { Card } from "@/app/_components/ui/CCard";
-import { Button } from "@/app/_components/ui/CButton";
+import { Card } from "@/app/_components/ui/Card";
+import { Button } from "@/app/_components/ui/Button";
 import { Share, Save, Trophy, MapPin, Clock, Route } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useGoogleMaps } from "@/app/_providers";
+import { WalkingSession, WalkingPin } from "@/app/_types/walking";
+import { addRoutePins } from "@/app/_components/map/pinUtils";
 
 // 간단 지도: sessionStorage/localStorage에서 경로를 읽어 폴리라인으로 표시
-function RouteMap({ route }: { route: google.maps.LatLngLiteral[] }) {
+function RouteMap({ route, pins }: { route: google.maps.LatLngLiteral[]; pins: WalkingPin[] }) {
 	const { isLoaded } = useGoogleMaps();
 
 	// 지도를 파일 내부에서 직접 렌더(공용 컴포넌트 없어도 동작하도록)
@@ -25,8 +27,8 @@ function RouteMap({ route }: { route: google.maps.LatLngLiteral[] }) {
 					clickableIcons: false,
 					disableDefaultUI: true,
 				});
-				new google.maps.Marker({ map, position: route[0], label: "S", title: "시작" });
-				new google.maps.Marker({ map, position: route[route.length - 1], label: "E", title: "도착" });
+
+				// 폴리라인으로 경로 표시
 				new google.maps.Polyline({
 					path: route,
 					geodesic: true,
@@ -35,10 +37,14 @@ function RouteMap({ route }: { route: google.maps.LatLngLiteral[] }) {
 					strokeOpacity: 0.95,
 					strokeWeight: 5,
 				});
-				// bounds
-				const b = new google.maps.LatLngBounds();
-				route.forEach(p => b.extend(p));
-				map.fitBounds(b);
+
+				// 시작점과 종료점 핀 추가 (유틸리티 함수 사용)
+				addRoutePins(map, route, pins);
+
+				// bounds 설정
+				const bounds = new google.maps.LatLngBounds();
+				route.forEach(point => bounds.extend(point));
+				map.fitBounds(bounds);
 			}}
 		/>
 	);
@@ -48,16 +54,17 @@ export default function WalkingSummary() {
 	const router = useRouter();
 
 	// 1) 트래커가 방금 저장한 세션을 우선 사용
-	const { durationSec, distanceKm, route } = useMemo(() => {
+	const { durationSec, distanceKm, route, pins } = useMemo(() => {
 		try {
 			const raw = sessionStorage.getItem("walking:latest");
 			if (raw) {
-				const s = JSON.parse(raw) as {
-					durationSec: number;
-					distanceKm: number;
-					route: { lat: number; lng: number }[];
+				const s = JSON.parse(raw) as WalkingSession;
+				return {
+					durationSec: s.durationSec ?? 0,
+					distanceKm: s.distanceKm ?? 0,
+					route: s.route?.map(r => ({ lat: r.lat, lng: r.lng })) ?? [],
+					pins: s.pins ?? [],
 				};
-				return { durationSec: s.durationSec ?? 0, distanceKm: s.distanceKm ?? 0, route: s.route ?? [] };
 			}
 		} catch {}
 		// 2) 없으면 예제 호환(localStorage.manualPath)
@@ -66,10 +73,20 @@ export default function WalkingSummary() {
 			if (manual) {
 				const arr = JSON.parse(manual) as { lat: number; lng: number }[];
 				const dist = arr.reduce((acc, cur, i) => (i ? acc + haversine(arr[i - 1], cur) : 0), 0);
-				return { durationSec: 0, distanceKm: +(dist / 1000).toFixed(3), route: arr };
+				return {
+					durationSec: 0,
+					distanceKm: +(dist / 1000).toFixed(3),
+					route: arr,
+					pins: [],
+				};
 			}
 		} catch {}
-		return { durationSec: 0, distanceKm: 0, route: [] as { lat: number; lng: number }[] };
+		return {
+			durationSec: 0,
+			distanceKm: 0,
+			route: [] as { lat: number; lng: number }[],
+			pins: [] as WalkingPin[],
+		};
 	}, []);
 
 	const formatTime = (seconds: number) => {
@@ -121,7 +138,7 @@ export default function WalkingSummary() {
 				</div>
 				<div className="p-4">
 					{route.length ? (
-						<RouteMap route={route} />
+						<RouteMap route={route} pins={pins} />
 					) : (
 						<div className="h-48 flex items-center justify-center text-gray-500">최근 산책 경로가 없습니다.</div>
 					)}

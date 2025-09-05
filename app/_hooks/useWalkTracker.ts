@@ -1,43 +1,16 @@
 import { useEffect, useRef, useState } from "react";
-
-interface UseWalkTrackerProps {
-	onStop: () => void;
-}
-
-interface UseWalkTrackerReturn {
-	// 지도 관련 refs
-	mapRef: React.MutableRefObject<HTMLDivElement | null>;
-	map: React.MutableRefObject<google.maps.Map | null>;
-	marker: React.MutableRefObject<google.maps.Marker | null>;
-	poly: React.MutableRefObject<google.maps.Polyline | null>;
-	pathRef: React.MutableRefObject<google.maps.LatLngLiteral[]>;
-
-	// 상태
-	tracking: boolean;
-	paused: boolean;
-	manualMode: boolean;
-	manualLatLng: { lat: number; lng: number } | null;
-	elapsedMs: number;
-	distance: number;
-
-	// 함수들
-	handleMapLoad: () => void;
-	togglePause: () => void;
-	toggleManualMode: () => void;
-	finishAndNotifyParent: () => void;
-	handleManualMove: (next: { lat: number; lng: number }) => void;
-	setManualLatLng: React.Dispatch<React.SetStateAction<{ lat: number; lng: number } | null>>;
-
-	// 상수
-	DEFAULT_CENTER: { lat: number; lng: number };
-	DELTA: number;
-}
+import { UseWalkTrackerProps, UseWalkTrackerReturn } from "@/app/_types/walking";
+import { saveLatestSession } from "@/app/_libs/walkingStorage";
+import { WALKING_CONSTANTS } from "@/app/_constants/walking";
+import { useWalking } from "@/app/_providers";
 
 /**
  * 산책 추적 커스텀 훅
  * GPS 위치 추적, 거리 측정, 경로 기록 등의 상태와 로직을 관리합니다
  */
 export function useWalkTracker({ onStop }: UseWalkTrackerProps): UseWalkTrackerReturn {
+	const { updateSession } = useWalking();
+
 	// 지도/트래킹 상태
 	const mapRef = useRef<HTMLDivElement | null>(null);
 	const map = useRef<google.maps.Map | null>(null);
@@ -182,17 +155,44 @@ export function useWalkTracker({ onStop }: UseWalkTrackerProps): UseWalkTrackerR
 			timestamp: new Date(now + i * 1000).toISOString(),
 		}));
 
-		const latest = {
+		// 시작점과 종료점 핀 생성
+		const pins = [];
+		if (pathRef.current.length > 0) {
+			const startPoint = pathRef.current[0];
+			const endPoint = pathRef.current[pathRef.current.length - 1];
+
+			pins.push({
+				lat: startPoint.lat,
+				lng: startPoint.lng,
+				type: "start" as const,
+				timestamp: new Date(startedAt).toISOString(),
+			});
+
+			pins.push({
+				lat: endPoint.lat,
+				lng: endPoint.lng,
+				type: "end" as const,
+				timestamp: new Date().toISOString(),
+			});
+		}
+
+		const completedSession = {
 			id: crypto.randomUUID(),
 			startTime: new Date(startedAt).toISOString(),
 			endTime: new Date().toISOString(),
 			durationSec,
 			distanceKm,
 			route,
+			pins, // 시작 및 종료 지점 핀 추가
+			isActive: false, // 🔴 완료된 세션으로 표시
+			isPaused: false,
 		};
-		try {
-			sessionStorage.setItem("walking:latest", JSON.stringify(latest));
-		} catch {}
+
+		// 🔴 통합된 저장 함수 사용
+		saveLatestSession(completedSession);
+
+		// 🔴 WalkingProvider 상태도 업데이트
+		updateSession(completedSession);
 
 		try {
 			if (pathRef.current.length > 1) {
@@ -242,6 +242,35 @@ export function useWalkTracker({ onStop }: UseWalkTrackerProps): UseWalkTrackerR
 			return () => clearInterval(id);
 		}
 	}, [tracking, manualMode, paused]);
+
+	// 실시간 세션 자동 저장 효과
+	useEffect(() => {
+		if ((tracking || manualMode) && !paused) {
+			const id = window.setInterval(() => {
+				// 30초마다 현재 진행 상황을 저장
+				const currentSession = {
+					id: crypto.randomUUID(),
+					startTime: new Date(startedAt).toISOString(),
+					endTime: "0", // 아직 진행 중
+					durationSec: Math.round(elapsedMs / 1000),
+					distanceKm: +(distance / 1000).toFixed(3),
+					route: pathRef.current.map((p, i) => ({
+						lat: p.lat,
+						lng: p.lng,
+						timestamp: new Date(startedAt + i * 1000).toISOString(),
+					})),
+					pins: [], // 진행 중일 때는 빈 배열
+					isActive: true, // 진행 중 표시
+					isPaused: paused,
+				};
+				saveLatestSession(currentSession);
+				// 🔴 WalkingProvider 상태도 실시간 업데이트
+				updateSession(currentSession);
+			}, WALKING_CONSTANTS.SESSION_AUTO_SAVE_INTERVAL_MS);
+
+			return () => clearInterval(id);
+		}
+	}, [tracking, manualMode, paused, elapsedMs, distance, startedAt, updateSession]);
 
 	// GPS 시작 효과
 	useEffect(() => {

@@ -1,4 +1,4 @@
-import { Input } from "@/app/_components/ui/CInput";
+import { Input } from "@/app/_components/ui/Input";
 import { Clock, Route } from "lucide-react";
 import { WalkingSession } from "@/app/_types/walking";
 

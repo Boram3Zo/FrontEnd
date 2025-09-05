@@ -1,6 +1,6 @@
 import { render, screen, fireEvent } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { Button, buttonVariants } from "@/app/_components/ui/CButton";
+import { Button, buttonVariants } from "@/app/_components/ui/Button";
 
 describe("Button 컴포넌트", () => {
 	describe("렌더링", () => {
