@@ -27,9 +27,9 @@ export default function MyPage() {
 					<div className="relative inline-block mb-4">
 						<CollectedCat breed={selectedCatBreed} size="lg" />
 					<button onClick={() => setShowCatSelection(true)}
-					className="absolute -bottom-1 -right-1 w-8 h-8 bg-orange-500 rounded-full flex items-center justify-center hover:bg-orange-600 transition-colors"
+					className="absolute -bottom-1 -right-1 w-4 h-4 bg-orange-500 rounded-full flex items-center justify-center hover:bg-orange-600 transition-colors"
 					>
-						<Edit3 className="h-4 w-4 text-white" />
+						<Edit3 className="h-2 w-2 text-white" />
 					</button>
 					</div>
 
@@ -102,7 +102,7 @@ export default function MyPage() {
 				</div>
 
 				{/* Settings Menu */}
-				<div className="space-y-2">
+				{/* <div className="space-y-2">
 					<h2 className="text-lg font-semibold text-gray-800 mb-3">설정</h2>
 
 					{[
@@ -118,7 +118,7 @@ export default function MyPage() {
 							</div>
 						</Card>
 					))}
-				</div>
+				</div> */}
 			</main>
 
 			<BottomNavigation />
