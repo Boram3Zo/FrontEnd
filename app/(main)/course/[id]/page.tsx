@@ -5,7 +5,7 @@ import { Header } from "@/app/_components/layout/Header";
 import { BottomNavigation } from "@/app/_components/layout/BottomNavigation";
 import { Button } from "@/app/_components/ui/Button";
 import { Card } from "@/app/_components/ui/Card";
-import { Heart, Share2, Clock, Route, MapPin } from "lucide-react";
+import { Heart, Clock, Route, MapPin } from "lucide-react";
 
 interface CourseSpot {
 	id: string;

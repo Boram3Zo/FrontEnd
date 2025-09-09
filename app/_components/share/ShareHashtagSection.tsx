@@ -41,17 +41,6 @@ export function ShareHashtagSection({
 		}
 	};
 
-	/**
-	 * 인기 해시태그 클릭 시 추가/제거 토글 처리
-	 */
-	const handlePopularTagClick = (tag: string) => {
-		if (!hashtags.includes(tag)) {
-			onHashtagAdd(tag);
-		} else {
-			onHashtagRemove(tag);
-		}
-	};
-
 	return (
 		<div className="px-4 py-4">
 			<div className="flex items-center gap-2 mb-3">

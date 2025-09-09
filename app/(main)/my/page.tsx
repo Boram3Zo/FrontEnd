@@ -1,10 +1,10 @@
-"use client"
+"use client";
 
-import { useState } from "react"
+import { useState } from "react";
 import { Header } from "@/app/_components/layout/Header";
 import { BottomNavigation } from "@/app/_components/layout/BottomNavigation";
 import { Card } from "@/app/_components/ui/Card";
-import { Settings, Award, MapPin, Clock, Heart, Share2, Bell, HelpCircle, Edit3 } from "lucide-react";
+import { Award, MapPin, Clock, Heart, Share2, Edit3 } from "lucide-react";
 import { CatSelectionModal } from "@/app/_components/cat/CatSelectionModal";
 import { CollectedCat } from "@/app/_components/cat/CollectedCat";
 
@@ -13,8 +13,8 @@ export default function MyPage() {
 	const [selectedCatBreed, setSelectedCatBreed] = useState("코리안 숏헤어");
 
 	const handleCatChange = (breed: string) => {
-		setSelectedCatBreed(breed)
-		setShowCatSelection(false)
+		setSelectedCatBreed(breed);
+		setShowCatSelection(false);
 	};
 
 	return (
@@ -26,11 +26,12 @@ export default function MyPage() {
 				<div className="py-6 text-center">
 					<div className="relative inline-block mb-4">
 						<CollectedCat breed={selectedCatBreed} size="lg" />
-					<button onClick={() => setShowCatSelection(true)}
-					className="absolute -bottom-1 -right-1 w-4 h-4 bg-orange-500 rounded-full flex items-center justify-center hover:bg-orange-600 transition-colors"
-					>
-						<Edit3 className="h-2 w-2 text-white" />
-					</button>
+						<button
+							onClick={() => setShowCatSelection(true)}
+							className="absolute -bottom-1 -right-1 w-4 h-4 bg-orange-500 rounded-full flex items-center justify-center hover:bg-orange-600 transition-colors"
+						>
+							<Edit3 className="h-2 w-2 text-white" />
+						</button>
 					</div>
 
 					<h1 className="text-2xl font-bold text-gray-800 mb-2">고양이 탐험가</h1>
