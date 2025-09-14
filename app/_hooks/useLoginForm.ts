@@ -15,10 +15,15 @@ export function useLoginForm() {
 
 	const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		const { id, value } = e.target;
-		setFormData(prev => ({
-			...prev,
-			[id]: value,
-		}));
+		console.log("🔄 Input Change:", { id, value }); // 디버깅용 로그
+		setFormData(prev => {
+			const newData = {
+				...prev,
+				[id]: value,
+			};
+			console.log("📝 Updated Form Data:", newData); // 디버깅용 로그
+			return newData;
+		});
 	};
 
 	const handleSubmit = async (e: React.FormEvent) => {
@@ -33,13 +38,18 @@ export function useLoginForm() {
 		setIsLoading(true);
 		setError("");
 
+		console.log("📤 Login Attempt:", {
+			email: formData.email,
+			password: formData.password,
+			emailLength: formData.email?.length || 0,
+			passwordLength: formData.password?.length || 0,
+		}); // 디버깅용 로그
+
 		try {
 			const response = await AuthService.login(formData.email, formData.password);
 
-			// 로그인 성공 시 토큰을 localStorage에 저장 (실제 구현에서는 보안 고려 필요)
-			if (response.token) {
-				localStorage.setItem("authToken", response.token);
-			}
+			// 세션 기반 인증: JSESSIONID 쿠키가 자동으로 설정됨 (credentials: 'include'로 처리)
+			console.log("✅ 로그인 성공:", response);
 
 			alert("로그인이 완료되었습니다!");
 			router.push("/"); // 메인 페이지로 이동

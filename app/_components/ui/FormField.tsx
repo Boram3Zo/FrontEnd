@@ -30,6 +30,7 @@ export function FormField({
 			</Label>
 			<Input
 				id={id}
+				name={id}
 				type={type}
 				placeholder={placeholder}
 				className="h-12"

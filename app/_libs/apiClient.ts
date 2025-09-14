@@ -85,17 +85,29 @@ export class ApiClient {
 				...defaultHeaders,
 				...options.headers,
 			},
+			credentials: "include", // 세션 쿠키(JSESSIONID) 자동 포함
 			...options,
 		};
 
 		try {
-			// 디버깅용 로깅
-			console.log("🚀 API Request:", {
+			// 디버깅용 로깅 (더 상세하게)
+			console.log("🚀 API Request Details:", {
 				url,
 				method: config.method || "GET",
 				headers: config.headers,
-				body: config.body,
+				rawBody: config.body,
+				bodyType: typeof config.body,
 			});
+
+			// JSON 파싱하여 실제 데이터 확인
+			if (config.body && typeof config.body === "string") {
+				try {
+					const parsedBody = JSON.parse(config.body);
+					console.log("📋 Parsed Body Data:", parsedBody);
+				} catch {
+					console.warn("⚠️ Body는 JSON이 아닙니다:", config.body);
+				}
+			}
 
 			const response = await fetch(url, config);
 			const data = await this.safeJsonParse(response);

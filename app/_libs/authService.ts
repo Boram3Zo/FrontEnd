@@ -20,4 +20,14 @@ export class AuthService {
 			throw error;
 		}
 	}
+
+	static async logout(): Promise<void> {
+		try {
+			await ApiClient.post(API_ENDPOINTS.LOGOUT);
+			// 세션 쿠키는 서버에서 자동으로 삭제됨
+		} catch (error) {
+			// 로그아웃 실패 시에도 에러를 전달
+			throw error;
+		}
+	}
 }
