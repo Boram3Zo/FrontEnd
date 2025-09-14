@@ -1,16 +1,15 @@
 // app/walk/walking-summary.tsx
 "use client";
 
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
 import { Card } from "@/app/_components/ui/Card";
 import { Button } from "@/app/_components/ui/Button";
-import { Share, Save, Trophy, MapPin, Clock, Route } from "lucide-react";
+import { Share, Trophy, MapPin, Clock, Route } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useGoogleMaps } from "@/app/_providers";
-import { WalkingSession, WalkingPin } from "@/app/_types/walking";
+import { WalkingPin } from "@/app/_types/walking";
 import { mapsSearchUrlForLatLng } from "@/app/_utils/googleMaps";
 import { addRoutePins } from "@/app/_components/map/pinUtils";
-import { saveRoute } from "@/app/_libs/routeService";
 
 // 간단 지도: sessionStorage/localStorage에서 경로를 읽어 폴리라인으로 표시
 function RouteMap({ route, pins }: { route: google.maps.LatLngLiteral[]; pins: WalkingPin[] }) {
@@ -54,18 +53,22 @@ function RouteMap({ route, pins }: { route: google.maps.LatLngLiteral[]; pins: W
 
 export default function WalkingSummary() {
 	const router = useRouter();
-	const [isSaving, setIsSaving] = useState(false);
 
 	// 1) 트래커가 방금 저장한 세션을 우선 사용
 	const { durationSec, distanceKm, route, pins } = useMemo(() => {
 		try {
 			const raw = sessionStorage.getItem("walking:latest");
 			if (raw) {
-				const s = JSON.parse(raw) as WalkingSession;
+				const s = JSON.parse(raw) as {
+					durationSec?: number;
+					distanceKm?: number;
+					route?: Array<{ lat: number; lng: number }>;
+					pins?: WalkingPin[];
+				};
 				return {
 					durationSec: s.durationSec ?? 0,
 					distanceKm: s.distanceKm ?? 0,
-					route: s.route?.map(r => ({ lat: r.lat, lng: r.lng })) ?? [],
+					route: s.route?.map((r: { lat: number; lng: number }) => ({ lat: r.lat, lng: r.lng })) ?? [],
 					pins: s.pins ?? [],
 				};
 			}
@@ -104,7 +107,7 @@ export default function WalkingSummary() {
 		startDetailed: StartDetailed;
 		startGuRoad: string | null;
 	} => {
-		const start = pins?.find(p => p.type === "start");
+		const start = pins?.find((p: WalkingPin) => p.type === "start");
 		if (!start) return { startAddress: null, startCoords: null, startDetailed: null, startGuRoad: null };
 		const mapInfo = {
 			startAddress: start.address ?? null,
@@ -130,53 +133,6 @@ export default function WalkingSummary() {
 		const m = Math.floor(paceMinutes);
 		const s = Math.round((paceMinutes - m) * 60);
 		return `${m}'${s.toString().padStart(2, "0")}"`;
-	};
-
-	// 경로 저장 핸들러
-	const handleSaveRoute = async () => {
-		if (isSaving) return;
-
-		try {
-			setIsSaving(true);
-
-			// 세션 데이터 구성
-			const session: WalkingSession = {
-				id: crypto.randomUUID(),
-				startTime: new Date().toISOString(),
-				endTime: new Date().toISOString(),
-				durationSec,
-				distanceKm,
-				route: route.map((r, i) => ({
-					lat: r.lat,
-					lng: r.lng,
-					timestamp: new Date(Date.now() + i * 1000).toISOString(),
-				})),
-				pins,
-				isActive: false,
-				isPaused: false,
-			};
-
-			// 임시 memberId (실제로는 인증된 사용자 ID 사용)
-			const memberId = 1; // TODO: 실제 로그인 사용자 ID로 교체
-
-			const result = await saveRoute(
-				session,
-				pins,
-				memberId,
-				`산책 경로 - ${new Date().toLocaleDateString()}`,
-				`총 거리: ${formatDistance(distanceKm)}, 소요시간: ${formatTime(durationSec)}`,
-				"일반",
-				["산책", "운동"]
-			);
-
-			console.log("경로 저장 성공:", result);
-			alert(`경로가 성공적으로 저장되었습니다! (ID: ${result.data})`);
-		} catch (error) {
-			console.error("경로 저장 실패:", error);
-			alert("경로 저장에 실패했습니다. 다시 시도해주세요.");
-		} finally {
-			setIsSaving(false);
-		}
 	};
 
 	return (
@@ -248,19 +204,10 @@ export default function WalkingSummary() {
 			</Card>
 
 			{/* 액션 */}
-			<div className="grid grid-cols-2 gap-3">
+			<div className="w-full">
 				<Button
 					variant="outline"
-					className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white py-4 text-lg font-medium rounded-xl"
-					onClick={handleSaveRoute}
-					disabled={isSaving}
-				>
-					<Save className="h-4 w-4 mr-2" />
-					{isSaving ? "저장 중..." : "저장하기"}
-				</Button>
-				<Button
-					variant="outline"
-					className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white py-4 text-lg font-medium rounded-xl"
+					className="w-full bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white py-4 text-lg font-medium rounded-xl"
 					onClick={() => router.push("/share")}
 				>
 					<Share className="h-5 w-5 mr-2" />

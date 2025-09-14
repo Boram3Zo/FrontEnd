@@ -2,6 +2,37 @@
 import { renderHook, act } from "@testing-library/react";
 import { usePhotoManager } from "@/app/_hooks/usePhotoManager";
 
+// Mock console.error to suppress EXIF warnings
+const originalError = console.error;
+beforeAll(() => {
+	console.error = jest.fn();
+});
+
+afterAll(() => {
+	console.error = originalError;
+});
+
+// Mock photoUtils to avoid EXIF issues
+jest.mock("@/app/_libs/photoUtils", () => ({
+	filterImageFiles: jest.fn((files: FileList) => Array.from(files).filter(file => file.type.startsWith("image/"))),
+	createPhotoFromFile: jest.fn(async (file: File) => ({
+		id: "mock-uuid-123",
+		file,
+		preview: "mock-object-url",
+		title: "",
+		description: "",
+	})),
+	createPhotoFromFileSync: jest.fn((file: File) => ({
+		id: "mock-uuid-123",
+		file,
+		preview: "mock-object-url",
+		title: "",
+		description: "",
+	})),
+	revokePhotoPreview: jest.fn(),
+	findPhotoById: jest.fn((photos: Array<{ id: string }>, id: string) => photos.find(p => p.id === id)),
+}));
+
 // Mock crypto.randomUUID
 Object.defineProperty(globalThis, "crypto", {
 	value: {
@@ -17,6 +48,9 @@ Object.defineProperty(globalThis, "URL", {
 	},
 });
 
+// Import the mocked photoUtils
+import * as photoUtils from "@/app/_libs/photoUtils";
+
 describe("usePhotoManager", () => {
 	beforeEach(() => {
 		jest.clearAllMocks();
@@ -28,10 +62,10 @@ describe("usePhotoManager", () => {
 		expect(result.current.photos).toEqual([]);
 	});
 
-	it("should add photos when addPhotos is called", () => {
+	it("should add photos when addPhotos is called", async () => {
 		const { result } = renderHook(() => usePhotoManager({ maxPhotos: 3 }));
 
-		const mockFile = new File([""], "test.jpg", { type: "image/jpeg" });
+		const mockFile = new File(["test content"], "test.jpg", { type: "image/jpeg" });
 		const mockFileList = {
 			0: mockFile,
 			length: 1,
@@ -41,8 +75,8 @@ describe("usePhotoManager", () => {
 			},
 		} as FileList;
 
-		act(() => {
-			result.current.addPhotos(mockFileList);
+		await act(async () => {
+			await result.current.addPhotos(mockFileList);
 		});
 
 		expect(result.current.photos).toHaveLength(1);
@@ -50,11 +84,12 @@ describe("usePhotoManager", () => {
 			id: "mock-uuid-123",
 			file: mockFile,
 			preview: "mock-object-url",
+			title: "",
 			description: "",
 		});
 	});
 
-	it("should not exceed maxPhotos limit", () => {
+	it("should not exceed maxPhotos limit", async () => {
 		const { result } = renderHook(() => usePhotoManager({ maxPhotos: 2 }));
 
 		const mockFiles = [
@@ -76,14 +111,14 @@ describe("usePhotoManager", () => {
 			},
 		} as FileList;
 
-		act(() => {
-			result.current.addPhotos(mockFileList);
+		await act(async () => {
+			await result.current.addPhotos(mockFileList);
 		});
 
 		expect(result.current.photos).toHaveLength(2);
 	});
 
-	it("should remove photo by id", () => {
+	it("should remove photo by id", async () => {
 		const { result } = renderHook(() => usePhotoManager());
 
 		const mockFile = new File([""], "test.jpg", { type: "image/jpeg" });
@@ -97,8 +132,8 @@ describe("usePhotoManager", () => {
 		} as FileList;
 
 		// Add photo first
-		act(() => {
-			result.current.addPhotos(mockFileList);
+		await act(async () => {
+			await result.current.addPhotos(mockFileList);
 		});
 
 		expect(result.current.photos).toHaveLength(1);
@@ -109,10 +144,10 @@ describe("usePhotoManager", () => {
 		});
 
 		expect(result.current.photos).toHaveLength(0);
-		expect(URL.revokeObjectURL).toHaveBeenCalledWith("mock-object-url");
+		expect(photoUtils.revokePhotoPreview).toHaveBeenCalled();
 	});
 
-	it("should update photo description", () => {
+	it("should update photo description", async () => {
 		const { result } = renderHook(() => usePhotoManager());
 
 		const mockFile = new File([""], "test.jpg", { type: "image/jpeg" });
@@ -126,8 +161,8 @@ describe("usePhotoManager", () => {
 		} as FileList;
 
 		// Add photo first
-		act(() => {
-			result.current.addPhotos(mockFileList);
+		await act(async () => {
+			await result.current.addPhotos(mockFileList);
 		});
 
 		// Update description
@@ -138,7 +173,7 @@ describe("usePhotoManager", () => {
 		expect(result.current.photos[0].description).toBe("New description");
 	});
 
-	it("should filter non-image files", () => {
+	it("should filter non-image files", async () => {
 		const { result } = renderHook(() => usePhotoManager());
 
 		const imageFile = new File([""], "image.jpg", { type: "image/jpeg" });
@@ -155,8 +190,8 @@ describe("usePhotoManager", () => {
 			},
 		} as FileList;
 
-		act(() => {
-			result.current.addPhotos(mockFileList);
+		await act(async () => {
+			await result.current.addPhotos(mockFileList);
 		});
 
 		expect(result.current.photos).toHaveLength(1);

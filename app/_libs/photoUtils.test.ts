@@ -1,7 +1,7 @@
 // __tests__/lib/photo/photoUtils.test.ts
 import {
 	isImageFile,
-	createPhotoFromFile,
+	createPhotoFromFileSync,
 	revokePhotoPreview,
 	filterImageFiles,
 	findPhotoById,
@@ -55,12 +55,13 @@ describe("photoUtils", () => {
 	describe("createPhotoFromFile", () => {
 		it("should create a SpotPhoto object from a File", () => {
 			const file = new File([""], "test.jpg", { type: "image/jpeg" });
-			const photo = createPhotoFromFile(file);
+			const photo = createPhotoFromFileSync(file);
 
 			expect(photo).toEqual({
 				id: "mock-uuid-123",
 				file,
 				preview: "mock-object-url",
+				title: "",
 				description: "",
 			});
 

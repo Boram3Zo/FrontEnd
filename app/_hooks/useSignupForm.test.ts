@@ -1,127 +1,95 @@
-// 간단한 mock 함수들
-const mockRouter = {
-	push: (url: string) => console.log(`🔗 Router push: ${url}`),
-};
+import { renderHook, act } from "@testing-library/react";
+import { useSignupForm } from "./useSignupForm";
+import { AuthService } from "@/app/_libs/authService";
+import { useAuth } from "@/app/_providers/AuthProvider";
 
-interface SignupData {
-	name: string;
-	email: string;
-	password: string;
-}
+jest.mock("@/app/_libs/authService");
+jest.mock("@/app/_providers/AuthProvider");
 
-const mockAuthService = {
-	signup: async (data: SignupData) => {
-		console.log("📤 API 호출:", data);
-		if (data.email === "existing@test.com") {
-			throw new Error("이미 존재하는 이메일입니다.");
-		}
-		return { message: "회원가입 성공" };
-	},
-};
+const mockRouterPush = jest.fn();
+jest.mock("next/navigation", () => ({
+	useRouter: () => ({
+		push: mockRouterPush,
+	}),
+}));
 
-// useSignupForm 로직 테스트
-const testSignupFormLogic = () => {
-	console.log("🧪 useSignupForm 로직 테스트 시작...");
+const mockLogin = jest.fn();
+const mockedAuthService = AuthService as jest.Mocked<typeof AuthService>;
+const mockedUseAuth = useAuth as jest.MockedFunction<typeof useAuth>;
 
-	// 폼 데이터 시뮬레이션
-	const formData = {
-		name: "",
-		email: "",
-		password: "",
-		confirmPassword: "",
-	};
-
-	let error = "";
-	const isLoading = false;
-	let termsAccepted = false;
-
-	// 테스트 1: 초기 상태
-	console.log(
-		"✅ 초기 상태:",
-		formData.name === "" && formData.email === "" && error === "" && !isLoading ? "PASS" : "FAIL"
-	);
-
-	// 테스트 2: 입력값 변경
-	formData.name = "홍길동";
-	formData.email = "test@example.com";
-	console.log("✅ 입력값 변경:", formData.name === "홍길동" && formData.email === "test@example.com" ? "PASS" : "FAIL");
-
-	// 테스트 3: 유효성 검사 (빈 필드)
-	const validateForm = () => {
-		if (!formData.name || !formData.email || !formData.password) {
-			return "모든 필드를 입력해주세요.";
-		}
-		if (formData.password !== formData.confirmPassword) {
-			return "비밀번호가 일치하지 않습니다.";
-		}
-		if (!termsAccepted) {
-			return "이용약관에 동의해주세요.";
-		}
-		return null;
-	};
-
-	error = validateForm() || "";
-	console.log("✅ 빈 필드 검증:", error.includes("모든 필드") ? "PASS" : "FAIL");
-
-	// 테스트 4: 완전한 폼 데이터
-	formData.password = "password123";
-	formData.confirmPassword = "password123";
-	termsAccepted = true;
-	error = validateForm() || "";
-	console.log("✅ 완전한 폼 검증:", error === "" ? "PASS" : "FAIL");
-
-	console.log("🎉 useSignupForm 로직 테스트 완료!\n");
-};
-
-// 통합 테스트
-const testSignupFlow = async () => {
-	console.log("🧪 회원가입 플로우 테스트 시작...");
-
-	const formData = {
-		name: "홍길동",
-		email: "test@example.com",
-		password: "password123",
-		confirmPassword: "password123",
-	};
-
-	try {
-		// 성공 케이스
-		console.log("📝 성공 케이스 테스트...");
-		const result = await mockAuthService.signup({
-			name: formData.name,
-			email: formData.email,
-			password: formData.password,
+describe("useSignupForm", () => {
+	beforeEach(() => {
+		jest.clearAllMocks();
+		mockedUseAuth.mockReturnValue({
+			isLoggedIn: false,
+			isLoading: false,
+			login: mockLogin,
+			logout: jest.fn(),
+			checkAuthStatus: jest.fn(),
 		});
-		console.log("✅ 회원가입 성공:", result.message === "회원가입 성공" ? "PASS" : "FAIL");
-		mockRouter.push("/login");
+	});
 
-		// 실패 케이스
-		console.log("📝 실패 케이스 테스트...");
-		try {
-			await mockAuthService.signup({
-				name: "다른사용자",
-				email: "existing@test.com",
-				password: "password123",
-			});
-			console.log("❌ 실패 케이스: FAIL (에러가 발생해야 함)");
-		} catch (error) {
-			console.log("✅ 실패 케이스:", error instanceof Error && error.message.includes("이미 존재") ? "PASS" : "FAIL");
-		}
-	} catch (error) {
-		console.error("❌ 플로우 테스트 에러:", error);
-	}
+	it("should initialize with correct default values", () => {
+		const { result } = renderHook(() => useSignupForm());
 
-	console.log("🎉 회원가입 플로우 테스트 완료!\n");
-};
+		expect(result.current.formData).toEqual({
+			name: "",
+			email: "",
+			password: "",
+			confirmPassword: "",
+		});
+		expect(result.current.isLoading).toBe(false);
+		expect(result.current.error).toBe("");
+		expect(result.current.termsAccepted).toBe(false);
+	});
 
-// 모든 테스트 실행
-const runAllSignupTests = async () => {
-	console.log("🚀 회원가입 전체 테스트 시작\n");
+	it("should handle input changes", () => {
+		const { result } = renderHook(() => useSignupForm());
 
-	testSignupFormLogic();
-	await testSignupFlow();
+		act(() => {
+			result.current.handleInputChange({
+				target: { id: "name", value: "테스트유저" },
+			} as React.ChangeEvent<HTMLInputElement>);
+		});
 
-	console.log("✨ 모든 회원가입 테스트 완료!");
-};
+		expect(result.current.formData.name).toBe("테스트유저");
+	});
 
-export { testSignupFormLogic, testSignupFlow, runAllSignupTests };
+	it("should handle successful signup with auto login", async () => {
+		mockedAuthService.signup.mockResolvedValueOnce({ message: "회원가입 성공" });
+		mockedAuthService.login.mockResolvedValueOnce({ message: "로그인 성공" });
+
+		const { result } = renderHook(() => useSignupForm());
+
+		act(() => {
+			result.current.handleInputChange({
+				target: { id: "name", value: "홍길동" },
+			} as React.ChangeEvent<HTMLInputElement>);
+			result.current.handleInputChange({
+				target: { id: "email", value: "test@example.com" },
+			} as React.ChangeEvent<HTMLInputElement>);
+			result.current.handleInputChange({
+				target: { id: "password", value: "password123" },
+			} as React.ChangeEvent<HTMLInputElement>);
+			result.current.handleInputChange({
+				target: { id: "confirmPassword", value: "password123" },
+			} as React.ChangeEvent<HTMLInputElement>);
+			result.current.setTermsAccepted(true);
+		});
+
+		await act(async () => {
+			await result.current.handleSubmit({
+				preventDefault: jest.fn(),
+			} as unknown as React.FormEvent);
+		});
+
+		expect(mockedAuthService.signup).toHaveBeenCalledWith({
+			name: "홍길동",
+			email: "test@example.com",
+			password: "password123",
+		});
+		expect(mockedAuthService.login).toHaveBeenCalledWith("test@example.com", "password123");
+		expect(mockLogin).toHaveBeenCalled();
+		expect(mockRouterPush).toHaveBeenCalledWith("/");
+	});
+});

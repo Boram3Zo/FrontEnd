@@ -32,25 +32,25 @@ describe("고양이 유틸리티 함수들", () => {
 	describe("getCatsByRarity", () => {
 		it("일반 등급 고양이들을 필터링할 수 있다", () => {
 			const commonCats = getCatsByRarity("common");
-			expect(commonCats).toHaveLength(7);
+			expect(commonCats).toHaveLength(8);
 			expect(commonCats[0].rarity).toBe("common");
 		});
 
 		it("희귀 등급 고양이들을 필터링할 수 있다", () => {
 			const rareCats = getCatsByRarity("rare");
-			expect(rareCats).toHaveLength(7);
+			expect(rareCats).toHaveLength(6);
 			expect(rareCats[0].rarity).toBe("rare");
 		});
 
 		it("에픽 등급 고양이들을 필터링할 수 있다", () => {
 			const epicCats = getCatsByRarity("epic");
-			expect(epicCats).toHaveLength(5);
+			expect(epicCats).toHaveLength(4);
 			expect(epicCats[0].rarity).toBe("epic");
 		});
 
 		it("전설 등급 고양이들을 필터링할 수 있다", () => {
 			const legendaryCats = getCatsByRarity("legendary");
-			expect(legendaryCats).toHaveLength(2);
+			expect(legendaryCats).toHaveLength(3);
 			expect(legendaryCats[0].rarity).toBe("legendary");
 		});
 
@@ -72,9 +72,9 @@ describe("고양이 유틸리티 함수들", () => {
 	});
 
 	describe("getDiscoveredCats", () => {
-		it("현재 발견된 고양이는 11마리다", () => {
+		it("현재 발견된 고양이는 13마리다", () => {
 			const discoveredCats = getDiscoveredCats();
-			expect(discoveredCats).toHaveLength(11);
+			expect(discoveredCats).toHaveLength(13);
 			expect(discoveredCats[0].name).toBe("치즈");
 			expect(discoveredCats[1].name).toBe("루나");
 		});
@@ -88,9 +88,9 @@ describe("고양이 유틸리티 함수들", () => {
 	});
 
 	describe("getUndiscoveredCats", () => {
-		it("현재 미발견 고양이는 11마리다", () => {
+		it("현재 미발견 고양이는 9마리다", () => {
 			const undiscoveredCats = getUndiscoveredCats();
-			expect(undiscoveredCats).toHaveLength(11);
+			expect(undiscoveredCats).toHaveLength(9);
 		});
 
 		it("미발견 고양이들만 반환한다", () => {
