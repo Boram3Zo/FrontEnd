@@ -8,6 +8,7 @@ import { Share, Save, Trophy, MapPin, Clock, Route } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useGoogleMaps } from "@/app/_providers";
 import { WalkingSession, WalkingPin } from "@/app/_types/walking";
+import { mapsSearchUrlForLatLng } from "@/app/_utils/googleMaps";
 import { addRoutePins } from "@/app/_components/map/pinUtils";
 
 // 간단 지도: sessionStorage/localStorage에서 경로를 읽어 폴리라인으로 표시
@@ -89,6 +90,30 @@ export default function WalkingSummary() {
 		};
 	}, []);
 
+	// 시작 위치 주소(가능하면 pins에서 가져옴)
+	type StartDetailed = {
+		formatted?: string;
+		[k: string]: unknown;
+	} | null;
+
+	const { startAddress, startCoords, startDetailed, startGuRoad } = useMemo((): {
+		startAddress: string | null;
+		startCoords: { lat: number; lng: number } | null;
+		startDetailed: StartDetailed;
+		startGuRoad: string | null;
+	} => {
+		const start = pins?.find(p => p.type === "start");
+		if (!start) return { startAddress: null, startCoords: null, startDetailed: null, startGuRoad: null };
+		const mapInfo = {
+			startAddress: start.address ?? null,
+			startCoords: { lat: start.lat, lng: start.lng },
+			startDetailed: (start.addressDetailed as StartDetailed) ?? null,
+			startGuRoad: [start.guName, start.roadName].filter(Boolean).join(" ") || null,
+		};
+		console.log(mapInfo);
+		return mapInfo;
+	}, [pins]);
+
 	const formatTime = (seconds: number) => {
 		const h = Math.floor(seconds / 3600);
 		const m = Math.floor((seconds % 3600) / 60);
@@ -108,7 +133,8 @@ export default function WalkingSummary() {
 	return (
 		<div className="min-h-[60vh]">
 			{/* 통계 */}
-			<div className="grid grid-cols-3 gap-4 mb-6">
+
+			<div className="grid grid-cols-4 gap-4 mb-6">
 				<Card className="p-4 text-center bg-white shadow-lg">
 					<Clock className="h-6 w-6 text-blue-500 mx-auto mb-2" />
 					<div className="text-lg font-bold text-gray-800 mb-1">{formatTime(durationSec)}</div>
@@ -125,6 +151,33 @@ export default function WalkingSummary() {
 					<Trophy className="h-6 w-6 text-orange-500 mx-auto mb-2" />
 					<div className="text-lg font-bold text-gray-800 mb-1">{calculatePace()}</div>
 					<div className="text-xs text-gray-600">평균 페이스</div>
+				</Card>
+				<Card className="p-4 text-center bg-white shadow-lg">
+					<Trophy className="h-6 w-6 text-orange-500 mx-auto mb-2" />
+					<div className="text-lg font-bold text-gray-800 mb-1">{calculatePace()}</div>
+					<div className="text-xs text-gray-600 break-words max-w-[10rem]">
+						{startGuRoad ? (
+							<div>{startGuRoad}</div>
+						) : startAddress ? (
+							<div>
+								<div>{startAddress}</div>
+								{startDetailed?.formatted && startDetailed.formatted !== startAddress ? (
+									<div className="text-[10px] text-gray-500 mt-1 break-words">{startDetailed.formatted}</div>
+								) : null}
+							</div>
+						) : startCoords ? (
+							<a
+								className="text-blue-600 underline"
+								href={mapsSearchUrlForLatLng(startCoords.lat, startCoords.lng)}
+								target="_blank"
+								rel="noreferrer"
+							>
+								위치 보기
+							</a>
+						) : (
+							"주소 정보 없음"
+						)}
+					</div>
 				</Card>
 			</div>
 

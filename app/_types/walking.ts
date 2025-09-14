@@ -5,6 +5,24 @@ export type WalkingPin = {
 	lng: number;
 	type: "start" | "end";
 	timestamp: string; // ISO
+	// Optional human-readable address (e.g. 구/동 or formatted address)
+	address?: string;
+	// Short parsed pieces for easy display
+	guName?: string;
+	roadName?: string;
+	// Optional detailed address components parsed from Geocoder
+	addressDetailed?: {
+		formatted?: string;
+		country?: string;
+		province?: string; // administrative_area_level_1
+		gu?: string; // administrative_area_level_2
+		city?: string; // locality
+		dong?: string; // sublocality_level_1 / sublocality
+		neighborhood?: string;
+		route?: string; // street
+		postalCode?: string;
+		raw?: unknown;
+	};
 };
 
 export type WalkingSession = {

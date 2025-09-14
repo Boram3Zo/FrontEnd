@@ -5,6 +5,7 @@ import Link from "next/link";
 import exifr from "exifr";
 import { GoogleMap } from "@/app/_components/map/GoogleMap";
 import { GoogleMapsProvider } from "@/app/_providers";
+import { mapsSearchUrlForLatLng } from "@/app/_utils/googleMaps";
 
 interface ExifData {
 	make?: string;
@@ -570,7 +571,10 @@ export default function PhotoPage() {
 															{/* Google Maps 링크 */}
 															<div className="mt-2 flex gap-2">
 																<a
-																	href={`https://www.google.com/maps?q=${selectedPhoto.exifData.latitude},${selectedPhoto.exifData.longitude}`}
+																	href={mapsSearchUrlForLatLng(
+																		selectedPhoto.exifData.latitude!,
+																		selectedPhoto.exifData.longitude!
+																	)}
 																	target="_blank"
 																	rel="noopener noreferrer"
 																	className="text-xs px-3 py-1 bg-red-600 text-white rounded hover:bg-red-700 transition-colors"

@@ -56,7 +56,7 @@ export function GoogleMapsProvider({ children }: GoogleMapsProviderProps) {
 		<GoogleMapsContext.Provider value={{ isLoaded }}>
 			{!isLoaded && !scriptAdded && (
 				<Script
-					src={`https://maps.googleapis.com/maps/api/js?key=${apiKey}&libraries=geometry`}
+					src={`https://maps.googleapis.com/maps/api/js?key=${apiKey}&libraries=geometry&language=ko&region=KR`}
 					strategy="afterInteractive"
 					onLoad={handleScriptLoad}
 				/>

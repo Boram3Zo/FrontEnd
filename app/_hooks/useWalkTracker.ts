@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { UseWalkTrackerProps, UseWalkTrackerReturn } from "@/app/_types/walking";
+import { UseWalkTrackerProps, UseWalkTrackerReturn, WalkingPin } from "@/app/_types/walking";
 import { saveLatestSession } from "@/app/_libs/walkingStorage";
 import { WALKING_CONSTANTS } from "@/app/_constants/walking";
 import { useWalking } from "@/app/_providers";
@@ -59,6 +59,28 @@ export function useWalkTracker({ onStop }: UseWalkTrackerProps): UseWalkTrackerR
 			strokeWeight: 5,
 			map: map.current,
 		});
+	};
+
+	// Clean up Google Maps objects and listeners to avoid leaks
+	const cleanupMapObjects = () => {
+		try {
+			if (marker.current) {
+				if (window.google?.maps?.event) window.google.maps.event.clearInstanceListeners(marker.current);
+				marker.current.setMap(null);
+				marker.current = null;
+			}
+			if (poly.current) {
+				if (window.google?.maps?.event) window.google.maps.event.clearInstanceListeners(poly.current);
+				poly.current.setMap(null);
+				poly.current = null;
+			}
+			if (map.current) {
+				if (window.google?.maps?.event) window.google.maps.event.clearInstanceListeners(map.current);
+				map.current = null;
+			}
+		} catch {
+			// noop
+		}
 	};
 
 	/**
@@ -143,7 +165,7 @@ export function useWalkTracker({ onStop }: UseWalkTrackerProps): UseWalkTrackerR
 	/**
 	 * 종료 처리
 	 */
-	const finishAndNotifyParent = () => {
+	const finishAndNotifyParent = async () => {
 		stopTrackingInternal();
 
 		const durationSec = Math.max(1, Math.round(elapsedMs / 1000));
@@ -161,11 +183,94 @@ export function useWalkTracker({ onStop }: UseWalkTrackerProps): UseWalkTrackerR
 			const startPoint = pathRef.current[0];
 			const endPoint = pathRef.current[pathRef.current.length - 1];
 
+			// Try reverse geocoding startPoint to get human-readable address
+			let startAddress: string | undefined = undefined;
+			let startAddressDetailed: WalkingPin["addressDetailed"] | undefined = undefined;
+			try {
+				if (window.google?.maps && window.google.maps.Geocoder) {
+					const geocoder = new window.google.maps.Geocoder();
+					const res = await new Promise<google.maps.GeocoderResult[] | null>(resolve => {
+						geocoder.geocode({ location: { lat: startPoint.lat, lng: startPoint.lng } }, (results, status) => {
+							if (status === "OK" && results) resolve(results);
+							else resolve(null);
+						});
+					});
+					if (res && res.length > 0) {
+						const first = res[0];
+						const addrComp = first.address_components || [];
+
+						const findComp = (types: string[]) => addrComp.find(c => types.some(t => c.types.includes(t)));
+
+						const countryComp = findComp(["country"]);
+						const provinceComp = findComp(["administrative_area_level_1"]);
+						const guComp = findComp(["administrative_area_level_2", "administrative_area_level_3"]);
+						const cityComp = findComp(["locality"]);
+						const dongComp = findComp([
+							"sublocality_level_1",
+							"sublocality",
+							"neighborhood",
+							"administrative_area_level_3",
+						]);
+						const neighborhoodComp = findComp(["neighborhood"]);
+						const routeComp = findComp(["route"]);
+						const postalComp = findComp(["postal_code"]);
+
+						const guName = guComp?.long_name;
+						let dongName = dongComp?.long_name;
+						if (dongName && guName && dongName.includes(guName)) {
+							dongName = dongName.replace(guName, "").trim();
+						}
+
+						// human-readable short address (구 동) preferred
+						if (guName || dongName) {
+							startAddress = [guName, dongName].filter(Boolean).join(" ");
+						} else {
+							startAddress = first.formatted_address;
+						}
+
+						// detailed address object
+						const addressDetailed = {
+							formatted: first.formatted_address,
+							country: countryComp?.long_name,
+							province: provinceComp?.long_name,
+							gu: guComp?.long_name,
+							city: cityComp?.long_name,
+							dong: dongComp?.long_name,
+							neighborhood: neighborhoodComp?.long_name,
+							route: routeComp?.long_name,
+							postalCode: postalComp?.long_name,
+							raw: first,
+						};
+						startAddressDetailed = addressDetailed;
+						// ensure startAddress prefers gu + dong when available
+						if (!startAddress) {
+							if (addressDetailed.gu || addressDetailed.dong) {
+								startAddress = [addressDetailed.gu, addressDetailed.dong].filter(Boolean).join(" ");
+							} else {
+								startAddress = addressDetailed.formatted;
+							}
+						}
+					}
+				}
+			} catch {
+				// ignore geocoding errors
+				/* noop */
+				startAddress = undefined;
+			}
+
+			// attach guName and roadName to the walking pin if available
+			const guName = startAddressDetailed?.gu ?? undefined;
+			const roadName = startAddressDetailed?.route ?? undefined;
+
 			pins.push({
 				lat: startPoint.lat,
 				lng: startPoint.lng,
 				type: "start" as const,
 				timestamp: new Date(startedAt).toISOString(),
+				address: startAddress,
+				guName,
+				roadName,
+				addressDetailed: startAddressDetailed,
 			});
 
 			pins.push({
@@ -280,6 +385,8 @@ export function useWalkTracker({ onStop }: UseWalkTrackerProps): UseWalkTrackerR
 		}
 		return () => {
 			if (watchIdRef.current !== null) navigator.geolocation.clearWatch(watchIdRef.current);
+			// cleanup google maps objects/listeners
+			cleanupMapObjects();
 		};
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
