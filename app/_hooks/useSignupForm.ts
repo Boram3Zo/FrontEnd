@@ -43,11 +43,20 @@ export function useSignupForm() {
 				password: formData.password,
 			});
 
-			alert("회원가입이 완료되었습니다!");
-			router.push("/login");
+			// 회원가입 성공 시 바로 메인화면으로 이동
+			router.push("/");
 		} catch (err) {
 			console.error("회원가입 에러:", err);
-			setError(err instanceof Error ? err.message : "서버에 연결할 수 없습니다. 잠시 후 다시 시도해주세요.");
+			if (err instanceof Error) {
+				// 특정 에러 메시지들을 정확히 표시
+				if (err.message.includes("이미 사용 중인 이메일입니다")) {
+					setError("이미 사용 중인 이메일입니다.");
+				} else {
+					setError(err.message);
+				}
+			} else {
+				setError("서버에 연결할 수 없습니다. 잠시 후 다시 시도해주세요.");
+			}
 		} finally {
 			setIsLoading(false);
 		}
