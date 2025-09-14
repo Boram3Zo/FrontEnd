@@ -44,8 +44,9 @@ docs/
 
 ### 파일명 규칙
 
-- 날짜 + 작업 내용으로 명명: `YYYY-MM-DD-작업내용.md`
-- 예: `2025-09-14-회원가입-메인화면-이동.md`
+- 날짜 + 시간 + 작업 내용으로 명명: `YYYY-MM-DD-HHMM-작업내용.md`
+- 예: `2025-09-14-1455-회원가입-메인화면-이동.md`
+- 시간은 24시간 형식 (HHMM)으로 표기
 
 ### 문서 종류별 분류
 
@@ -61,10 +62,15 @@ docs/
 # 새 문서 생성
 npm run docs:create [type] [title]
 
-# 예시
+# 예시 (자동으로 시간 포함된 파일명 생성됨)
 npm run docs:create change "회원가입-메인화면-이동"
+# → 2025-09-14-1455-회원가입-메인화면-이동.md
+
 npm run docs:create refactoring "API-에러처리-공통화"
+# → 2025-09-14-1456-api-에러처리-공통화.md
+
 npm run docs:create feature "사진-업로드-기능"
+# → 2025-09-14-1457-사진-업로드-기능.md
 ```
 
 ### GitHub Copilot 통합
