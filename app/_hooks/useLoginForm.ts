@@ -3,9 +3,11 @@ import { useRouter } from "next/navigation";
 import { LoginFormData } from "@/app/_types/auth";
 import { AuthService } from "@/app/_libs/authService";
 import { validateLoginForm } from "@/app/_utils/validation";
+import { useAuth } from "@/app/_providers";
 
 export function useLoginForm() {
 	const router = useRouter();
+	const { checkAuthStatus, login } = useAuth();
 	const [formData, setFormData] = useState<LoginFormData>({
 		email: "",
 		password: "",
@@ -50,6 +52,18 @@ export function useLoginForm() {
 
 			// 세션 기반 인증: JSESSIONID 쿠키가 자동으로 설정됨 (credentials: 'include'로 처리)
 			console.log("✅ 로그인 성공:", response);
+
+			// 로그인 성공 후 상태를 즉시 업데이트
+			login(); // 먼저 상태를 true로 설정
+
+			// 디버깅용: LocalStorage에 수동 로그인 플래그 설정
+			localStorage.setItem("manualLogin", "true");
+			console.log("🔧 수동 로그인 플래그 설정됨");
+
+			// 그 다음 쿠키 상태도 다시 확인
+			setTimeout(() => {
+				checkAuthStatus();
+			}, 100); // 쿠키 설정이 완료될 시간을 주기 위해 약간의 지연
 
 			alert("로그인이 완료되었습니다!");
 			router.push("/"); // 메인 페이지로 이동

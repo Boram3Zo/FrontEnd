@@ -6,6 +6,7 @@ export const API_ENDPOINTS = {
 	SIGNUP: "/member/signup",
 	LOGIN: "/member/login",
 	LOGOUT: "/member/logout",
+	PROFILE: "/member/profile", // 현재 로그인된 사용자 정보 확인용
 } as const;
 
 // API Helper function

@@ -5,7 +5,7 @@ import { Card, CardContent } from "@/app/_components/ui/Card";
 import { User, LogOut, UserPlus, LogIn, X } from "lucide-react";
 import Link from "next/link";
 import { useEffect } from "react";
-import { useAuth } from "@/app/_hooks/useAuth";
+import { useAuth } from "@/app/_providers";
 import { useRouter } from "next/navigation";
 
 interface MenuSidebarProps {

@@ -2,7 +2,7 @@ import type React from "react";
 import type { Metadata } from "next";
 import { Noto_Sans_KR } from "next/font/google";
 import "./globals.css";
-import { GoogleMapsProvider, WalkingProvider } from "./_providers";
+import { GoogleMapsProvider, WalkingProvider, AuthProvider } from "./_providers";
 
 const notoSansKR = Noto_Sans_KR({
 	subsets: ["latin"],
@@ -25,9 +25,11 @@ export default function RootLayout({
 	return (
 		<html lang="ko" className={notoSansKR.variable}>
 			<body className="font-sans antialiased">
-				<GoogleMapsProvider>
-					<WalkingProvider>{children}</WalkingProvider>
-				</GoogleMapsProvider>
+				<AuthProvider>
+					<GoogleMapsProvider>
+						<WalkingProvider>{children}</WalkingProvider>
+					</GoogleMapsProvider>
+				</AuthProvider>
 			</body>
 		</html>
 	);
