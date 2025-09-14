@@ -64,15 +64,39 @@ export class ApiClient {
 	static async request<T = ApiResponse>(endpoint: string, options: RequestInit = {}): Promise<T> {
 		const url = `${this.baseUrl}${endpoint}`;
 
+		// 기본 헤더 설정
+		const defaultHeaders: Record<string, string> = {
+			Accept: "application/json",
+		};
+
+		// body가 있는 경우 Content-Type 처리
+		if (options.body) {
+			if (options.body instanceof FormData) {
+				// FormData인 경우 브라우저가 자동으로 Content-Type 설정하도록 함
+				// Content-Type을 설정하지 않음
+			} else {
+				// JSON 데이터인 경우 명시적으로 설정
+				defaultHeaders["Content-Type"] = "application/json; charset=utf-8";
+			}
+		}
+
 		const config: RequestInit = {
 			headers: {
-				"Content-Type": "application/json",
+				...defaultHeaders,
 				...options.headers,
 			},
 			...options,
 		};
 
 		try {
+			// 디버깅용 로깅
+			console.log("🚀 API Request:", {
+				url,
+				method: config.method || "GET",
+				headers: config.headers,
+				body: config.body,
+			});
+
 			const response = await fetch(url, config);
 			const data = await this.safeJsonParse(response);
 
@@ -109,10 +133,19 @@ export class ApiClient {
 	 * POST 요청을 수행합니다.
 	 */
 	static async post<T = ApiResponse>(endpoint: string, data?: unknown, headers?: Record<string, string>): Promise<T> {
+		// 명시적으로 Content-Type을 설정하고 JSON 문자열로 변환
+		const postHeaders: Record<string, string> = {
+			"Content-Type": "application/json; charset=utf-8",
+			Accept: "application/json",
+			...headers,
+		};
+
+		const body = data ? JSON.stringify(data) : undefined;
+
 		return this.request<T>(endpoint, {
 			method: "POST",
-			body: data ? JSON.stringify(data) : undefined,
-			headers,
+			body,
+			headers: postHeaders,
 		});
 	}
 
@@ -120,10 +153,18 @@ export class ApiClient {
 	 * PUT 요청을 수행합니다.
 	 */
 	static async put<T = ApiResponse>(endpoint: string, data?: unknown, headers?: Record<string, string>): Promise<T> {
+		const putHeaders: Record<string, string> = {
+			"Content-Type": "application/json; charset=utf-8",
+			Accept: "application/json",
+			...headers,
+		};
+
+		const body = data ? JSON.stringify(data) : undefined;
+
 		return this.request<T>(endpoint, {
 			method: "PUT",
-			body: data ? JSON.stringify(data) : undefined,
-			headers,
+			body,
+			headers: putHeaders,
 		});
 	}
 
