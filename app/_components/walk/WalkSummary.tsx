@@ -180,7 +180,7 @@ export default function WalkingSummary() {
 	};
 
 	return (
-		<div className="min-h-[60vh]">
+		<div className="min-h-[60vh] px-4 py-6">
 			{/* 통계 */}
 
 			<div className="grid grid-cols-4 gap-4 mb-6">
