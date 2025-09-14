@@ -75,9 +75,9 @@ describe("photoUtils", () => {
 				id: "test-id",
 				file: new File([""], "test.jpg", { type: "image/jpeg" }),
 				preview: "mock-preview-url",
+				title: "Test Photo",
 				description: "test description",
 			};
-
 			revokePhotoPreview(mockPhoto);
 
 			expect(URL.revokeObjectURL).toHaveBeenCalledWith("mock-preview-url");
@@ -117,12 +117,14 @@ describe("photoUtils", () => {
 				id: "photo-1",
 				file: new File([""], "test1.jpg", { type: "image/jpeg" }),
 				preview: "preview-1",
+				title: "Photo 1 Title",
 				description: "Photo 1",
 			},
 			{
 				id: "photo-2",
 				file: new File([""], "test2.jpg", { type: "image/jpeg" }),
 				preview: "preview-2",
+				title: "Photo 2 Title",
 				description: "Photo 2",
 			},
 		];

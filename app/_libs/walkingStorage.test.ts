@@ -37,6 +37,10 @@ describe("산책 세션 저장소 함수들", () => {
 			{ lat: 37.5664, lng: 126.978, timestamp: "2024-01-15T10:15:00Z" },
 			{ lat: 37.5665, lng: 126.9781, timestamp: "2024-01-15T10:30:00Z" },
 		],
+		pins: [
+			{ lat: 37.5663, lng: 126.9779, type: "start", timestamp: "2024-01-15T10:00:00Z" },
+			{ lat: 37.5665, lng: 126.9781, type: "end", timestamp: "2024-01-15T11:30:00Z" },
+		],
 	};
 
 	beforeEach(() => {
@@ -73,6 +77,7 @@ describe("산책 세션 저장소 함수들", () => {
 				isActive: true,
 				isPaused: false,
 				route: [],
+				pins: [],
 			};
 
 			saveLatestSession(복잡한세션);

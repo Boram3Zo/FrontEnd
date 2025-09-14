@@ -1,6 +1,6 @@
 // __tests__/integration/photo-upload-workflow.test.tsx
 import { render, screen } from "@testing-library/react";
-import { PhotoUploader } from "@/app/_components/share/SharePhotoUploader";
+import { SharePhotoUploader } from "@/app/_components/share/SharePhotoUploader";
 
 // Mock URL.createObjectURL and URL.revokeObjectURL
 global.URL.createObjectURL = jest.fn(() => "mocked-url");
@@ -27,8 +27,8 @@ describe("Photo Upload Workflow Integration", () => {
 		uuidCounter = 0; // Reset counter
 	});
 
-	it("should render PhotoUploader component", () => {
-		render(<PhotoUploader {...defaultProps} />);
+	it("should render SharePhotoUploader component", () => {
+		render(<SharePhotoUploader {...defaultProps} />);
 
 		expect(screen.getByText("스팟 사진")).toBeInTheDocument();
 		expect(screen.getByText("사진 추가")).toBeInTheDocument();
@@ -36,14 +36,14 @@ describe("Photo Upload Workflow Integration", () => {
 	});
 
 	it("should render with custom props", () => {
-		render(<PhotoUploader {...defaultProps} title="커스텀 제목" emptyMessage="커스텀 빈 상태 메시지" />);
+		render(<SharePhotoUploader {...defaultProps} title="커스텀 제목" emptyMessage="커스텀 빈 상태 메시지" />);
 
 		expect(screen.getByText("커스텀 제목")).toBeInTheDocument();
 		expect(screen.getByText("커스텀 빈 상태 메시지")).toBeInTheDocument();
 	});
 
 	it("should have file input with correct attributes", () => {
-		render(<PhotoUploader {...defaultProps} />);
+		render(<SharePhotoUploader {...defaultProps} />);
 
 		const fileInput = screen.getByLabelText("사진 파일 선택");
 		expect(fileInput).toHaveAttribute("type", "file");
@@ -52,16 +52,18 @@ describe("Photo Upload Workflow Integration", () => {
 	});
 
 	it("should render grid with correct columns", () => {
-		const { container } = render(<PhotoUploader {...defaultProps} gridColumns={4} />);
+		it("should apply custom gridColumns", () => {
+			const { container } = render(<SharePhotoUploader {...defaultProps} gridColumns={4} />);
 
-		const gridContainer = container.querySelector(".grid-cols-4");
-		expect(gridContainer).toBeInTheDocument();
-	});
+			const gridContainer = container.querySelector(".grid-cols-4");
+			expect(gridContainer).toBeInTheDocument();
+		});
 
-	it("should call onPhotosChange on mount", () => {
-		render(<PhotoUploader {...defaultProps} />);
+		it("should call onPhotosChange on mount", () => {
+			render(<SharePhotoUploader {...defaultProps} />);
 
-		// Should be called at least once on mount with empty array
-		expect(mockOnPhotosChange).toHaveBeenCalledWith([]);
+			// Should be called at least once on mount with empty array
+			expect(mockOnPhotosChange).toHaveBeenCalledWith([]);
+		});
 	});
 });

@@ -10,12 +10,14 @@ describe("SharePhotoDescriptions", () => {
 			id: "photo-1",
 			file: new File([""], "test1.jpg", { type: "image/jpeg" }),
 			preview: "preview-url-1",
+			title: "Photo 1 Title",
 			description: "Photo 1 description",
 		},
 		{
 			id: "photo-2",
 			file: new File([""], "test2.jpg", { type: "image/jpeg" }),
 			preview: "preview-url-2",
+			title: "Photo 2 Title",
 			description: "",
 		},
 	];
