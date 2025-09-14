@@ -13,8 +13,12 @@ const config = {
 	testEnvironment: "jsdom",
 	// Add more setup options before each test is run
 	setupFilesAfterEnv: ["<rootDir>/jest.setup.ts"],
-	// Test file patterns - looks for test files alongside source files
-	testMatch: ["**/__tests__/**/*.(js|jsx|ts|tsx)", "**/*.(test|spec).(js|jsx|ts|tsx)"],
+	// Test file patterns - looks for test files alongside source files and in scripts folder
+	testMatch: [
+		"**/__tests__/**/*.(js|jsx|ts|tsx)",
+		"**/*.(test|spec).(js|jsx|ts|tsx)",
+		"scripts/**/*.(test|spec).(js|ts)",
+	],
 	moduleNameMapper: {
 		// Handle module aliases (this will be automatically configured for you based on your tsconfig.json paths)
 		"^@/(.*)$": "<rootDir>/$1",
