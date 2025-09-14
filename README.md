@@ -2,7 +2,32 @@
 
 나만 알고 있는 숨겨진 골## 📚 문서 가이드
 
-프로젝트에 대한 자세한 정보는 `docs/` 폴더의 문서들을 참고해주세요:
+프로젝트에 대한 ## 📚 문서 가이드
+
+프로젝트에 대한 자세한 정보는 `docs/` 폴더의 체계적인 문서들을 참고해주세요:
+
+### 📖 시작하기
+
+- **[📚 문서 시스템](docs/README.md)** - 전체 문서 구조 및 네비게이션
+
+### 🏗️ 프로젝트 이해
+
+- **[⚡ 기술 스택](docs/guide/project/tech-stack.md)** - 사용 기술 및 아키텍처
+- **[📁 프로젝트 구조](docs/guide/project/structure.md)** - 폴더 구조 및 조직 방법
+- **[📦 패키지 관리](docs/guide/project/packages.md)** - 의존성 및 설치 가이드
+
+### 🧩 주요 기능
+
+- **[👤 회원가입 시스템](docs/components/auth/signup.md)** - 사용자 인증 및 가입
+- **[🚶‍♂️ 산책 추적](docs/components/walk/tracking.md)** - GPS 기반 실시간 추적
+- **[🐱 고양이 컬렉션](docs/components/cat/collection.md)** - 게임 요소 및 수집 시스템
+- **[📸 사진 공유](docs/components/share/photo-upload.md)** - 사진 업로드 및 공유
+
+### 🛠️ 개발 가이드
+
+- **[🤖 AI 어시스턴트](docs/guide/development/prompt-guide.md)** - 개발 효율성 향상
+- **[📋 개발 로드맵](docs/guide/development/roadmap.md)** - 향후 계획 및 개선사항
+- **[📡 API 문서](docs/api/endpoints.md)** - REST API 사용법 폴더의 문서들을 참고해주세요:
 
 ### 📖 프로젝트 문서
 
