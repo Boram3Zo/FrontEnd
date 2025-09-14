@@ -1,10 +1,13 @@
+"use client";
+
 import { Header } from "@/app/_components/layout/Header";
 import { BottomNavigation } from "@/app/_components/layout/BottomNavigation";
 import { CatCollection } from "@/app/_components/cat/CatCollection";
 import { CatStats } from "@/app/_components/cat/CatStats";
 import { CatCharacter } from "@/app/_components/cat/CatCharacter";
+import { withAuthGuard } from "@/app/_components/auth/AuthGuard";
 
-export default function CatTowerPage() {
+function CatTowerPage() {
 	return (
 		<div className="min-h-screen bg-gradient-to-b from-yellow-50 to-orange-50">
 			<Header />
@@ -44,3 +47,6 @@ export default function CatTowerPage() {
 		</div>
 	);
 }
+
+// 인증 가드로 보호된 캣타워 페이지 export
+export default withAuthGuard(CatTowerPage);

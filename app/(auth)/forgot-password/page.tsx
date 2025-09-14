@@ -8,8 +8,9 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/app/_components/ui/C
 import { Label } from "@/app/_components/ui/Label";
 import { useState } from "react";
 import Link from "next/link";
+import { withGuestOnlyGuard } from "@/app/_components/auth/AuthGuard";
 
-export default function ForgotPasswordPage() {
+function ForgotPasswordPage() {
 	const [step, setStep] = useState<"email" | "password">("email");
 	const [email, setEmail] = useState("");
 	const [newPassword, setNewPassword] = useState("");
@@ -128,3 +129,6 @@ export default function ForgotPasswordPage() {
 		</div>
 	);
 }
+
+// 게스트 전용 가드로 보호된 비밀번호 찾기 페이지 export
+export default withGuestOnlyGuard(ForgotPasswordPage);

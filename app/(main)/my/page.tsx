@@ -7,8 +7,9 @@ import { Card } from "@/app/_components/ui/Card";
 import { Award, MapPin, Clock, Heart, Share2, Edit3 } from "lucide-react";
 import { CatSelectionModal } from "@/app/_components/cat/CatSelectionModal";
 import { CollectedCat } from "@/app/_components/cat/CollectedCat";
+import { withAuthGuard } from "@/app/_components/auth/AuthGuard";
 
-export default function MyPage() {
+function MyPage() {
 	const [showCatSelection, setShowCatSelection] = useState(false);
 	const [selectedCatBreed, setSelectedCatBreed] = useState("코리안 숏헤어");
 
@@ -133,3 +134,6 @@ export default function MyPage() {
 		</div>
 	);
 }
+
+// 인증 가드로 보호된 마이페이지 export
+export default withAuthGuard(MyPage);
