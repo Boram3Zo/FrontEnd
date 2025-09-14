@@ -4,8 +4,8 @@ export const API_BASE_URL = "http://localhost:9988";
 // API Endpoints
 export const API_ENDPOINTS = {
 	SIGNUP: "/member/signup",
-	LOGIN: "/login",
-	LOGOUT: "/logout",
+	LOGIN: "/member/login",
+	LOGOUT: "/member/logout",
 } as const;
 
 // API Helper function
