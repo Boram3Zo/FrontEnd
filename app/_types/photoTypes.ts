@@ -86,6 +86,8 @@ export interface UsePhotoManagerReturn {
 	updateDescription: (id: string, description: string) => void;
 	/** 사진 제목 업데이트 핸들러 */
 	updateTitle: (id: string, title: string) => void;
+	/** 개별 사진을 서버에 업로드합니다. 반환값은 서버 응답입니다. */
+	uploadPhoto?: (photo: SpotPhoto, postId: number) => Promise<unknown>;
 	/** 사진 추가 트리거 함수 */
 	triggerFileSelect: () => void;
 	/** 파일 입력 ref */

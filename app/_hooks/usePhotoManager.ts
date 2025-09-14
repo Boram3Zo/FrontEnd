@@ -1,6 +1,7 @@
 // hooks/usePhotoManager.ts
 import { useState, useRef, useCallback } from "react";
 import { SpotPhoto, UsePhotoManagerReturn, PhotoUploaderOptions } from "@/app/_types/photoTypes";
+import { uploadPhotoFile } from "@/app/_libs/photoService";
 import {
 	filterImageFiles,
 	createPhotoFromFile,
@@ -92,9 +93,22 @@ export const usePhotoManager = (options: PhotoUploaderOptions = {}): UsePhotoMan
 		fileInputRef.current?.click();
 	}, []);
 
+	const uploadPhoto = async (photo: SpotPhoto, postId: number) => {
+		try {
+			const lat = photo.exifData?.latitude;
+			const lng = photo.exifData?.longitude;
+			const resp = await uploadPhotoFile(photo.file, postId, lat, lng, photo.description);
+			return resp;
+		} catch (err) {
+			console.error("Upload failed", err);
+			throw err;
+		}
+	};
+
 	return {
 		photos,
 		addPhotos,
+		uploadPhoto,
 		removePhoto,
 		updateDescription,
 		updateTitle,

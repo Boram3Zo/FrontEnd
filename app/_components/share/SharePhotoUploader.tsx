@@ -14,6 +14,8 @@ interface SharePhotoUploaderProps extends PhotoUploaderOptions {
 	emptyMessage?: string;
 	/** 사진 변경 시 호출되는 콜백 */
 	onPhotosChange?: (photos: SpotPhoto[]) => void;
+	/** 업로드할 게시글 ID (필수: 서버 업로드 시) */
+	postId?: number;
 }
 
 /**
@@ -27,12 +29,35 @@ export const SharePhotoUploader: React.FC<SharePhotoUploaderProps> = ({
 	acceptedFileTypes = PHOTO_CONSTANTS.ACCEPTED_FILE_TYPES,
 	gridColumns = PHOTO_CONSTANTS.DEFAULT_GRID_COLUMNS,
 	onPhotosChange,
+	postId,
 }) => {
-	const { photos, addPhotos, removePhoto, updateDescription, triggerFileSelect, fileInputRef } = usePhotoManager({
-		maxPhotos,
-		acceptedFileTypes,
-		gridColumns,
-	});
+	const { photos, addPhotos, removePhoto, updateDescription, triggerFileSelect, fileInputRef, uploadPhoto } =
+		usePhotoManager({
+			maxPhotos,
+			acceptedFileTypes,
+			gridColumns,
+		});
+
+	// upload helper (전체 업로드)
+	const handleUploadAll = async () => {
+		if (!postId) {
+			alert("postId가 필요합니다. 서버 업로드를 위해 postId를 전달해주세요.");
+			return;
+		}
+		for (const p of photos) {
+			try {
+				if (!uploadPhoto) {
+					console.warn("uploadPhoto handler is not available");
+					continue;
+				}
+				await uploadPhoto(p, postId);
+				// TODO: 성공 처리(예: 상태 변경)
+			} catch (err) {
+				console.error("사진 업로드 실패", err);
+				alert("사진 업로드 실패");
+			}
+		}
+	};
 
 	// 사진 변경 시 부모 컴포넌트에 알림
 	React.useEffect(() => {
@@ -78,6 +103,15 @@ export const SharePhotoUploader: React.FC<SharePhotoUploaderProps> = ({
 				onRemovePhoto={removePhoto}
 				onUpdateDescription={updateDescription}
 			/>
+
+			{/* 업로드 버튼 */}
+			{photos.length > 0 && (
+				<div className="mt-4 flex gap-2">
+					<button className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700" onClick={handleUploadAll}>
+						서버에 업로드
+					</button>
+				</div>
+			)}
 
 			{/* 빈 상태 메시지 */}
 			{photos.length === 0 && <p className="text-sm text-gray-500">{emptyMessage}</p>}
