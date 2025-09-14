@@ -7,7 +7,7 @@ import { useLoginForm } from "@/app/_hooks/useLoginForm";
 import Link from "next/link";
 
 export function LoginForm() {
-	const { formData, isLoading, error, handleInputChange, handleSubmit } = useLoginForm();
+	const { formData, isLoading, error, successMessage, handleInputChange, handleSubmit } = useLoginForm();
 
 	return (
 		<div className="max-w-md mx-auto">
@@ -20,6 +20,11 @@ export function LoginForm() {
 
 				<CardContent className="space-y-6">
 					<form onSubmit={handleSubmit} className="space-y-6">
+						{successMessage && (
+							<div className="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded">
+								{successMessage}
+							</div>
+						)}
 						{error && <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded">{error}</div>}
 
 						<div className="space-y-4">

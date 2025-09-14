@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useState, useEffect } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { LoginFormData } from "@/app/_types/auth";
 import { AuthService } from "@/app/_libs/authService";
 import { validateLoginForm } from "@/app/_utils/validation";
@@ -7,6 +7,7 @@ import { useAuth } from "@/app/_providers";
 
 export function useLoginForm() {
 	const router = useRouter();
+	const searchParams = useSearchParams();
 	const { checkAuthStatus, login } = useAuth();
 	const [formData, setFormData] = useState<LoginFormData>({
 		email: "",
@@ -14,6 +15,15 @@ export function useLoginForm() {
 	});
 	const [isLoading, setIsLoading] = useState(false);
 	const [error, setError] = useState("");
+	const [successMessage, setSuccessMessage] = useState("");
+
+	// URL 쿼리 파라미터에서 메시지 확인
+	useEffect(() => {
+		const message = searchParams.get("message");
+		if (message) {
+			setSuccessMessage(decodeURIComponent(message));
+		}
+	}, [searchParams]);
 
 	const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		const { id, value } = e.target;
@@ -79,6 +89,7 @@ export function useLoginForm() {
 		formData,
 		isLoading,
 		error,
+		successMessage,
 		handleInputChange,
 		handleSubmit,
 	};
