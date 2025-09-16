@@ -162,26 +162,6 @@ export function KoreanMap() {
 							서울특별시
 						</text>
 
-						{/* Other regions (simplified) */}
-						<rect x="50" y="100" width="80" height="60" fill="#e5e7eb" stroke="#666" strokeWidth="1" rx="4" />
-						<text x="90" y="135" textAnchor="middle" className="text-xs fill-gray-600">
-							경기도
-						</text>
-
-						<rect x="300" y="120" width="70" height="50" fill="#e5e7eb" stroke="#666" strokeWidth="1" rx="4" />
-						<text x="335" y="150" textAnchor="middle" className="text-xs fill-gray-600">
-							강원도
-						</text>
-
-						<rect x="80" y="200" width="90" height="70" fill="#e5e7eb" stroke="#666" strokeWidth="1" rx="4" />
-						<text x="125" y="240" textAnchor="middle" className="text-xs fill-gray-600">
-							충청남도
-						</text>
-
-						<rect x="250" y="200" width="80" height="60" fill="#e5e7eb" stroke="#666" strokeWidth="1" rx="4" />
-						<text x="290" y="235" textAnchor="middle" className="text-xs fill-gray-600">
-							경상북도
-						</text>
 					</svg>
 				</div>
 
@@ -243,7 +223,7 @@ export function KoreanMap() {
 				</div>
 			</div>
 		);
-	}
+	}	
 
 	return null;
 }
