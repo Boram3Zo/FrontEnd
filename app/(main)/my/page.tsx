@@ -8,10 +8,12 @@ import { Award, MapPin, Clock, Heart, Share2, Edit3 } from "lucide-react";
 import { CatSelectionModal } from "@/app/_components/cat/CatSelectionModal";
 import { CollectedCat } from "@/app/_components/cat/CollectedCat";
 import { withAuthGuard } from "@/app/_components/auth/AuthGuard";
+import { useRouter } from "next/navigation";
 
 function MyPage() {
 	const [showCatSelection, setShowCatSelection] = useState(false);
 	const [selectedCatBreed, setSelectedCatBreed] = useState("코리안 숏헤어");
+	const router = useRouter();
 
 	const handleCatChange = (breed: string) => {
 		setSelectedCatBreed(breed);
@@ -21,7 +23,6 @@ function MyPage() {
 	return (
 		<div className="min-h-screen bg-gradient-to-b from-purple-50 to-pink-50">
 			<Header />
-
 			<main className="pb-20 px-4">
 				{/* Profile Section */}
 				<div className="py-6 text-center">
@@ -77,7 +78,10 @@ function MyPage() {
 					<h2 className="text-lg font-semibold text-gray-800 mb-3">나의 활동</h2>
 
 					<div className="grid grid-cols-2 gap-3">
-						<Card className="p-4 text-center hover:shadow-lg transition-shadow cursor-pointer">
+						<Card
+							className="p-4 text-center hover:shadow-lg transition-shadow cursor-pointer"
+							onClick={() => router.push("/my-courses")}
+						>
 							<MapPin className="h-6 w-6 text-orange-500 mx-auto mb-2" />
 							<div className="text-lg font-bold text-gray-800">내 코스</div>
 							<div className="text-sm text-gray-600">12개</div>
