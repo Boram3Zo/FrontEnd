@@ -78,7 +78,21 @@ export default function FavoriteCoursesPage() {
 			<div className="px-4 py-6">
 				<div className="space-y-4">
 					{courses.map(course => (
-						<Card key={course.id} className="p-4 bg-white shadow-md hover:shadow-lg transition-shadow flex items-center">
+						<Card key={course.id} className="p-4 bg-white shadow-md hover:shadow-lg transition-shadow flex relative">
+							{/* Heart button - right top */}
+							<div className="absolute top-4 right-4">
+								<Button
+									variant="ghost"
+									size="icon"
+									onClick={() => toggleFavorite(course.id)}
+									aria-label="찜하기"
+								>
+									<Heart
+										className={`h-6 w-6 ${course.favorite ? "text-pink-500 fill-pink-500" : "text-gray-400"}`}
+										fill={course.favorite ? "#ec4899" : "none"}
+									/>
+								</Button>
+							</div>
 							<div className="flex items-start gap-4 flex-1">
 								{/* Course image on the left */}
 								<div className="w-20 h-20 bg-gray-200 rounded-lg overflow-hidden flex-shrink-0">
@@ -96,38 +110,22 @@ export default function FavoriteCoursesPage() {
 										</div>
 									)}
 								</div>
-								{/* Course information on the right */}
-								<div className="flex-1">
-									<div className="flex items-start justify-between mb-2">
-										<h3 className="font-bold text-gray-800 text-lg">{course.title}</h3>
+								{/* Course information - left aligned */}
+								<div className="flex-1 flex flex-col justify-center">
+									<h3 className="font-bold text-gray-800 text-lg mb-2">{course.title}</h3>
+									<div className="text-sm text-gray-600 mb-1 flex items-center gap-1">
+										<MapPin className="h-3 w-3" />
+										<span>{course.location}</span>
 									</div>
-									<div className="text-sm text-gray-600 mb-2">
-										<div className="flex items-center gap-1 mb-1">
-											<MapPin className="h-3 w-3" />
-											<span>{course.location}</span>
+									<div className="text-sm text-gray-600 flex items-center gap-4">
+										<div className="flex items-center gap-1">
+											<Clock className="h-3 w-3" />
+											<span>{course.duration}</span>
 										</div>
-										<div className="flex items-center gap-4">
-											<div className="flex items-center gap-1">
-												<Clock className="h-3 w-3" />
-												<span>{course.duration}</span>
-											</div>
-											<span>거리: {course.distance}</span>
-										</div>
+										<span>거리: {course.distance}</span>
 									</div>
 								</div>
 							</div>
-							{/* Heart button */}
-							<Button
-								variant="ghost"
-								size="icon"
-								onClick={() => toggleFavorite(course.id)}
-								aria-label="찜하기"
-							>
-								<Heart
-									className={`h-6 w-6 ${course.favorite ? "text-pink-500 fill-pink-500" : "text-gray-400"}`}
-									fill={course.favorite ? "#ec4899" : "none"}
-								/>
-							</Button>
 						</Card>
 					))}
 				</div>
