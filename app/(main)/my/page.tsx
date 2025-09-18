@@ -87,7 +87,10 @@ function MyPage() {
 							<div className="text-sm text-gray-600">12개</div>
 						</Card>
 
-						<Card className="p-4 text-center hover:shadow-lg transition-shadow cursor-pointer">
+						<Card
+							className="p-4 text-center hover:shadow-lg transition-shadow cursor-pointer"
+							onClick={() => router.push("/my/favorite-courses")}
+						>
 							<Heart className="h-6 w-6 text-pink-500 mx-auto mb-2" />
 							<div className="text-lg font-bold text-gray-800">찜한 코스</div>
 							<div className="text-sm text-gray-600">28개</div>
@@ -99,7 +102,10 @@ function MyPage() {
 							<div className="text-sm text-gray-600">47회</div>
 						</Card>
 
-						<Card className="p-4 text-center hover:shadow-lg transition-shadow cursor-pointer">
+						<Card
+							className="p-4 text-center hover:shadow-lg transition-shadow cursor-pointer"
+							onClick={() => router.push("/my/shared-courses")}
+						>
 							<Share2 className="h-6 w-6 text-green-500 mx-auto mb-2" />
 							<div className="text-lg font-bold text-gray-800">공유한 코스</div>
 							<div className="text-sm text-gray-600">8개</div>
