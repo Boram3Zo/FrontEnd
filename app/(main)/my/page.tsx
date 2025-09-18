@@ -80,7 +80,7 @@ function MyPage() {
 					<div className="grid grid-cols-2 gap-3">
 						<Card
 							className="p-4 text-center hover:shadow-lg transition-shadow cursor-pointer"
-							onClick={() => router.push("/my-courses")}
+							onClick={() => router.push("/my/my-courses")}
 						>
 							<MapPin className="h-6 w-6 text-orange-500 mx-auto mb-2" />
 							<div className="text-lg font-bold text-gray-800">내 코스</div>
