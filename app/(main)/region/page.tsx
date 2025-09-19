@@ -15,7 +15,7 @@ export default function RegionPage() {
 					<div className="flex items-center justify-center gap-3">
 						<CatCharacter size="sm" animation="wiggle" />
 						<h1 className="text-lg font-bold text-gray-800">지역별 산책 코스</h1>
-						<CatCharacter size="sm" animation="bounce" />	
+						<CatCharacter size="sm" animation="bounce" />
 					</div>
 				</div>
 
