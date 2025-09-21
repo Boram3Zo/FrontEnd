@@ -68,3 +68,42 @@ export function convertPostToPopularCourse(
 		likeCount: Math.floor(Math.random() * 500) + 50, // 임시 좋아요 수 (추후 실제 데이터로 교체)
 	};
 }
+
+/**
+ * Post 데이터를 내 코스 UI용 형태로 변환
+ */
+export function convertPostToMyCourse(post: import("@/app/_types/post").Post) {
+	// 거리를 km 단위로 표시
+	const distanceKm =
+		typeof post.distance === "number" ? (post.distance / 1000).toFixed(1) + "km" : post.distance + "km";
+
+	// 대표 이미지 URL 결정
+	const imageUrl = post.photoList?.[0]?.filePath || "/hangang-park-walkway.png";
+
+	return {
+		id: post.postId.toString(),
+		title: post.title,
+		location: post.region,
+		duration: formatDurationForDisplay(post.duration),
+		distance: distanceKm,
+		imageUrl: imageUrl,
+		theme: post.theme,
+		content: post.content,
+		photoList: post.photoList,
+	};
+}
+
+/**
+ * HH:mm:ss 형식의 시간을 표시용 형식으로 변환
+ */
+export function formatDurationForDisplay(duration: string): string {
+	const [hours, minutes, seconds] = duration.split(":").map(Number);
+
+	if (hours > 0) {
+		return `${hours}시간 ${minutes}분`;
+	} else if (minutes > 0) {
+		return `${minutes}분`;
+	} else {
+		return `${seconds}초`;
+	}
+}

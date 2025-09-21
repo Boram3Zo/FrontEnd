@@ -9,6 +9,7 @@ import {
 	SharePostRequest,
 	SharePostResponse,
 	PostListResponse,
+	MyCourseResponse,
 } from "@/app/_types/post";
 
 /**
@@ -60,5 +61,18 @@ export async function getPostById(postId: number) {
 	} catch (error) {
 		console.error("게시글 조회 실패:", error);
 		throw new Error("게시글을 불러오는데 실패했습니다.");
+	}
+}
+
+/**
+ * 내 코스 목록 조회 API 호출
+ */
+export async function getMyCourses(memberId: number): Promise<MyCourseResponse> {
+	try {
+		const response = await ApiClient.get<MyCourseResponse>(`/member/myCourse?memberId=${memberId}`);
+		return response;
+	} catch (error) {
+		console.error("내 코스 목록 조회 실패:", error);
+		throw new Error("내 코스 목록을 불러오는데 실패했습니다.");
 	}
 }
