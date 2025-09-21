@@ -1,3 +1,5 @@
+import { API_BASE_URL } from "@/app/_constants/api";
+
 /**
  * 게시글 생성 API 관련 타입 정의
  */
@@ -90,7 +92,7 @@ export function convertWalkingSessionToPostRequest(
  */
 export async function createPost(postData: CreatePostRequest): Promise<CreatePostResponse> {
 	try {
-		const response = await fetch("http://localhost:9988/post/create", {
+		const response = await fetch(`${API_BASE_URL}/post/create`, {
 			method: "POST",
 			headers: {
 				"Content-Type": "application/json",

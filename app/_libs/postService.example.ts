@@ -4,6 +4,7 @@
  */
 
 import { createPost } from "@/app/_libs/postService";
+import { API_BASE_URL } from "@/app/_constants/api";
 
 // 테스트용 데이터
 export const testCreatePost = async () => {
@@ -29,18 +30,18 @@ export const testCreatePost = async () => {
 	try {
 		console.log("API 요청 시작...");
 		console.log("요청 데이터:", testData);
-		
+
 		const result = await createPost(testData);
-		
+
 		console.log("API 응답:", result);
-		
+
 		if (result.success) {
 			console.log("✅ 게시글 생성 성공!");
 			console.log("생성된 postId:", result.postId);
 		} else {
 			console.log("❌ 게시글 생성 실패:", result.message);
 		}
-		
+
 		return result;
 	} catch (error) {
 		console.error("❌ API 호출 중 오류:", error);
@@ -53,10 +54,10 @@ export const testCreatePost = async () => {
 
 // cURL 명령어와 동일한 요청을 만드는 함수
 export const curlEquivalentTest = () => {
-	return fetch('http://localhost:9988/post/create', {
-		method: 'POST',
+	return fetch(`${API_BASE_URL}/post/create`, {
+		method: "POST",
 		headers: {
-			'Content-Type': 'application/json',
+			"Content-Type": "application/json",
 		},
 		body: JSON.stringify({
 			postId: null,
@@ -77,13 +78,13 @@ export const curlEquivalentTest = () => {
 			},
 		}),
 	})
-	.then(response => response.json())
-	.then(data => {
-		console.log('cURL 테스트 결과:', data);
-		return data;
-	})
-	.catch(error => {
-		console.error('cURL 테스트 오류:', error);
-		throw error;
-	});
+		.then(response => response.json())
+		.then(data => {
+			console.log("cURL 테스트 결과:", data);
+			return data;
+		})
+		.catch(error => {
+			console.error("cURL 테스트 오류:", error);
+			throw error;
+		});
 };

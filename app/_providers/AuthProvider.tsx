@@ -1,6 +1,7 @@
 "use client";
 
 import React, { createContext, useContext, useState, useEffect, ReactNode } from "react";
+import { API_BASE_URL } from "@/app/_constants/api";
 
 interface AuthContextType {
 	isLoggedIn: boolean | null;
@@ -35,7 +36,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
 			// API를 통한 실제 인증 상태 확인
 			console.log("🌐 API를 통한 인증 상태 확인 시도...");
 
-			const response = await fetch("http://localhost:9988/member/profile", {
+			const response = await fetch(`${API_BASE_URL}/member/profile`, {
 				method: "GET",
 				credentials: "include", // HttpOnly 쿠키를 포함하여 요청
 				headers: {

@@ -45,7 +45,8 @@ const postRequest = {
 };
 
 // 3. API 호출
-const result = await fetch('http://localhost:9988/post/create', {
+const apiBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:9988';
+const result = await fetch(`${apiBaseUrl}/post/create`, {
   method: 'POST',
   headers: { 'Content-Type': 'application/json' },
   body: JSON.stringify(postRequest)
@@ -99,7 +100,8 @@ const result = await fetch('http://localhost:9988/post/create', {
 
 ```typescript
 // postService.ts에서 수정 가능
-const API_ENDPOINT = "http://localhost:9988/post/create";
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:9988";
+const API_ENDPOINT = `${API_BASE_URL}/post/create`;
 ```
 
 ### 사용자 ID
