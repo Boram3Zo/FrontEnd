@@ -4,7 +4,7 @@ import { useState } from "react";
 import { Header } from "@/app/_components/layout/Header";
 import { BottomNavigation } from "@/app/_components/layout/BottomNavigation";
 import { Card } from "@/app/_components/ui/Card";
-import { Award, MapPin, Clock, Heart, Share2, Edit3 } from "lucide-react";
+import { Award, MapPin, Heart, Edit3 } from "lucide-react";
 import { CatSelectionModal } from "@/app/_components/cat/CatSelectionModal";
 import { CollectedCat } from "@/app/_components/cat/CollectedCat";
 import { withAuthGuard } from "@/app/_components/auth/AuthGuard";

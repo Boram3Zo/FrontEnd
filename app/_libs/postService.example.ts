@@ -37,7 +37,7 @@ export const testCreatePost = async () => {
 
 		if (result.success) {
 			console.log("✅ 게시글 생성 성공!");
-			console.log("생성된 postId:", result.postId);
+			console.log("생성된 postId:", result.data);
 		} else {
 			console.log("❌ 게시글 생성 실패:", result.message);
 		}
