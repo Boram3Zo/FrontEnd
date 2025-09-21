@@ -6,6 +6,7 @@ import { SafeImage } from "@/app/_components/ui/SafeImage";
 import { Heart, Clock, Route, MapPin } from "lucide-react";
 import { getPostById, getImageUrl } from "@/app/_libs/postService";
 import { Post } from "@/app/_types/post";
+import RouteMap from "@/app/_components/map/RouteMap";
 
 type PageParams = Promise<{ id: string }>;
 
@@ -44,6 +45,22 @@ function formatDistance(distance: number): string {
 	} else {
 		return `${(distance * 1000).toFixed(0)}m`;
 	}
+}
+
+function parseRouteFromSpots(spotsJson: string | null): { lat: number; lng: number }[] {
+	if (!spotsJson) return [];
+	try {
+		const spots = JSON.parse(spotsJson);
+		if (Array.isArray(spots)) {
+			return spots.map((spot: { lat: string; lng: string }) => ({
+				lat: parseFloat(spot.lat),
+				lng: parseFloat(spot.lng),
+			}));
+		}
+	} catch (error) {
+		console.error("경로 파싱 실패:", error);
+	}
+	return [];
 }
 
 export default async function CourseDetailPage({ params }: { params: PageParams }) {
@@ -122,10 +139,35 @@ export default async function CourseDetailPage({ params }: { params: PageParams 
 				<div className="px-4 py-4">
 					<Card className="border border-gray-300 overflow-hidden">
 						{/* Map Section */}
-						<div className="bg-gray-100 h-32 flex items-center justify-center">
-							<span className="text-gray-500">
-								지도 ({course.map.startLatitude}, {course.map.startLongitude})
-							</span>
+						<div className="h-48">
+							{(() => {
+								// 경로 데이터 준비
+								const route = parseRouteFromSpots(course.map.spots);
+
+								// 경로가 없으면 시작점과 끝점으로 기본 경로 생성
+								if (route.length === 0) {
+									const startLat = parseFloat(course.map.startLatitude);
+									const startLng = parseFloat(course.map.startLongitude);
+									const endLat = parseFloat(course.map.endLatitude);
+									const endLng = parseFloat(course.map.endLongitude);
+
+									if (!isNaN(startLat) && !isNaN(startLng) && !isNaN(endLat) && !isNaN(endLng)) {
+										route.push({ lat: startLat, lng: startLng });
+										route.push({ lat: endLat, lng: endLng });
+									}
+								}
+
+								// 경로가 있으면 RouteMap 표시, 없으면 메시지 표시
+								if (route.length > 0) {
+									return <RouteMap route={route} height="h-48" />;
+								} else {
+									return (
+										<div className="bg-gray-100 h-full flex items-center justify-center">
+											<span className="text-gray-500">지도 데이터가 없습니다</span>
+										</div>
+									);
+								}
+							})()}
 						</div>
 
 						{/* Photo Section */}
