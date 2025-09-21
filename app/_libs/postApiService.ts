@@ -77,3 +77,24 @@ export async function getMyCourses(memberId: number): Promise<MyCourseResponse> 
 		throw new Error("내 코스 목록을 불러오는데 실패했습니다.");
 	}
 }
+
+/**
+ * 게시글 좋아요 처리
+ * @param postId - 게시글 ID
+ * @param memberId - 회원 ID
+ * @returns 좋아요 처리 결과
+ */
+export async function likePost(
+	postId: number,
+	memberId: number
+): Promise<{ success: boolean; message?: string; data?: string }> {
+	try {
+		const response = await ApiClient.get<{ success: boolean; message?: string; data?: string }>(
+			`/post/like?postId=${postId}&memberId=${memberId}`
+		);
+		return response;
+	} catch (error) {
+		console.error("좋아요 처리 실패:", error);
+		throw new Error("좋아요 처리에 실패했습니다.");
+	}
+}

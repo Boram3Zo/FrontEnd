@@ -6,7 +6,7 @@
  */
 
 // API 서비스
-export { createPost, sharePost, getPostList, getPostById, getMyCourses } from "./postApiService";
+export { createPost, sharePost, getPostList, getPostById, getMyCourses, likePost } from "./postApiService";
 
 // 데이터 변환 매퍼
 export { convertWalkingSessionToPostRequest, convertWalkingSessionToShareRequest } from "./postMapper";

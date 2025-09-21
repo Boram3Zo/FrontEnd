@@ -1,9 +1,9 @@
 import { Header } from "@/app/_components/layout/Header";
 import { BottomNavigation } from "@/app/_components/layout/BottomNavigation";
-import { Button } from "@/app/_components/ui/Button";
 import { Card } from "@/app/_components/ui/Card";
 import { SafeImage } from "@/app/_components/ui/SafeImage";
-import { Heart, Clock, Route, MapPin } from "lucide-react";
+import { LikeButton } from "@/app/_components/ui/LikeButton";
+import { Clock, Route, MapPin } from "lucide-react";
 import { getPostById, getImageUrl } from "@/app/_libs/postService";
 import { Post } from "@/app/_types/post";
 import RouteMap from "@/app/_components/map/RouteMap";
@@ -109,9 +109,7 @@ export default async function CourseDetailPage({ params }: { params: PageParams 
 					<div className="flex items-center justify-between mb-2">
 						<h1 className="text-xl font-bold text-gray-800">{course.title}</h1>
 						<div className="flex items-center gap-2">
-							<Button variant="ghost" size="icon">
-								<Heart className="h-5 w-5 text-gray-600" />
-							</Button>
+							<LikeButton postId={postId} />
 							{/* <Button variant="ghost" size="icon">
 								<Share2 className="h-5 w-5 text-gray-600" />
 							</Button> */}
