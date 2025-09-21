@@ -78,7 +78,7 @@ export interface SharePostRequest {
 // ===== API 응답 타입 =====
 export interface CreatePostResponse {
 	success: boolean;
-	postId?: number;
+	data?: number; // 실제 API는 data 필드에 postId를 반환
 	message?: string;
 }
 

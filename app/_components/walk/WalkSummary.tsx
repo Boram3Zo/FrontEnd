@@ -160,18 +160,18 @@ export default function WalkingSummary() {
 
 			if (result.success) {
 				console.log("게시글 생성 성공, 전체 결과:", result);
-				console.log("postId 값:", result.postId);
-				console.log("postId 타입:", typeof result.postId);
-				console.log("postId가 truthy인가?", !!result.postId);
+				console.log("postId 값:", result.data);
+				console.log("postId 타입:", typeof result.data);
+				console.log("postId가 truthy인가?", !!result.data);
 
 				// postId는 반드시 있어야 함
-				if (result.postId !== null && result.postId !== undefined) {
+				if (result.data !== null && result.data !== undefined) {
 					// 동적 라우트로 이동: /share/[id]
-					const shareUrl = `/share/${result.postId}`;
+					const shareUrl = `/share/${result.data}`;
 					console.log("생성된 shareUrl:", shareUrl);
 
 					// sessionStorage 백업 (브라우저 뒤로가기 등을 위한 보험)
-					sessionStorage.setItem("created:postId", String(result.postId));
+					sessionStorage.setItem("created:postId", String(result.data));
 
 					router.push(shareUrl);
 				} else {
