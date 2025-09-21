@@ -1,10 +1,11 @@
 "use client";
 
 import React from "react";
-import { Camera } from "lucide-react";
+import { Camera, Upload } from "lucide-react";
 import { SharePhotoGrid } from "./SharePhotoGrid";
 import { usePhotoManager } from "@/app/_hooks/usePhotoManager";
 import { PhotoUploaderOptions, SpotPhoto } from "@/app/_types/photoTypes";
+import { UploadPhotoResponse } from "@/app/_libs/photoService";
 import { PHOTO_CONSTANTS } from "@/app/_constants/constants";
 
 interface SharePhotoUploaderProps extends PhotoUploaderOptions {
@@ -38,24 +39,83 @@ export const SharePhotoUploader: React.FC<SharePhotoUploaderProps> = ({
 			gridColumns,
 		});
 
+	// 업로드 상태 관리
+	const [uploading, setUploading] = React.useState(false);
+	const [uploadedPhotos, setUploadedPhotos] = React.useState<Set<string>>(new Set());
+	const [uploadingPhotos, setUploadingPhotos] = React.useState<Set<string>>(new Set());
+
 	// upload helper (전체 업로드)
 	const handleUploadAll = async () => {
 		if (!postId) {
 			alert("postId가 필요합니다. 서버 업로드를 위해 postId를 전달해주세요.");
 			return;
 		}
+
+		setUploading(true);
+		let successCount = 0;
+		let failCount = 0;
+
 		for (const p of photos) {
 			try {
 				if (!uploadPhoto) {
 					console.warn("uploadPhoto handler is not available");
 					continue;
 				}
-				await uploadPhoto(p, postId);
-				// TODO: 성공 처리(예: 상태 변경)
+
+				const result = (await uploadPhoto(p, postId)) as UploadPhotoResponse;
+				if (result.success) {
+					successCount++;
+					setUploadedPhotos(prev => new Set([...prev, p.id]));
+					console.log(`✅ 사진 업로드 성공: ${p.file.name}`, result.data);
+				} else {
+					failCount++;
+					console.error(`❌ 사진 업로드 실패: ${p.file.name}`, result.message);
+				}
 			} catch (err) {
+				failCount++;
 				console.error("사진 업로드 실패", err);
-				alert("사진 업로드 실패");
 			}
+		}
+
+		setUploading(false);
+
+		// 결과 메시지 표시
+		if (failCount === 0) {
+			alert(`모든 사진이 성공적으로 업로드되었습니다! (${successCount}개)`);
+		} else if (successCount > 0) {
+			alert(`${successCount}개 업로드 성공, ${failCount}개 실패했습니다.`);
+		} else {
+			alert("모든 사진 업로드가 실패했습니다. 다시 시도해주세요.");
+		}
+	};
+
+	// 개별 사진 업로드 핸들러
+	const handleUploadSingle = async (photo: SpotPhoto) => {
+		if (!postId || !uploadPhoto) {
+			alert("업로드할 수 없습니다.");
+			return;
+		}
+
+		setUploadingPhotos(prev => new Set([...prev, photo.id]));
+
+		try {
+			const result = (await uploadPhoto(photo, postId)) as UploadPhotoResponse;
+			if (result.success) {
+				setUploadedPhotos(prev => new Set([...prev, photo.id]));
+				console.log(`✅ 사진 업로드 성공: ${photo.file.name}`, result.data);
+			} else {
+				console.error(`❌ 사진 업로드 실패: ${photo.file.name}`, result.message);
+				alert(`업로드 실패: ${result.message}`);
+			}
+		} catch (err) {
+			console.error("사진 업로드 실패", err);
+			alert("사진 업로드 중 오류가 발생했습니다.");
+		} finally {
+			setUploadingPhotos(prev => {
+				const newSet = new Set(prev);
+				newSet.delete(photo.id);
+				return newSet;
+			});
 		}
 	};
 
@@ -102,14 +162,29 @@ export const SharePhotoUploader: React.FC<SharePhotoUploaderProps> = ({
 				onAddPhoto={triggerFileSelect}
 				onRemovePhoto={removePhoto}
 				onUpdateDescription={updateDescription}
+				onUploadPhoto={postId ? handleUploadSingle : undefined}
+				uploadedPhotoIds={uploadedPhotos}
+				uploadingPhotoIds={uploadingPhotos}
 			/>
 
 			{/* 업로드 버튼 */}
-			{photos.length > 0 && (
+			{photos.length > 0 && postId && (
 				<div className="mt-4 flex gap-2">
-					<button className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700" onClick={handleUploadAll}>
-						서버에 업로드
+					<button
+						className={`px-4 py-2 rounded flex items-center gap-2 ${
+							uploading ? "bg-gray-400 cursor-not-allowed" : "bg-blue-600 hover:bg-blue-700"
+						} text-white`}
+						onClick={handleUploadAll}
+						disabled={uploading}
+					>
+						<Upload className="h-4 w-4" />
+						{uploading ? "업로드 중..." : "서버에 업로드"}
 					</button>
+					{uploadedPhotos.size > 0 && (
+						<div className="px-3 py-2 bg-green-100 text-green-800 rounded text-sm">
+							{uploadedPhotos.size}/{photos.length} 업로드 완료
+						</div>
+					)}
 				</div>
 			)}
 

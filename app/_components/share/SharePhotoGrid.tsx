@@ -3,7 +3,7 @@
 
 import { Card } from "@/app/_components/ui/Card";
 import { Textarea } from "@/app/_components/ui/Textarea";
-import { Plus, X, MapPin } from "lucide-react";
+import { Plus, X, MapPin, Upload, Check } from "lucide-react";
 import { SpotPhoto } from "@/app/_types/photoTypes";
 import { formatGpsCoordinates } from "@/app/_libs/photoUtils";
 import { PHOTO_CONSTANTS } from "@/app/_constants/constants";
@@ -19,6 +19,12 @@ interface SharePhotoGridProps {
 	onRemovePhoto: (id: string) => void;
 	/** 설명 업데이트 핸들러 */
 	onUpdateDescription: (id: string, description: string) => void;
+	/** 개별 사진 업로드 핸들러 (선택사항) */
+	onUploadPhoto?: (photo: SpotPhoto) => Promise<void>;
+	/** 업로드된 사진 ID 목록 */
+	uploadedPhotoIds?: Set<string>;
+	/** 업로드 중인 사진 ID 목록 */
+	uploadingPhotoIds?: Set<string>;
 }
 
 /**
@@ -31,6 +37,9 @@ export const SharePhotoGrid: React.FC<SharePhotoGridProps> = ({
 	onAddPhoto,
 	onRemovePhoto,
 	onUpdateDescription,
+	onUploadPhoto,
+	uploadedPhotoIds = new Set(),
+	uploadingPhotoIds = new Set(),
 }) => {
 	return (
 		<div className="space-y-4">
@@ -93,6 +102,31 @@ export const SharePhotoGrid: React.FC<SharePhotoGridProps> = ({
 									</p>
 								)}
 							</div>
+
+							{/* 개별 업로드 버튼 */}
+							{onUploadPhoto && (
+								<div className="pt-2">
+									{uploadedPhotoIds.has(photo.id) ? (
+										<div className="flex items-center gap-2 text-green-600 text-sm">
+											<Check className="w-4 h-4" />
+											<span>업로드 완료</span>
+										</div>
+									) : (
+										<button
+											onClick={() => onUploadPhoto(photo)}
+											disabled={uploadingPhotoIds.has(photo.id)}
+											className={`flex items-center gap-2 px-3 py-1 rounded text-sm ${
+												uploadingPhotoIds.has(photo.id)
+													? "bg-gray-300 text-gray-500 cursor-not-allowed"
+													: "bg-blue-600 hover:bg-blue-700 text-white"
+											}`}
+										>
+											<Upload className="w-4 h-4" />
+											{uploadingPhotoIds.has(photo.id) ? "업로드 중..." : "업로드"}
+										</button>
+									)}
+								</div>
+							)}
 						</div>
 					</div>
 				</Card>

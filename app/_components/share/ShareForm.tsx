@@ -163,6 +163,7 @@ export function ShareForm({ postId: propsPostId }: ShareFormProps = {}) {
 				emptyMessage="스팟 사진을 추가하고 설명을 작성해주세요"
 				maxPhotos={PHOTO_CONSTANTS.MAX_PHOTOS}
 				onPhotosChange={handlePhotosChange}
+				postId={postId ? parseInt(postId) : undefined}
 			/>
 			{/* 사진 개수 표시 */}
 			{spotPhotos.length > 0 && (
