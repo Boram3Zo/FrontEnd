@@ -107,6 +107,46 @@ export function ShareForm({ postId: propsPostId }: ShareFormProps = {}) {
 	};
 
 	/**
+	 * GPS 좌표에서 실제 주소를 가져오는 함수
+	 */
+	const getAddressFromCoordinates = async (lat: number, lng: number): Promise<string> => {
+		try {
+			if (window.google?.maps && window.google.maps.Geocoder) {
+				const geocoder = new window.google.maps.Geocoder();
+				const results = await new Promise<google.maps.GeocoderResult[] | null>(resolve => {
+					geocoder.geocode({ location: { lat, lng } }, (results, status) => {
+						if (status === "OK" && results) resolve(results);
+						else resolve(null);
+					});
+				});
+
+				if (results && results.length > 0) {
+					const first = results[0];
+					const addressComponents = first.address_components || [];
+
+					// 시/구/동 정보 추출
+					const findComponent = (types: string[]) => addressComponents.find(c => types.some(t => c.types.includes(t)));
+
+					const cityComp = findComponent(["locality", "administrative_area_level_2"]);
+					const guComp = findComponent(["administrative_area_level_2", "administrative_area_level_3"]);
+					const dongComp = findComponent(["sublocality_level_1", "sublocality"]);
+
+					// 주소 조합
+					const addressParts = [];
+					if (cityComp) addressParts.push(cityComp.long_name);
+					if (guComp && guComp.long_name !== cityComp?.long_name) addressParts.push(guComp.long_name);
+					if (dongComp) addressParts.push(dongComp.long_name);
+
+					return addressParts.length > 0 ? addressParts.join(" ") : first.formatted_address;
+				}
+			}
+		} catch (error) {
+			console.error("주소 변환 실패:", error);
+		}
+		return "알 수 없는 지역";
+	};
+
+	/**
 	 * 폼 제출 핸들러
 	 * 게시글 공유 완료 API를 호출하여 산책 데이터를 서버에 저장
 	 */
@@ -122,11 +162,17 @@ export function ShareForm({ postId: propsPostId }: ShareFormProps = {}) {
 		}
 
 		try {
+			// 시작점의 실제 주소 가져오기
+			const startPoint = session.route[0];
+			const actualRegion = startPoint
+				? await getAddressFromCoordinates(startPoint.lat, startPoint.lng)
+				: session.pins?.find(pin => pin.type === "start")?.guName || "알 수 없는 지역";
+
 			// 산책 세션 데이터를 게시글 공유 요청 형식으로 변환
 			const shareRequest = convertWalkingSessionToShareRequest(parseInt(postId), session, {
 				memberId: 1, // TODO: 실제 사용자 ID로 대체
 				title: formData.title,
-				region: session.pins?.find(pin => pin.type === "start")?.guName || "알 수 없는 지역",
+				region: actualRegion,
 				content: formData.content,
 				theme: formData.selectedTheme || "",
 				hashtags: formData.hashtags.length > 0 ? formData.hashtags : [],
