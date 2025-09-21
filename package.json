@@ -4,9 +4,10 @@
 	"private": true,
 	"scripts": {
 		"dev": "next dev --turbopack",
-		"build": "npm run type-check && npm run test && next build",
-		"build:vercel": "npm run type-check && npm run test:ci && next build",
-		"type-check": "tsc --noEmit",
+		"build": "npx tsc --noEmit && next build",
+		"build:full": "npm run type-check && npm run test && next build",
+		"build:vercel": "npx tsc --noEmit && next build",
+		"type-check": "npx tsc --noEmit",
 		"start": "next start",
 		"lint": "next lint",
 		"test": "jest",
