@@ -145,7 +145,26 @@ export function ShareForm({ postId: propsPostId }: ShareFormProps = {}) {
 		}
 	};
 
-	const isFormValid = formData.title.trim() && formData.content.trim();
+	// 필수 항목 체크
+	const requiredFields = {
+		title: formData.title.trim(),
+		content: formData.content.trim(),
+		hasRoute: session?.route && session.route.length > 0,
+	};
+
+	const missingFields: string[] = [];
+	if (!requiredFields.title) missingFields.push("제목");
+	if (!requiredFields.content) missingFields.push("내용");
+	if (!requiredFields.hasRoute) missingFields.push("산책 경로");
+
+	const isFormValid = missingFields.length === 0;
+
+	// 버튼 텍스트와 상태 메시지
+	const getButtonText = () => {
+		if (missingFields.length === 0) return "코스 공유하기";
+		if (missingFields.length === 1) return `${missingFields[0]} 입력 필요`;
+		return `${missingFields.length}개 항목 입력 필요`;
+	};
 
 	return (
 		<main className="pb-20">
@@ -184,10 +203,58 @@ export function ShareForm({ postId: propsPostId }: ShareFormProps = {}) {
 				onHashtagAdd={handleHashtagAdd}
 				onHashtagRemove={handleHashtagRemove}
 			/>
+			{/* 필수 항목 체크리스트 (버튼 위에 표시) */}
+			<div className="px-4 py-4">
+				<div className="bg-gray-50 rounded-lg p-4 mb-4">
+					<h4 className="text-sm font-medium text-gray-700 mb-3">공유 전 확인사항</h4>
+					<div className="space-y-2">
+						<div
+							className={`flex items-center gap-2 text-sm ${
+								requiredFields.hasRoute ? "text-green-600" : "text-red-500"
+							}`}
+						>
+							<span
+								className={`w-4 h-4 rounded-full flex items-center justify-center text-xs ${
+									requiredFields.hasRoute ? "bg-green-100" : "bg-red-100"
+								}`}
+							>
+								{requiredFields.hasRoute ? "✓" : "!"}
+							</span>
+							<span>산책 경로 {requiredFields.hasRoute ? "완료" : "필요"}</span>
+						</div>
+						<div
+							className={`flex items-center gap-2 text-sm ${requiredFields.title ? "text-green-600" : "text-red-500"}`}
+						>
+							<span
+								className={`w-4 h-4 rounded-full flex items-center justify-center text-xs ${
+									requiredFields.title ? "bg-green-100" : "bg-red-100"
+								}`}
+							>
+								{requiredFields.title ? "✓" : "!"}
+							</span>
+							<span>코스 제목 {requiredFields.title ? "완료" : "필요"}</span>
+						</div>
+						<div
+							className={`flex items-center gap-2 text-sm ${
+								requiredFields.content ? "text-green-600" : "text-red-500"
+							}`}
+						>
+							<span
+								className={`w-4 h-4 rounded-full flex items-center justify-center text-xs ${
+									requiredFields.content ? "bg-green-100" : "bg-red-100"
+								}`}
+							>
+								{requiredFields.content ? "✓" : "!"}
+							</span>
+							<span>코스 설명 {requiredFields.content ? "완료" : "필요"}</span>
+						</div>
+					</div>
+				</div>
+			</div>
 			{/* 제출 버튼 */}
-			<div className="px-4 py-6">
+			<div className="px-4 pb-6">
 				<Button
-					className={`w-full font-semibold py-3 rounded-lg ${
+					className={`w-full font-semibold py-3 rounded-lg transition-colors ${
 						isFormValid
 							? "bg-orange-500 hover:bg-orange-600 text-white"
 							: "bg-gray-300 text-gray-500 cursor-not-allowed"
@@ -195,8 +262,11 @@ export function ShareForm({ postId: propsPostId }: ShareFormProps = {}) {
 					onClick={handleSubmit}
 					disabled={!isFormValid}
 				>
-					코스 공유하기
+					{getButtonText()}
 				</Button>
+				{!isFormValid && (
+					<p className="text-xs text-gray-500 mt-2 text-center">위 항목들을 모두 완료하면 공유할 수 있습니다</p>
+				)}
 			</div>
 		</main>
 	);
