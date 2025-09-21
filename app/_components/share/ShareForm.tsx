@@ -13,7 +13,7 @@ import { useWalking } from "@/app/_providers";
 import { SpotPhoto } from "@/app/_types/photoTypes";
 import { ShareFormData } from "@/app/_types/shareTypes";
 import { PHOTO_CONSTANTS } from "@/app/_constants/constants";
-import { createPost, convertWalkingSessionToPostRequest } from "@/app/_libs/postService";
+import { sharePost, convertWalkingSessionToShareRequest } from "@/app/_libs/postService";
 
 interface ShareFormProps {
 	postId?: string; // props로 받을 수 있는 postId (동적 라우트용)
@@ -108,7 +108,7 @@ export function ShareForm({ postId: propsPostId }: ShareFormProps = {}) {
 
 	/**
 	 * 폼 제출 핸들러
-	 * 게시글 생성 API를 호출하여 산책 데이터를 서버에 저장
+	 * 게시글 공유 완료 API를 호출하여 산책 데이터를 서버에 저장
 	 */
 	const handleSubmit = async () => {
 		if (!session) {
@@ -116,9 +116,14 @@ export function ShareForm({ postId: propsPostId }: ShareFormProps = {}) {
 			return;
 		}
 
+		if (!postId) {
+			alert("게시글 ID가 없습니다. 페이지를 새로고침해주세요.");
+			return;
+		}
+
 		try {
-			// 산책 세션 데이터를 게시글 생성 요청 형식으로 변환
-			const postRequest = convertWalkingSessionToPostRequest(session, {
+			// 산책 세션 데이터를 게시글 공유 요청 형식으로 변환
+			const shareRequest = convertWalkingSessionToShareRequest(parseInt(postId), session, {
 				memberId: 1, // TODO: 실제 사용자 ID로 대체
 				title: formData.title,
 				region: session.pins?.find(pin => pin.type === "start")?.guName || "알 수 없는 지역",
@@ -127,10 +132,10 @@ export function ShareForm({ postId: propsPostId }: ShareFormProps = {}) {
 				hashtags: formData.hashtags.length > 0 ? formData.hashtags : [],
 			});
 
-			console.log("API 요청 데이터:", postRequest);
+			console.log("공유 API 요청 데이터:", shareRequest);
 
-			// 게시글 생성 API 호출
-			const result = await createPost(postRequest);
+			// 게시글 공유 완료 API 호출
+			const result = await sharePost(shareRequest);
 
 			if (result.success) {
 				alert("코스가 성공적으로 공유되었습니다!");
