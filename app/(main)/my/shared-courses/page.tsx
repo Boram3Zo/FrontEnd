@@ -2,7 +2,7 @@
 
 import { Card } from "@/app/_components/ui/Card";
 import { Button } from "@/app/_components/ui/Button";
-import { MapPin, Clock, ArrowLeft, Share2 } from "lucide-react";
+import { MapPin, Clock, ArrowLeft } from "lucide-react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 
