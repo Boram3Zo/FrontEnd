@@ -1,7 +1,7 @@
 // hooks/usePhotoManager.ts
 import { useState, useRef, useCallback } from "react";
 import { SpotPhoto, UsePhotoManagerReturn, PhotoUploaderOptions } from "@/app/_types/photoTypes";
-import { uploadPhotoFile } from "@/app/_libs/photoService";
+import { uploadPhotoFile, deletePhotoFile } from "@/app/_libs/photoService";
 import {
 	filterImageFiles,
 	createPhotoFromFile,
@@ -87,6 +87,13 @@ export const usePhotoManager = (options: PhotoUploaderOptions = {}): UsePhotoMan
 	}, []);
 
 	/**
+	 * 사진의 photoId 업데이트 (업로드 성공 후)
+	 */
+	const updatePhotoId = useCallback((id: string, photoId: number) => {
+		setPhotos(prev => prev.map(photo => (photo.id === id ? { ...photo, photoId } : photo)));
+	}, []);
+
+	/**
 	 * 파일 선택 창 열기
 	 */
 	const triggerFileSelect = useCallback(() => {
@@ -105,13 +112,29 @@ export const usePhotoManager = (options: PhotoUploaderOptions = {}): UsePhotoMan
 		}
 	};
 
+	const deletePhoto = async (photo: SpotPhoto, postId: number) => {
+		if (!photo.photoId) {
+			throw new Error("사진이 서버에 업로드되지 않았습니다.");
+		}
+
+		try {
+			const resp = await deletePhotoFile(photo.photoId, postId);
+			return resp;
+		} catch (err) {
+			console.error("Delete failed", err);
+			throw err;
+		}
+	};
+
 	return {
 		photos,
 		addPhotos,
 		uploadPhoto,
+		deletePhoto,
 		removePhoto,
 		updateDescription,
 		updateTitle,
+		updatePhotoId,
 		triggerFileSelect,
 		fileInputRef,
 	};

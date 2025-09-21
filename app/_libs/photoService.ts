@@ -11,6 +11,12 @@ export interface UploadPhotoResponse {
 	message?: string | null;
 }
 
+export interface DeletePhotoResponse {
+	success: boolean;
+	data: boolean;
+	message?: string | null;
+}
+
 /**
  * Upload a photo file (multipart/form-data) to backend.
  */
@@ -35,4 +41,20 @@ export async function uploadPhotoFile(
 	});
 
 	return res as UploadPhotoResponse;
+}
+
+/**
+ * Delete a photo by photoId and postId
+ */
+export async function deletePhotoFile(photoId: number, postId: number) {
+	const formData = new FormData();
+	formData.append("photoId", String(photoId));
+	formData.append("postId", String(postId));
+
+	const res = await ApiClient.request<DeletePhotoResponse>("/post/delete-photo", {
+		method: "POST",
+		body: formData,
+	});
+
+	return res as DeletePhotoResponse;
 }

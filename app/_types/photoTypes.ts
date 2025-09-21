@@ -46,8 +46,10 @@ export interface ExifData {
  * 스팟 사진 데이터 타입
  */
 export interface SpotPhoto {
-	/** 고유 식별자 */
+	/** 고유 식별자 (클라이언트용) */
 	id: string;
+	/** 서버에서 반환된 사진 ID (업로드 후) */
+	photoId?: number;
 	/** 원본 파일 객체 */
 	file: File;
 	/** 미리보기 URL (createObjectURL로 생성) */
@@ -80,14 +82,18 @@ export interface UsePhotoManagerReturn {
 	photos: SpotPhoto[];
 	/** 사진 추가 핸들러 */
 	addPhotos: (files: FileList) => Promise<void>;
-	/** 사진 삭제 핸들러 */
+	/** 사진 삭제 핸들러 (로컬 삭제) */
 	removePhoto: (id: string) => void;
 	/** 사진 설명 업데이트 핸들러 */
 	updateDescription: (id: string, description: string) => void;
 	/** 사진 제목 업데이트 핸들러 */
 	updateTitle: (id: string, title: string) => void;
+	/** 사진의 photoId 업데이트 (업로드 성공 후) */
+	updatePhotoId: (id: string, photoId: number) => void;
 	/** 개별 사진을 서버에 업로드합니다. 반환값은 서버 응답입니다. */
 	uploadPhoto?: (photo: SpotPhoto, postId: number) => Promise<unknown>;
+	/** 서버에서 사진을 삭제합니다. */
+	deletePhoto?: (photo: SpotPhoto, postId: number) => Promise<unknown>;
 	/** 사진 추가 트리거 함수 */
 	triggerFileSelect: () => void;
 	/** 파일 입력 ref */

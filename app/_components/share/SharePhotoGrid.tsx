@@ -17,6 +17,8 @@ interface SharePhotoGridProps {
 	onAddPhoto: () => void;
 	/** 사진 삭제 핸들러 */
 	onRemovePhoto: (id: string) => void;
+	/** 서버 사진 삭제 핸들러 (선택사항) */
+	onDeletePhoto?: (photo: SpotPhoto) => Promise<void>;
 	/** 설명 업데이트 핸들러 */
 	onUpdateDescription: (id: string, description: string) => void;
 	/** 개별 사진 업로드 핸들러 (선택사항) */
@@ -38,6 +40,7 @@ export const SharePhotoGrid: React.FC<SharePhotoGridProps> = ({
 	onRemovePhoto,
 	onUpdateDescription,
 	onUploadPhoto,
+	onDeletePhoto,
 	uploadedPhotoIds = new Set(),
 	uploadingPhotoIds = new Set(),
 }) => {
@@ -56,7 +59,14 @@ export const SharePhotoGrid: React.FC<SharePhotoGridProps> = ({
 								className="w-full h-full object-cover rounded-lg"
 							/>
 							<button
-								onClick={() => onRemovePhoto(photo.id)}
+								onClick={() => {
+									// 서버 삭제 핸들러가 있고 사진이 업로드되었다면 서버 삭제, 아니면 로컬 삭제
+									if (onDeletePhoto && (photo.photoId || uploadedPhotoIds.has(photo.id))) {
+										onDeletePhoto(photo);
+									} else {
+										onRemovePhoto(photo.id);
+									}
+								}}
 								className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs hover:bg-red-600 transition-colors shadow-md"
 								aria-label="사진 삭제"
 							>

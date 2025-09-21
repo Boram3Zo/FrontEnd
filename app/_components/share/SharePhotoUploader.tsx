@@ -5,7 +5,7 @@ import { Camera, Upload } from "lucide-react";
 import { SharePhotoGrid } from "./SharePhotoGrid";
 import { usePhotoManager } from "@/app/_hooks/usePhotoManager";
 import { PhotoUploaderOptions, SpotPhoto } from "@/app/_types/photoTypes";
-import { UploadPhotoResponse } from "@/app/_libs/photoService";
+import { UploadPhotoResponse, DeletePhotoResponse } from "@/app/_libs/photoService";
 import { PHOTO_CONSTANTS } from "@/app/_constants/constants";
 
 interface SharePhotoUploaderProps extends PhotoUploaderOptions {
@@ -32,12 +32,21 @@ export const SharePhotoUploader: React.FC<SharePhotoUploaderProps> = ({
 	onPhotosChange,
 	postId,
 }) => {
-	const { photos, addPhotos, removePhoto, updateDescription, triggerFileSelect, fileInputRef, uploadPhoto } =
-		usePhotoManager({
-			maxPhotos,
-			acceptedFileTypes,
-			gridColumns,
-		});
+	const {
+		photos,
+		addPhotos,
+		removePhoto,
+		updateDescription,
+		triggerFileSelect,
+		fileInputRef,
+		uploadPhoto,
+		deletePhoto,
+		updatePhotoId,
+	} = usePhotoManager({
+		maxPhotos,
+		acceptedFileTypes,
+		gridColumns,
+	});
 
 	// 업로드 상태 관리
 	const [uploading, setUploading] = React.useState(false);
@@ -66,6 +75,7 @@ export const SharePhotoUploader: React.FC<SharePhotoUploaderProps> = ({
 				if (result.success) {
 					successCount++;
 					setUploadedPhotos(prev => new Set([...prev, p.id]));
+					updatePhotoId(p.id, result.data.photoId); // photoId 저장
 					console.log(`✅ 사진 업로드 성공: ${p.file.name}`, result.data);
 				} else {
 					failCount++;
@@ -102,6 +112,7 @@ export const SharePhotoUploader: React.FC<SharePhotoUploaderProps> = ({
 			const result = (await uploadPhoto(photo, postId)) as UploadPhotoResponse;
 			if (result.success) {
 				setUploadedPhotos(prev => new Set([...prev, photo.id]));
+				updatePhotoId(photo.id, result.data.photoId); // photoId 저장
 				console.log(`✅ 사진 업로드 성공: ${photo.file.name}`, result.data);
 			} else {
 				console.error(`❌ 사진 업로드 실패: ${photo.file.name}`, result.message);
@@ -116,6 +127,45 @@ export const SharePhotoUploader: React.FC<SharePhotoUploaderProps> = ({
 				newSet.delete(photo.id);
 				return newSet;
 			});
+		}
+	};
+
+	// 사진 삭제 핸들러 (서버에서 삭제 + 로컬에서 제거)
+	const handleDeletePhoto = async (photo: SpotPhoto) => {
+		if (!postId || !deletePhoto) {
+			// 서버에 업로드되지 않은 사진은 로컬에서만 삭제
+			removePhoto(photo.id);
+			return;
+		}
+
+		if (!photo.photoId) {
+			// photoId가 없으면 서버에 업로드되지 않은 사진이므로 로컬에서만 삭제
+			removePhoto(photo.id);
+			return;
+		}
+
+		const confirmed = confirm("서버에서 사진을 삭제하시겠습니까? 삭제된 사진은 복구할 수 없습니다.");
+		if (!confirmed) {
+			return;
+		}
+
+		try {
+			const result = (await deletePhoto(photo, postId)) as DeletePhotoResponse;
+			if (result.success) {
+				removePhoto(photo.id);
+				setUploadedPhotos(prev => {
+					const newSet = new Set(prev);
+					newSet.delete(photo.id);
+					return newSet;
+				});
+				console.log(`✅ 사진 삭제 성공: ${photo.file.name}`);
+			} else {
+				console.error(`❌ 사진 삭제 실패: ${photo.file.name}`, result.message);
+				alert(`삭제 실패: ${result.message}`);
+			}
+		} catch (err) {
+			console.error("사진 삭제 실패", err);
+			alert("사진 삭제 중 오류가 발생했습니다.");
 		}
 	};
 
@@ -163,6 +213,7 @@ export const SharePhotoUploader: React.FC<SharePhotoUploaderProps> = ({
 				onRemovePhoto={removePhoto}
 				onUpdateDescription={updateDescription}
 				onUploadPhoto={postId ? handleUploadSingle : undefined}
+				onDeletePhoto={postId ? handleDeletePhoto : undefined}
 				uploadedPhotoIds={uploadedPhotos}
 				uploadingPhotoIds={uploadingPhotos}
 			/>
