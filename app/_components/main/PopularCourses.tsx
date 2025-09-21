@@ -11,13 +11,30 @@ export function PopularCourses() {
 	const [courses, setCourses] = useState<PopularCourse[]>([]);
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState<string | null>(null);
+	const [imageErrors, setImageErrors] = useState<{ [key: number]: boolean }>({});
 
 	useEffect(() => {
 		const loadPopularCourses = async () => {
 			try {
 				setLoading(true);
 				const response = await getPostList(1, 5); // 인기 코스 5개만 가져오기
+				console.log("🔍 API 응답 원본 데이터:", response.data.boardPage.content);
+
+				// 각 포스트의 사진 정보 로그
+				response.data.boardPage.content.forEach((post, index) => {
+					console.log(`📷 Post ${index + 1} 사진 정보:`, post.photoList);
+					if (post.photoList && post.photoList.length > 0) {
+						console.log(`📂 첫 번째 사진 경로:`, post.photoList[0].filePath);
+					}
+				});
+
 				const popularCourses = response.data.boardPage.content.map(convertPostToPopularCourse);
+
+				// 변환된 코스의 이미지 URL 로그
+				popularCourses.forEach((course, index) => {
+					console.log(`🖼️ Course ${index + 1} 변환된 이미지 URL:`, course.imageUrl);
+				});
+
 				setCourses(popularCourses);
 			} catch (err) {
 				console.error("인기 코스 로딩 실패:", err);
@@ -84,11 +101,15 @@ export function PopularCourses() {
 								<div className="flex items-center gap-3">
 									<div className="w-16 h-16 bg-gradient-to-br from-green-200 to-green-400 rounded-lg overflow-hidden">
 										<Image
-											src={course.imageUrl}
+											src={imageErrors[course.id] ? "/hangang-park-walkway.png" : course.imageUrl}
 											alt={course.title}
 											width={64}
 											height={64}
 											className="w-full h-full object-cover"
+											unoptimized
+											onError={() => {
+												setImageErrors(prev => ({ ...prev, [course.id]: true }));
+											}}
 										/>
 									</div>
 									<div className="flex-1">

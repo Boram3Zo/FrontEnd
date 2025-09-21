@@ -23,6 +23,18 @@ const nextConfig: NextConfig = {
 				port: "",
 				pathname: "/account123/**",
 			},
+			{
+				protocol: "http",
+				hostname: "localhost",
+				port: "9988",
+				pathname: "/**",
+			},
+			{
+				protocol: "http",
+				hostname: "myungjinki.com",
+				port: "9988",
+				pathname: "/**",
+			},
 		],
 	},
 };

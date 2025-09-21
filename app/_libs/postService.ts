@@ -14,6 +14,7 @@ export { convertWalkingSessionToPostRequest, convertWalkingSessionToShareRequest
 // 유틸리티 함수들
 export {
 	formatDuration,
+	getImageUrl,
 	getRouteEndpoints,
 	convertRouteToSpots,
 	convertRouteToJsonSpots,
