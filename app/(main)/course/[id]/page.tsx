@@ -179,6 +179,7 @@ export default async function CourseDetailPage({ params }: { params: PageParams 
 										alt={course.photoList[0].imageDescription}
 										fill
 										className="object-cover"
+										priority={true}
 									/>
 									{course.photoList.length > 1 && (
 										<div className="absolute bottom-2 right-2 bg-black bg-opacity-50 text-white px-2 py-1 rounded text-xs">
