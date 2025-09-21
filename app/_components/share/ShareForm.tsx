@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useState, useEffect } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { Button } from "@/app/_components/ui/Button";
 import { SharePhotoUploader } from "./SharePhotoUploader";
 import { ShareRouteSection } from "./ShareRouteSection";
@@ -15,13 +15,23 @@ import { ShareFormData } from "@/app/_types/shareTypes";
 import { PHOTO_CONSTANTS } from "@/app/_constants/constants";
 import { createPost, convertWalkingSessionToPostRequest } from "@/app/_libs/postService";
 
+interface ShareFormProps {
+	postId?: string; // props로 받을 수 있는 postId (동적 라우트용)
+}
+
 /**
  * 산책 코스 공유 폼 컴포넌트
  * 사용자가 산책 경로와 관련 정보를 입력하여 다른 사용자들과 공유할 수 있는 폼을 제공합니다.
  */
-export function ShareForm() {
+export function ShareForm({ postId: propsPostId }: ShareFormProps = {}) {
 	const router = useRouter();
+	const searchParams = useSearchParams();
 	const { session, spotPhotos, setSpotPhotos } = useWalking();
+
+	// postId 우선순위: props > URL 파라미터 > sessionStorage
+	const urlPostId = searchParams.get("post_id") || searchParams.get("postId");
+	const sessionPostId = typeof window !== "undefined" ? sessionStorage.getItem("created:postId") : null;
+	const postId = propsPostId || urlPostId || sessionPostId;
 
 	// 폼 데이터 상태 관리
 	const [formData, setFormData] = useState<ShareFormData>({
@@ -31,6 +41,33 @@ export function ShareForm() {
 		hashtags: [],
 		hashtagInput: "",
 	});
+
+	// postId 처리 및 검증
+	useEffect(() => {
+		if (postId) {
+			console.log("🎯 ShareForm에서 받은 postId:", postId);
+			console.log("🎯 URL에서:", urlPostId);
+			console.log("🎯 SessionStorage에서:", sessionPostId);
+			console.log("🎯 최종 사용할 postId:", postId);
+
+			// sessionStorage 정리 (한 번 사용했으면 제거)
+			if (sessionPostId) {
+				sessionStorage.removeItem("created:postId");
+			}
+		} else {
+			console.warn("⚠️ ShareForm이 postId 없이 접근됨");
+
+			// 동적 라우트(/share/[id])가 아닌 기본 /share 경로인 경우 허용
+			// 하지만 일반적으로는 postId가 있어야 함을 로그로 남김
+			if (window.location.pathname === "/share") {
+				console.log("📝 기본 /share 페이지 접근 - 새 게시글 작성 모드");
+			} else {
+				console.log("📝 동적 라우트이지만 postId 없음 - 메인으로 리다이렉트");
+				alert("잘못된 접근입니다. 메인 페이지로 이동합니다.");
+				router.push("/");
+			}
+		}
+	}, [postId, urlPostId, sessionPostId, router]);
 
 	/**
 	 * 폼 데이터 필드를 업데이트하는 함수

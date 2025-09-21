@@ -159,10 +159,26 @@ export default function WalkingSummary() {
 			const result = await createPost(postRequest);
 
 			if (result.success) {
-				console.log("게시글 생성 성공, postId:", result.postId);
-				// 성공 시 /share 페이지로 이동 (postId 포함)
-				const shareUrl = result.postId ? `/share?postId=${result.postId}` : "/share";
-				router.push(shareUrl);
+				console.log("게시글 생성 성공, 전체 결과:", result);
+				console.log("postId 값:", result.postId);
+				console.log("postId 타입:", typeof result.postId);
+				console.log("postId가 truthy인가?", !!result.postId);
+
+				// postId는 반드시 있어야 함
+				if (result.postId !== null && result.postId !== undefined) {
+					// 동적 라우트로 이동: /share/[id]
+					const shareUrl = `/share/${result.postId}`;
+					console.log("생성된 shareUrl:", shareUrl);
+
+					// sessionStorage 백업 (브라우저 뒤로가기 등을 위한 보험)
+					sessionStorage.setItem("created:postId", String(result.postId));
+
+					router.push(shareUrl);
+				} else {
+					// postId가 없는 경우는 API 에러로 처리
+					console.error("❌ 게시글 생성은 성공했으나 postId가 반환되지 않음");
+					alert("게시글 생성 후 ID를 받아오지 못했습니다. 다시 시도해주세요.");
+				}
 			} else {
 				alert(`게시글 생성 실패: ${result.message}`);
 			}

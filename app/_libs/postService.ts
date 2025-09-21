@@ -105,9 +105,16 @@ export async function createPost(postData: CreatePostRequest): Promise<CreatePos
 		}
 
 		const result = await response.json();
+		console.log("API 응답 원본:", result);
+
+		// 다양한 필드명 시도
+		const postId = result.data;
+		console.log("추출된 postId:", postId);
+		console.log("postId 타입:", typeof postId);
+
 		return {
 			success: true,
-			postId: result.postId,
+			postId: postId,
 			message: result.message,
 		};
 	} catch (error) {
