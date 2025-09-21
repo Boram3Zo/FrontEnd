@@ -13,6 +13,10 @@ const config = {
 	testEnvironment: "jsdom",
 	// Add more setup options before each test is run
 	setupFilesAfterEnv: ["<rootDir>/jest.setup.ts"],
+	// React 19 compatibility
+	testEnvironmentOptions: {
+		customExportConditions: [""],
+	},
 	// Test file patterns - looks for test files alongside source files and in scripts folder
 	testMatch: [
 		"**/__tests__/**/*.(js|jsx|ts|tsx)",
