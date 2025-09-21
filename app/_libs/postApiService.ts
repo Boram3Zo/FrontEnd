@@ -10,6 +10,7 @@ import {
 	SharePostResponse,
 	PostListResponse,
 	MyCourseResponse,
+	PostReadResponse,
 } from "@/app/_types/post";
 
 /**
@@ -52,11 +53,11 @@ export async function getPostList(page: number = 0, size: number = 10): Promise<
 }
 
 /**
- * 특정 게시글 조회 API 호출
+ * 특정 게시글 조회 API 호출 (Query Parameter 방식)
  */
-export async function getPostById(postId: number) {
+export async function getPostById(postId: number): Promise<PostReadResponse> {
 	try {
-		const response = await ApiClient.get(`/post/${postId}`);
+		const response = await ApiClient.get<PostReadResponse>(`/post/read?postId=${postId}`);
 		return response;
 	} catch (error) {
 		console.error("게시글 조회 실패:", error);

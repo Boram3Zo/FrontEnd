@@ -137,6 +137,12 @@ export interface MyCourseResponse {
 	data: Post[];
 }
 
+export interface PostReadResponse {
+	success: boolean;
+	message: string;
+	data: Post;
+}
+
 // ===== 산책 세션 타입 =====
 export interface WalkingSession {
 	durationSec: number;

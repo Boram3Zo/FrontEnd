@@ -31,6 +31,7 @@ export type {
 	SharePostRequest,
 	SharePostResponse,
 	PostListResponse,
+	PostReadResponse,
 	MyCourseResponse,
 	WalkingSession,
 	PostCreateOptions,
