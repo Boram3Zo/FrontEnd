@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { Button } from "@/app/_components/ui/Button";
 import { SharePhotoUploader } from "./SharePhotoUploader";
 import { ShareRouteSection } from "./ShareRouteSection";
@@ -12,12 +13,14 @@ import { useWalking } from "@/app/_providers";
 import { SpotPhoto } from "@/app/_types/photoTypes";
 import { ShareFormData } from "@/app/_types/shareTypes";
 import { PHOTO_CONSTANTS } from "@/app/_constants/constants";
+import { createPost, convertWalkingSessionToPostRequest } from "@/app/_libs/postService";
 
 /**
  * 산책 코스 공유 폼 컴포넌트
  * 사용자가 산책 경로와 관련 정보를 입력하여 다른 사용자들과 공유할 수 있는 폼을 제공합니다.
  */
 export function ShareForm() {
+	const router = useRouter();
 	const { session, spotPhotos, setSpotPhotos } = useWalking();
 
 	// 폼 데이터 상태 관리
@@ -68,18 +71,41 @@ export function ShareForm() {
 
 	/**
 	 * 폼 제출 핸들러
-	 * 현재는 콘솔 로그와 알림으로 처리, 추후 실제 API 연동 예정
+	 * 게시글 생성 API를 호출하여 산책 데이터를 서버에 저장
 	 */
-	const handleSubmit = () => {
-		const shareData = {
-			...formData,
-			spotPhotos,
-			session,
-		};
+	const handleSubmit = async () => {
+		if (!session) {
+			alert("산책 데이터가 없습니다.");
+			return;
+		}
 
-		// TODO: 실제 API 호출 또는 저장 로직
-		console.log("공유 데이터:", shareData);
-		alert("코스가 공유되었습니다!"); // 임시 알림
+		try {
+			// 산책 세션 데이터를 게시글 생성 요청 형식으로 변환
+			const postRequest = convertWalkingSessionToPostRequest(session, {
+				memberId: 1, // TODO: 실제 사용자 ID로 대체
+				title: formData.title,
+				region: session.pins?.find(pin => pin.type === "start")?.guName || "알 수 없는 지역",
+				content: formData.content,
+				theme: formData.selectedTheme || "",
+				hashtags: formData.hashtags.length > 0 ? formData.hashtags : [],
+			});
+
+			console.log("API 요청 데이터:", postRequest);
+
+			// 게시글 생성 API 호출
+			const result = await createPost(postRequest);
+
+			if (result.success) {
+				alert("코스가 성공적으로 공유되었습니다!");
+				// 성공 시 홈으로 이동
+				router.push("/");
+			} else {
+				alert(`공유 실패: ${result.message}`);
+			}
+		} catch (error) {
+			console.error("공유 중 오류 발생:", error);
+			alert("공유 중 오류가 발생했습니다. 다시 시도해주세요.");
+		}
 	};
 
 	const isFormValid = formData.title.trim() && formData.content.trim();

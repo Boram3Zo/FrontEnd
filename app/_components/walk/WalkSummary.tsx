@@ -1,16 +1,17 @@
 // app/walk/walking-summary.tsx
 "use client";
 
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { Card } from "@/app/_components/ui/Card";
 import { Button } from "@/app/_components/ui/Button";
-import { Share, MapPin } from "lucide-react";
+import { Share, MapPin, Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useGoogleMaps } from "@/app/_providers";
 import { WalkingPin } from "@/app/_types/walking";
 import { mapsSearchUrlForLatLng } from "@/app/_utils/googleMaps";
 import { addRoutePins } from "@/app/_components/map/pinUtils";
 import { WalkTrackerStats } from "./WalkTrackerStats";
+import { createPost, convertWalkingSessionToPostRequest } from "@/app/_libs/postService";
 
 // 간단 지도: sessionStorage/localStorage에서 경로를 읽어 폴리라인으로 표시
 function RouteMap({ route, pins }: { route: google.maps.LatLngLiteral[]; pins: WalkingPin[] }) {
@@ -54,6 +55,7 @@ function RouteMap({ route, pins }: { route: google.maps.LatLngLiteral[]; pins: W
 
 export default function WalkingSummary() {
 	const router = useRouter();
+	const [isSharing, setIsSharing] = useState(false);
 
 	// 1) 트래커가 방금 저장한 세션을 우선 사용
 	const { durationSec, distanceKm, route, pins } = useMemo(() => {
@@ -119,6 +121,58 @@ export default function WalkingSummary() {
 		console.log(mapInfo);
 		return mapInfo;
 	}, [pins]);
+
+	/**
+	 * 산책 코스 공유하기 핸들러
+	 * API를 먼저 호출하고 성공하면 /share 페이지로 이동
+	 */
+	const handleShareWalkingCourse = async () => {
+		if (!route.length || durationSec === 0) {
+			alert("공유할 산책 데이터가 없습니다.");
+			return;
+		}
+
+		setIsSharing(true);
+
+		try {
+			// 산책 세션 데이터 구성
+			const sessionData = {
+				durationSec,
+				distanceKm,
+				route,
+				pins,
+			};
+
+			// API 요청 데이터로 변환
+			const postRequest = convertWalkingSessionToPostRequest(sessionData, {
+				memberId: 1, // TODO: 실제 사용자 ID로 대체
+				title: `${new Date().toLocaleDateString()} 산책`,
+				region: startGuRoad || startAddress || "알 수 없는 지역",
+				content: "멋진 산책 코스를 공유합니다!",
+				theme: "",
+				hashtags: [],
+			});
+
+			console.log("게시글 생성 API 호출:", postRequest);
+
+			// 게시글 생성 API 호출
+			const result = await createPost(postRequest);
+
+			if (result.success) {
+				console.log("게시글 생성 성공, postId:", result.postId);
+				// 성공 시 /share 페이지로 이동 (postId 포함)
+				const shareUrl = result.postId ? `/share?postId=${result.postId}` : "/share";
+				router.push(shareUrl);
+			} else {
+				alert(`게시글 생성 실패: ${result.message}`);
+			}
+		} catch (error) {
+			console.error("공유 중 오류 발생:", error);
+			alert("공유 중 오류가 발생했습니다. 다시 시도해주세요.");
+		} finally {
+			setIsSharing(false);
+		}
+	};
 
 	return (
 		<div className="min-h-[60vh] px-4 py-6">
@@ -192,15 +246,29 @@ export default function WalkingSummary() {
 			</Card>
 
 			{/* 액션 */}
-			<div className="w-full">
+			<div className="w-full space-y-3">
 				<Button
 					variant="outline"
-					className="w-full bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white py-4 text-lg font-medium rounded-xl"
-					onClick={() => router.push("/share")}
+					className="w-full bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white py-4 text-lg font-medium rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 active:scale-95 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+					onClick={handleShareWalkingCourse}
+					disabled={isSharing}
 				>
-					<Share className="h-5 w-5 mr-2" />
-					공유하기
+					{isSharing ? (
+						<>
+							<Loader2 className="h-5 w-5 mr-2 animate-spin" />
+							<span className="font-semibold">공유 중...</span>
+						</>
+					) : (
+						<>
+							<Share className="h-5 w-5 mr-2" />
+							<span className="font-semibold">이 산책 코스 공유하기</span>
+						</>
+					)}
 				</Button>
+
+				<p className="text-sm text-gray-500 text-center">
+					{isSharing ? "게시글을 생성하고 있습니다..." : "다른 사람들과 함께 이 멋진 산책 코스를 나누어보세요! 🚶‍♀️✨"}
+				</p>
 			</div>
 		</div>
 	);
