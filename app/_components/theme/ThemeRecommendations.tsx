@@ -5,7 +5,7 @@ import { Card } from "@/app/_components/ui/Card";
 import { Button } from "@/app/_components/ui/Button";
 import { MapPin, Clock, Users, Heart } from "lucide-react";
 import Link from "next/link";
-import Image from "next/image";
+import { SafeImage } from "@/app/_components/ui/SafeImage";
 import { Theme } from "@/app/_types/theme";
 import { MOCK_THEMES } from "@/app/_mocks/themes";
 
@@ -64,8 +64,8 @@ export function ThemeRecommendations() {
 					<h5 className="font-semibold text-gray-800 mb-3">이 테마의 인기 코스</h5>
 					<div className="flex gap-3">
 						<div className="w-20 h-20 bg-gray-200 rounded-lg overflow-hidden">
-							<Image
-								src={recommendedTheme.popularCourse.image || "/placeholder.svg"}
+							<SafeImage
+								src={recommendedTheme.popularCourse.image}
 								alt={recommendedTheme.popularCourse.title}
 								width={80}
 								height={80}

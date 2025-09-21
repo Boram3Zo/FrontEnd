@@ -1,11 +1,11 @@
 "use client";
 
 import { useState } from "react";
+import { MapPin, Clock, Heart, ArrowLeft } from "lucide-react";
 import { Card } from "@/app/_components/ui/Card";
 import { Button } from "@/app/_components/ui/Button";
-import { MapPin, Clock, ArrowLeft, Heart } from "lucide-react";
 import { useRouter } from "next/navigation";
-import Image from "next/image";
+import { SafeImage } from "@/app/_components/ui/SafeImage";
 
 interface FavoriteCourseSpot {
 	id: string;
@@ -30,9 +30,7 @@ const INITIAL_FAVORITE_COURSES: FavoriteCourse[] = [
 		location: "강남구 역삼동",
 		duration: "35분",
 		distance: "1.8km",
-		spots: [
-			{ id: "spot1", name: "공원", image: "/sunny-city-park.png" },
-		],
+		spots: [{ id: "spot1", name: "공원", image: "/sunny-city-park.png" }],
 		favorite: true,
 	},
 	{
@@ -41,9 +39,7 @@ const INITIAL_FAVORITE_COURSES: FavoriteCourse[] = [
 		location: "종로구 계동길",
 		duration: "50분",
 		distance: "2.2km",
-		spots: [
-			{ id: "spot2", name: "한옥", image: "/traditional-house.png" },
-		],
+		spots: [{ id: "spot2", name: "한옥", image: "/traditional-house.png" }],
 		favorite: true,
 	},
 ];
@@ -54,9 +50,7 @@ export default function FavoriteCoursesPage() {
 
 	const toggleFavorite = (id: string) => {
 		setCourses(courses =>
-			courses.map(course =>
-				course.id === id ? { ...course, favorite: !course.favorite } : course
-			)
+			courses.map(course => (course.id === id ? { ...course, favorite: !course.favorite } : course))
 		);
 	};
 
@@ -81,12 +75,7 @@ export default function FavoriteCoursesPage() {
 						<Card key={course.id} className="p-4 bg-white shadow-md hover:shadow-lg transition-shadow flex relative">
 							{/* Heart button - right top */}
 							<div className="absolute top-4 right-4">
-								<Button
-									variant="ghost"
-									size="icon"
-									onClick={() => toggleFavorite(course.id)}
-									aria-label="찜하기"
-								>
+								<Button variant="ghost" size="icon" onClick={() => toggleFavorite(course.id)} aria-label="찜하기">
 									<Heart
 										className={`h-6 w-6 ${course.favorite ? "text-pink-500 fill-pink-500" : "text-gray-400"}`}
 										fill={course.favorite ? "#ec4899" : "none"}
@@ -96,19 +85,13 @@ export default function FavoriteCoursesPage() {
 							<div className="flex items-start gap-4 flex-1">
 								{/* Course image on the left */}
 								<div className="w-20 h-20 bg-gray-200 rounded-lg overflow-hidden flex-shrink-0">
-									{course.spots[0]?.image ? (
-										<Image
-											src={course.spots[0].image || "/placeholder.svg"}
-											alt={course.title}
-											width={80}
-											height={80}
-											className="w-full h-full object-cover"
-										/>
-									) : (
-										<div className="w-full h-full bg-gray-300 flex items-center justify-center">
-											<MapPin className="h-8 w-8 text-gray-500" />
-										</div>
-									)}
+									<SafeImage
+										src={course.spots[0]?.image}
+										alt={course.title}
+										width={80}
+										height={80}
+										className="w-full h-full object-cover"
+									/>
 								</div>
 								{/* Course information - left aligned */}
 								<div className="flex-1 flex flex-col justify-center">

@@ -4,7 +4,7 @@ import { Card } from "@/app/_components/ui/Card";
 import { Button } from "@/app/_components/ui/Button";
 import { MapPin, Clock, ArrowLeft } from "lucide-react";
 import { useRouter } from "next/navigation";
-import Image from "next/image";
+import { SafeImage } from "@/app/_components/ui/SafeImage";
 import { useEffect, useState } from "react";
 import { getMyCourses, convertPostToMyCourse } from "@/app/_libs/postService";
 
@@ -145,7 +145,7 @@ export default function MyCoursesPage() {
 								<div className="flex items-start gap-4">
 									{/* Course image on the left */}
 									<div className="w-20 h-20 bg-gray-200 rounded-lg overflow-hidden flex-shrink-0">
-										<Image
+										<SafeImage
 											src={course.imageUrl}
 											alt={course.title ? `${course.title} 산책 코스 이미지` : "산책 코스 이미지"}
 											width={80}

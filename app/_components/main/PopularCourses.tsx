@@ -3,7 +3,7 @@
 import { Card } from "@/app/_components/ui/Card";
 import { MapPin, Heart } from "lucide-react";
 import Link from "next/link";
-import Image from "next/image";
+import { SafeImage } from "@/app/_components/ui/SafeImage";
 import { useEffect, useState } from "react";
 import { getPostList, convertPostToPopularCourse, type PopularCourse } from "@/app/_libs/postService";
 
@@ -11,7 +11,6 @@ export function PopularCourses() {
 	const [courses, setCourses] = useState<PopularCourse[]>([]);
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState<string | null>(null);
-	const [imageErrors, setImageErrors] = useState<{ [key: number]: boolean }>({});
 
 	useEffect(() => {
 		const loadPopularCourses = async () => {
@@ -100,16 +99,12 @@ export function PopularCourses() {
 							<Card className="p-3 bg-white/90 backdrop-blur-sm shadow-md hover:shadow-lg transition-all duration-300 cursor-pointer">
 								<div className="flex items-center gap-3">
 									<div className="w-16 h-16 bg-gradient-to-br from-green-200 to-green-400 rounded-lg overflow-hidden">
-										<Image
-											src={imageErrors[course.id] ? "/hangang-park-walkway.png" : course.imageUrl}
+										<SafeImage
+											src={course.imageUrl}
 											alt={course.title}
 											width={64}
 											height={64}
 											className="w-full h-full object-cover"
-											unoptimized
-											onError={() => {
-												setImageErrors(prev => ({ ...prev, [course.id]: true }));
-											}}
 										/>
 									</div>
 									<div className="flex-1">

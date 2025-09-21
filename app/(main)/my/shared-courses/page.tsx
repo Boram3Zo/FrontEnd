@@ -4,7 +4,7 @@ import { Card } from "@/app/_components/ui/Card";
 import { Button } from "@/app/_components/ui/Button";
 import { MapPin, Clock, ArrowLeft } from "lucide-react";
 import { useRouter } from "next/navigation";
-import Image from "next/image";
+import { SafeImage } from "@/app/_components/ui/SafeImage";
 
 interface SharedCourseSpot {
 	id: string;
@@ -28,9 +28,7 @@ const SHARED_COURSES: SharedCourse[] = [
 		location: "강남구 테헤란로 123",
 		duration: "40분",
 		distance: "2.0km",
-		spots: [
-			{ id: "spot1", name: "공원 입구", image: "/sunny-city-park.png" },
-		],
+		spots: [{ id: "spot1", name: "공원 입구", image: "/sunny-city-park.png" }],
 	},
 	{
 		id: "2",
@@ -38,9 +36,7 @@ const SHARED_COURSES: SharedCourse[] = [
 		location: "영등포구 여의도동",
 		duration: "55분",
 		distance: "3.1km",
-		spots: [
-			{ id: "spot2", name: "한강공원", image: "/sunny-city-park.png" },
-		],
+		spots: [{ id: "spot2", name: "한강공원", image: "/sunny-city-park.png" }],
 	},
 ];
 
@@ -69,19 +65,13 @@ export default function SharedCoursesPage() {
 							<div className="flex items-start gap-4">
 								{/* Course image on the left */}
 								<div className="w-20 h-20 bg-gray-200 rounded-lg overflow-hidden flex-shrink-0">
-									{course.spots[0]?.image ? (
-										<Image
-											src={course.spots[0].image || "/placeholder.svg"}
-											alt={course.title}
-											width={80}
-											height={80}
-											className="w-full h-full object-cover"
-										/>
-									) : (
-										<div className="w-full h-full bg-gray-300 flex items-center justify-center">
-											<MapPin className="h-8 w-8 text-gray-500" />
-										</div>
-									)}
+									<SafeImage
+										src={course.spots[0]?.image}
+										alt={course.title}
+										width={80}
+										height={80}
+										className="w-full h-full object-cover"
+									/>
 								</div>
 								{/* Course information on the right */}
 								<div className="flex-1">
