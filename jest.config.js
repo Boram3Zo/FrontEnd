@@ -13,10 +13,25 @@ const config = {
 	testEnvironment: "jsdom",
 	// Add more setup options before each test is run
 	setupFilesAfterEnv: ["<rootDir>/jest.setup.ts"],
-	// React 19 compatibility
+	// React 19 and Vercel compatibility
 	testEnvironmentOptions: {
 		customExportConditions: [""],
+		url: "http://localhost",
 	},
+	// Global setup for React.act compatibility
+	globals: {
+		"ts-jest": {
+			tsconfig: {
+				jsx: "react-jsx",
+			},
+		},
+	},
+	// Transform configuration for better React 19 support
+	transform: {
+		"^.+\\.(js|jsx|ts|tsx)$": ["babel-jest", { presets: ["next/babel"] }],
+	},
+	// Module file extensions
+	moduleFileExtensions: ["ts", "tsx", "js", "jsx", "json"],
 	// Test file patterns - looks for test files alongside source files and in scripts folder
 	testMatch: [
 		"**/__tests__/**/*.(js|jsx|ts|tsx)",

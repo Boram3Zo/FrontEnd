@@ -1,14 +1,19 @@
 // jest.setup.ts
 import "@testing-library/jest-dom";
 
-// Configure React Testing Library to work with React 19
+// Simple and effective React.act setup for all environments
+// This approach is recommended for React 18+ with RTL 13+
+Object.defineProperty(global, "IS_REACT_ACT_ENVIRONMENT", {
+	value: true,
+	writable: true,
+	configurable: true,
+});
+
+// Configure React Testing Library
 import { configure } from "@testing-library/react";
 
-// Configure testing library
 configure({
 	testIdAttribute: "data-testid",
-	// Disable automatic cleanup if needed
-	// asyncUtilTimeout: 1000,
 });
 
 // ResizeObserver mock for Radix UI components
