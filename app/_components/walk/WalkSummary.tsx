@@ -4,12 +4,13 @@
 import { useMemo } from "react";
 import { Card } from "@/app/_components/ui/Card";
 import { Button } from "@/app/_components/ui/Button";
-import { Share, Trophy, MapPin, Clock, Route } from "lucide-react";
+import { Share, MapPin } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useGoogleMaps } from "@/app/_providers";
 import { WalkingPin } from "@/app/_types/walking";
 import { mapsSearchUrlForLatLng } from "@/app/_utils/googleMaps";
 import { addRoutePins } from "@/app/_components/map/pinUtils";
+import { WalkTrackerStats } from "./WalkTrackerStats";
 
 // 간단 지도: sessionStorage/localStorage에서 경로를 읽어 폴리라인으로 표시
 function RouteMap({ route, pins }: { route: google.maps.LatLngLiteral[]; pins: WalkingPin[] }) {
@@ -119,80 +120,67 @@ export default function WalkingSummary() {
 		return mapInfo;
 	}, [pins]);
 
-	const formatTime = (seconds: number) => {
-		const h = Math.floor(seconds / 3600);
-		const m = Math.floor((seconds % 3600) / 60);
-		const s = seconds % 60;
-		if (h > 0) return `${h}시간 ${m}분 ${s}초`;
-		return `${m}분 ${s}초`;
-	};
-	const formatDistance = (km: number) => (km < 1 ? `${Math.round(km * 1000)}m` : `${km.toFixed(2)}km`);
-	const calculatePace = () => {
-		if (!distanceKm) return "0'00\"";
-		const paceMinutes = (durationSec || 1) / 60 / distanceKm;
-		const m = Math.floor(paceMinutes);
-		const s = Math.round((paceMinutes - m) * 60);
-		return `${m}'${s.toString().padStart(2, "0")}"`;
-	};
-
 	return (
 		<div className="min-h-[60vh] px-4 py-6">
 			{/* 통계 */}
-
-			<div className="grid grid-cols-4 gap-4 mb-6">
-				<Card className="p-4 text-center bg-white shadow-lg">
-					<Clock className="h-6 w-6 text-blue-500 mx-auto mb-2" />
-					<div className="text-lg font-bold text-gray-800 mb-1">{formatTime(durationSec)}</div>
-					<div className="text-xs text-gray-600">총 시간</div>
-				</Card>
-
-				<Card className="p-4 text-center bg-white shadow-lg">
-					<Route className="h-6 w-6 text-green-500 mx-auto mb-2" />
-					<div className="text-lg font-bold text-gray-800 mb-1">{formatDistance(distanceKm)}</div>
-					<div className="text-xs text-gray-600">총 거리</div>
-				</Card>
-
-				<Card className="p-4 text-center bg-white shadow-lg">
-					<Trophy className="h-6 w-6 text-orange-500 mx-auto mb-2" />
-					<div className="text-lg font-bold text-gray-800 mb-1">{calculatePace()}</div>
-					<div className="text-xs text-gray-600">평균 페이스</div>
-				</Card>
-				<Card className="p-4 text-center bg-white shadow-lg">
-					<Trophy className="h-6 w-6 text-orange-500 mx-auto mb-2" />
-					<div className="text-lg font-bold text-gray-800 mb-1">{calculatePace()}</div>
-					<div className="text-xs text-gray-600 break-words max-w-[10rem]">
-						{startGuRoad ? (
-							<div>{startGuRoad}</div>
-						) : startAddress ? (
-							<div>
-								<div>{startAddress}</div>
-								{startDetailed?.formatted && startDetailed.formatted !== startAddress ? (
-									<div className="text-[10px] text-gray-500 mt-1 break-words">{startDetailed.formatted}</div>
-								) : null}
-							</div>
-						) : startCoords ? (
-							<a
-								className="text-blue-600 underline"
-								href={mapsSearchUrlForLatLng(startCoords.lat, startCoords.lng)}
-								target="_blank"
-								rel="noreferrer"
-							>
-								위치 보기
-							</a>
-						) : (
-							"주소 정보 없음"
-						)}
-					</div>
-				</Card>
+			<div className="mb-6">
+				<WalkTrackerStats
+					distance={distanceKm * 1000}
+					elapsedMs={durationSec * 1000}
+					layout="grid"
+					showExtended={false}
+				/>
 			</div>
 
 			{/* 경로 지도 */}
 			<Card className="mb-6 overflow-hidden">
-				<div className="p-4 border-b">
-					<h3 className="font-semibold text-gray-800 flex items-center gap-2">
-						<MapPin className="h-4 w-4" />
-						내가 걸은 경로
-					</h3>
+				<div className="p-4 border-b bg-gradient-to-r from-blue-50 to-green-50">
+					<div className="flex items-start justify-between">
+						<div className="flex items-center gap-2 mb-2">
+							<div className="p-1.5 bg-blue-500 rounded-full">
+								<MapPin className="h-4 w-4 text-white" />
+							</div>
+							<h3 className="font-semibold text-gray-800">내가 걸은 경로</h3>
+						</div>
+					</div>
+
+					{/* 시작 위치 정보 */}
+					<div className="mt-3 p-3 bg-white/70 rounded-lg">
+						<div className="text-xs text-gray-500 mb-1">시작 위치</div>
+						<div className="text-sm font-medium text-gray-700">
+							{startGuRoad ? (
+								<div className="flex items-center gap-1">
+									<span className="text-blue-600">📍</span>
+									<span>{startGuRoad}</span>
+								</div>
+							) : startAddress ? (
+								<div>
+									<div className="flex items-center gap-1">
+										<span className="text-blue-600">📍</span>
+										<span>{startAddress}</span>
+									</div>
+									{startDetailed?.formatted && startDetailed.formatted !== startAddress && (
+										<div className="text-xs text-gray-500 mt-1 ml-4 opacity-75">{startDetailed.formatted}</div>
+									)}
+								</div>
+							) : startCoords ? (
+								<a
+									className="flex items-center gap-1 text-blue-600 hover:text-blue-800 transition-colors"
+									href={mapsSearchUrlForLatLng(startCoords.lat, startCoords.lng)}
+									target="_blank"
+									rel="noreferrer"
+								>
+									<span>🗺️</span>
+									<span className="underline">위치 보기</span>
+								</a>
+							) : (
+								<div className="flex items-center gap-1 text-gray-400">
+									<span>❓</span>
+									<span>주소 정보 없음</span>
+								</div>
+							)}
+						</div>
+					</div>
 				</div>
 				<div className="p-4">
 					{route.length ? (
