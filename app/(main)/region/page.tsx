@@ -1,6 +1,6 @@
 import { Header } from "@/app/_components/layout/Header";
 import { BottomNavigation } from "@/app/_components/layout/BottomNavigation";
-import { KoreanMap } from "@/app/_components/map/KoreanMap";
+import KoreanMap from "@/app/_components/map/KoreanMap";
 import { RegionCourseList } from "@/app/_components/course/RegionCourseList";
 import { CatCharacter } from "@/app/_components/cat/CatCharacter";
 
