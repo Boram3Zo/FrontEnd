@@ -41,14 +41,15 @@ const KoreanMap: React.FC = () => {
 					<h2 className="text-2xl font-bold mb-4 text-center">서울특별시 행정구역</h2>
 
 					<svg
-						viewBox="0 0 800 600"
+						viewBox="0 0 1000 900"
 						className="w-full h-auto border border-gray-200 rounded-lg"
 						style={{ maxHeight: "500px" }}
 					>
 						{/* Background */}
-						<rect width="800" height="600" fill="#f8fafc" />
+						<rect width="1000" height="900" fill="#f8fafc" />
 
-						{/* Seoul Districts - Real Shape Based on Seoul Map */}
+						{/* Seoul Districts - Real Shape with Transform for Proper Scaling */}
+						<g transform="translate(20, 20) scale(0.91)">
 						{seoulDistricts.map(district => {
 							const isHovered = hoveredDistrict === district.id;
 							const isSelected = selectedDistrict?.id === district.id;
@@ -111,59 +112,59 @@ const KoreanMap: React.FC = () => {
 								}
 							};
 
-							// 각 구의 라벨 위치
+							// 각 구의 라벨 위치 (transform 적용된 좌표계에 맞춰 조정)
 							const getLabelPosition = (id: string) => {
 								switch (id) {
 									case "jongno":
-										return { x: 520, y: 360 };
+										return { x: 493, y: 329 };
 									case "jung":
-										return { x: 550, y: 435 };
+										return { x: 521, y: 398 };
 									case "yongsan":
-										return { x: 530, y: 500 };
+										return { x: 493, y: 457 };
 									case "seongdong":
-										return { x: 650, y: 480 };
+										return { x: 612, y: 439 };
 									case "gwangjin":
-										return { x: 790, y: 470 };
+										return { x: 721, y: 430 };
 									case "dongdaemun":
-										return { x: 680, y: 350 };
+										return { x: 639, y: 329 };
 									case "jungnang":
-										return { x: 780, y: 360 };
+										return { x: 712, y: 311 };
 									case "seongbuk":
-										return { x: 620, y: 320 };
+										return { x: 566, y: 284 };
 									case "gangbuk":
-										return { x: 580, y: 270 };
+										return { x: 529, y: 239 };
 									case "dobong":
-										return { x: 620, y: 120 };
+										return { x: 548, y: 138 };
 									case "nowon":
-										return { x: 740, y: 180 };
+										return { x: 675, y: 175 };
 									case "eunpyeong":
-										return { x: 350, y: 290 };
+										return { x: 366, y: 257 };
 									case "seodaemun":
-										return { x: 400, y: 410 };
+										return { x: 402, y: 366 };
 									case "mapo":
-										return { x: 420, y: 450 };
+										return { x: 430, y: 402 };
 									case "yangcheon":
-										return { x: 240, y: 600 };
+										return { x: 275, y: 521 };
 									case "gangseo":
-										return { x: 200, y: 450 };
+										return { x: 220, y: 402 };
 									case "guro":
-										return { x: 250, y: 610 };
+										return { x: 311, y: 548 };
 									case "geumcheon":
-										return { x: 350, y: 700 };
+										return { x: 366, y: 612 };
 									case "yeongdeungpo":
-										return { x: 380, y: 610 };
+										return { x: 402, y: 530 };
 									case "dongjak":
-										return { x: 450, y: 650 };
+										return { x: 448, y: 566 };
 									case "gwanak":
-										return { x: 485, y: 690 };
+										return { x: 475, y: 612 };
 									case "seocho":
-										return { x: 650, y: 750 };
+										return { x: 602, y: 657 };
 									case "gangnam":
-										return { x: 750, y: 650 };
+										return { x: 675, y: 566 };
 									case "songpa":
-										return { x: 820, y: 580 };
+										return { x: 748, y: 502 };
 									case "gangdong":
-										return { x: 900, y: 470 };
+										return { x: 821, y: 411 };
 									default:
 										return { x: 25, y: 25 };
 								}
@@ -188,14 +189,16 @@ const KoreanMap: React.FC = () => {
 										x={labelPos.x}
 										y={labelPos.y}
 										textAnchor="middle"
-										className="text-xs font-medium fill-current text-gray-800 pointer-events-none"
-										style={{ fontSize: "12px" }}
+										dominantBaseline="middle"
+										className="font-bold fill-current text-gray-800 pointer-events-none"
+										style={{ fontSize: "18px" }}
 									>
 										{district.koreanName}
 									</text>
 								</g>
 							);
 						})}
+						</g>
 					</svg>
 				</div>
 			</div>
@@ -329,3 +332,4 @@ const KoreanMap: React.FC = () => {
 };
 
 export default KoreanMap;
+
