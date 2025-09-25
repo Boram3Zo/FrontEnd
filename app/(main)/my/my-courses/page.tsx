@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 import { SafeImage } from "@/app/_components/ui/SafeImage";
 import { useEffect, useState } from "react";
 import { getMyCourses, convertPostToMyCourse } from "@/app/_libs/postService";
+import { withAuthGuard } from "@/app/_components/auth/AuthGuard";
 
 interface MyCourse {
 	id: string;
@@ -19,7 +20,7 @@ interface MyCourse {
 	content: string;
 }
 
-export default function MyCoursesPage() {
+function MyCoursesPage() {
 	const router = useRouter();
 	const [courses, setCourses] = useState<MyCourse[]>([]);
 	const [loading, setLoading] = useState(true);
@@ -185,3 +186,5 @@ export default function MyCoursesPage() {
 		</div>
 	);
 }
+
+export default withAuthGuard(MyCoursesPage);
