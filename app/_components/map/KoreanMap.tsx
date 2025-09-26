@@ -134,7 +134,7 @@ const KoreanMap: React.FC = () => {
 									case "gangbuk":
 										return { x: 529, y: 239 };
 									case "dobong":
-										return { x: 548, y: 138 };
+										return { x: 640, y: 120 };
 									case "nowon":
 										return { x: 675, y: 175 };
 									case "eunpyeong":
