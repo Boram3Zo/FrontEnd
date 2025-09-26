@@ -23,3 +23,22 @@ export interface PopularCourse {
 	rating: number;
 	image: string;
 }
+
+// API Response Types
+export interface ThemeListResponse {
+	themes: Theme[];
+	total: number;
+	page: number;
+	limit: number;
+}
+
+export interface GetThemesParams {
+	page?: number;
+	limit?: number;
+	category?: string;
+	search?: string;
+}
+
+export interface ThemeWithCourses extends Theme {
+	courses: import("@/app/_types/post").PopularCourse[];
+}

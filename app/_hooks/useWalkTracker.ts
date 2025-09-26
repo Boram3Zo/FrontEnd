@@ -299,21 +299,24 @@ export function useWalkTracker({ onStop }: UseWalkTrackerProps): UseWalkTrackerR
 		// 🔴 WalkingProvider 상태도 업데이트
 		updateSession(completedSession);
 
+		// 로컬스토리지 대신 DB에 경로 저장 (향후 구현)
 		try {
 			if (pathRef.current.length > 1) {
-				localStorage.setItem("manualPath", JSON.stringify(pathRef.current));
-				const existing = JSON.parse(localStorage.getItem("savedRoutes") || "[]");
-				const newRoute = {
-					id: `route_${Date.now()}`,
-					name: `측정 경로 ${existing.length + 1}`,
-					createdAt: new Date().toISOString(),
+				console.log('경로 데이터가 DB에 저장됩니다:', {
 					path: pathRef.current,
 					pointCount: pathRef.current.length,
-				};
-				existing.push(newRoute);
-				localStorage.setItem("savedRoutes", JSON.stringify(existing));
+					session: completedSession
+				});
+				
+				// TODO: DB 저장 API 호출 구현
+				// await saveRouteToDatabase({
+				//   path: pathRef.current,
+				//   session: completedSession
+				// });
 			}
-		} catch {}
+		} catch (error) {
+			console.error('경로 저장 중 오류 발생:', error);
+		}
 
 		onStop();
 	};

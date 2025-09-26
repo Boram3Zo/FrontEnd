@@ -1,19 +1,10 @@
 import { Button } from "@/app/_components/ui/Button";
-import { ThemeOption } from "@/app/_types/shareTypes";
+import { THEME_OPTIONS } from "@/app/_constants/themes";
 
 interface ShareThemeSelectionProps {
 	selectedTheme: string | null;
 	onThemeSelect: (theme: string) => void;
 }
-
-const themeEmojis: ThemeOption[] = [
-	{ emoji: "🐱", label: "고양이" },
-	{ emoji: "🌸", label: "벚꽃" },
-	{ emoji: "🏠", label: "한옥" },
-	{ emoji: "🌊", label: "바다" },
-	{ emoji: "🌲", label: "숲길" },
-	{ emoji: "🌅", label: "일출" },
-];
 
 /**
  * 산책 코스 테마를 선택하는 컴포넌트
@@ -25,7 +16,7 @@ export function ShareThemeSelection({ selectedTheme, onThemeSelect }: ShareTheme
 		<div className="px-4 py-4">
 			<h3 className="text-base font-semibold text-gray-800 mb-3">테마 선택</h3>
 			<div className="flex flex-wrap gap-2 mb-4">
-				{themeEmojis.map((theme, index) => (
+				{THEME_OPTIONS.map((theme, index) => (
 					<Button
 						key={index}
 						variant={selectedTheme === theme.label ? "default" : "outline"}

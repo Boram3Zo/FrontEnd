@@ -3,92 +3,66 @@ import { BottomNavigation } from "@/app/_components/layout/BottomNavigation";
 import { CatCharacter } from "@/app/_components/cat/CatCharacter";
 import { Card } from "@/app/_components/ui/Card";
 import { Button } from "@/app/_components/ui/Button";
+import { THEME_OPTIONS } from "@/app/_constants/themes";
 import Link from "next/link";
 
-interface Theme {
+// ThemeOption을 확장하여 추가 정보 포함
+interface ExtendedTheme {
 	id: string;
-	name: string;
 	emoji: string;
+	label: string;
 	description: string;
 	color: string;
 	courseCount: number;
 	tags: string[];
 }
 
-const ALL_THEMES: Theme[] = [
-	{
-		id: "nature",
-		name: "자연 힐링",
-		emoji: "🌳",
-		description: "도심 속 자연을 만나는 힐링 코스",
-		color: "from-green-400 to-emerald-500",
-		courseCount: 24,
-		tags: ["공원", "강변", "숲길"],
-	},
-	{
-		id: "history",
-		name: "역사 탐방",
-		emoji: "🏛️",
-		description: "서울의 역사와 문화를 느끼는 코스",
-		color: "from-amber-400 to-orange-500",
-		courseCount: 18,
-		tags: ["한옥", "궁궐", "문화재"],
-	},
-	{
-		id: "cafe",
-		name: "카페 투어",
-		emoji: "☕",
-		description: "특별한 카페들을 찾아가는 여행",
-		color: "from-orange-400 to-red-500",
-		courseCount: 31,
-		tags: ["카페", "디저트", "브런치"],
-	},
-	{
-		id: "night",
-		name: "야경 명소",
-		emoji: "🌙",
-		description: "밤에만 볼 수 있는 아름다운 풍경",
-		color: "from-indigo-400 to-purple-500",
-		courseCount: 15,
-		tags: ["야경", "조명", "데이트"],
-	},
-	{
-		id: "market",
-		name: "전통 시장",
-		emoji: "🏪",
-		description: "정겨운 전통 시장의 맛과 멋",
-		color: "from-red-400 to-pink-500",
-		courseCount: 12,
-		tags: ["시장", "먹거리", "전통"],
-	},
-	{
-		id: "art",
-		name: "예술 거리",
-		emoji: "🎨",
-		description: "예술과 문화가 살아있는 거리",
-		color: "from-purple-400 to-pink-500",
-		courseCount: 20,
-		tags: ["갤러리", "벽화", "공연"],
-	},
-	{
-		id: "riverside",
-		name: "강변 산책",
-		emoji: "🌊",
-		description: "시원한 강바람과 함께하는 산책",
-		color: "from-blue-400 to-cyan-500",
-		courseCount: 16,
-		tags: ["한강", "강변", "자전거"],
-	},
-	{
-		id: "shopping",
-		name: "쇼핑 거리",
-		emoji: "🛍️",
-		description: "쇼핑과 구경이 함께하는 코스",
-		color: "from-pink-400 to-rose-500",
-		courseCount: 22,
-		tags: ["쇼핑", "패션", "트렌드"],
-	},
-];
+// THEME_OPTIONS를 기반으로 확장된 테마 데이터 생성
+const ALL_THEMES: ExtendedTheme[] = THEME_OPTIONS.map((theme, index) => ({
+	id: theme.label.toLowerCase().replace(/\s+/g, '-'),
+	emoji: theme.emoji,
+	label: theme.label,
+	description: getThemeDescription(theme.label),
+	color: getThemeColor(index),
+	courseCount: Math.floor(Math.random() * 30) + 10, // 임시 코스 개수
+	tags: getThemeTags(theme.label),
+}));
+
+function getThemeDescription(label: string): string {
+	const descriptions: Record<string, string> = {
+		"고양이": "귀여운 고양이들과 함께하는 힐링 산책",
+		"벚꽃": "아름다운 벚꽃과 함께하는 봄날 산책",
+		"한옥": "전통 한옥의 정취를 느끼는 문화 산책",
+		"바다": "시원한 바닷바람과 함께하는 해안 산책",
+		"숲길": "푸르른 자연 속에서 즐기는 힐링 산책",
+		"일출": "아름다운 일출을 감상하며 하는 새벽 산책"
+	};
+	return descriptions[label] || `${label} 테마의 특별한 산책 코스`;
+}
+
+function getThemeColor(index: number): string {
+	const colors = [
+		"from-pink-400 to-rose-500",
+		"from-pink-400 to-purple-500", 
+		"from-amber-400 to-orange-500",
+		"from-blue-400 to-cyan-500",
+		"from-green-400 to-emerald-500",
+		"from-orange-400 to-red-500"
+	];
+	return colors[index % colors.length];
+}
+
+function getThemeTags(label: string): string[] {
+	const tagMap: Record<string, string[]> = {
+		"고양이": ["고양이", "힐링", "동물"],
+		"벚꽃": ["벚꽃", "봄", "꽃구경"],
+		"한옥": ["전통", "문화", "역사"],
+		"바다": ["바다", "해안", "자연"],
+		"숲길": ["숲", "자연", "힐링"],
+		"일출": ["일출", "새벽", "경치"]
+	};
+	return tagMap[label] || [label];
+}
 
 export default function AllThemesPage() {
 	return (
@@ -123,7 +97,7 @@ export default function AllThemesPage() {
 										<div className="flex items-center gap-3">
 											<span className="text-2xl">{theme.emoji}</span>
 											<div>
-												<h3 className="font-bold text-lg">{theme.name}</h3>
+												<h3 className="font-bold text-lg">{theme.label}</h3>
 												<p className="text-white/90 text-sm">{theme.description}</p>
 											</div>
 										</div>

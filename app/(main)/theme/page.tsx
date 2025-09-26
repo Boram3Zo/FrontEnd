@@ -1,11 +1,17 @@
+"use client";
+
+import { useState } from "react";
 import { Header } from "@/app/_components/layout/Header";
 import { BottomNavigation } from "@/app/_components/layout/BottomNavigation";
 import { CatCharacter } from "@/app/_components/cat/CatCharacter";
 import { ThemeRecommendations } from "@/app/_components/theme/ThemeRecommendations";
+import { ThemeSelector } from "@/app/_components/theme/ThemeSelector";
+import { ThemeCourseList } from "@/app/_components/theme/ThemeCourseList";
 import { Button } from "@/app/_components/ui/Button";
 import Link from "next/link";
 
 export default function ThemePage() {
+	const [selectedTheme, setSelectedTheme] = useState<string | null>(null);
 	return (
 		<div className="min-h-screen bg-gradient-to-b from-purple-50 to-pink-50">
 			<Header />
@@ -37,6 +43,20 @@ export default function ThemePage() {
 				{/* Theme recommendations */}
 				<ThemeRecommendations />
 
+				{/* Theme selector */}
+				<div className="mt-8">
+					<ThemeSelector
+						selectedTheme={selectedTheme}
+						onThemeSelect={setSelectedTheme}
+					/>
+				</div>
+
+				{/* Theme course list */}
+				<ThemeCourseList
+					selectedTheme={selectedTheme}
+					limit={6}
+				/>
+
 				{/* View all themes button */}
 				<div className="px-4 mt-8">
 					<Link href="/theme/all">
@@ -44,52 +64,6 @@ export default function ThemePage() {
 							모든 테마 보기 ✨
 						</Button>
 					</Link>
-				</div>
-
-				{/* Popular themes quick access */}
-				<div className="px-4 mt-8">
-					<h3 className="text-lg font-bold text-gray-800 mb-4 flex items-center gap-2">
-						<span>🔥</span>
-						인기 테마
-					</h3>
-					<div className="grid grid-cols-2 gap-3">
-						<Link href="/theme/nature">
-							<Button
-								variant="outline"
-								className="h-20 flex flex-col items-center justify-center bg-green-50 hover:bg-green-100 border-green-200"
-							>
-								<span className="text-2xl mb-1">🌳</span>
-								<span className="text-sm font-medium">자연 힐링</span>
-							</Button>
-						</Link>
-						<Link href="/theme/history">
-							<Button
-								variant="outline"
-								className="h-20 flex flex-col items-center justify-center bg-amber-50 hover:bg-amber-100 border-amber-200"
-							>
-								<span className="text-2xl mb-1">🏛️</span>
-								<span className="text-sm font-medium">역사 탐방</span>
-							</Button>
-						</Link>
-						<Link href="/theme/cafe">
-							<Button
-								variant="outline"
-								className="h-20 flex flex-col items-center justify-center bg-orange-50 hover:bg-orange-100 border-orange-200"
-							>
-								<span className="text-2xl mb-1">☕</span>
-								<span className="text-sm font-medium">카페 투어</span>
-							</Button>
-						</Link>
-						<Link href="/theme/night">
-							<Button
-								variant="outline"
-								className="h-20 flex flex-col items-center justify-center bg-indigo-50 hover:bg-indigo-100 border-indigo-200"
-							>
-								<span className="text-2xl mb-1">🌙</span>
-								<span className="text-sm font-medium">야경 명소</span>
-							</Button>
-						</Link>
-					</div>
 				</div>
 			</main>
 
