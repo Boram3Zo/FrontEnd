@@ -34,3 +34,26 @@ export function isValidTheme(label: string): boolean {
 export function getThemeLabels(): string[] {
 	return THEME_OPTIONS.map(option => option.label);
 }
+
+/**
+ * URL slug에서 테마 정보를 찾는 헬퍼 함수
+ * slug는 테마 label과 동일하게 처리
+ */
+export function getThemeBySlug(slug: string): ThemeOption | null {
+	return THEME_OPTIONS.find(option => option.label === slug) || null;
+}
+
+/**
+ * 테마 정보를 확장된 형태로 반환하는 헬퍼 함수
+ */
+export function getExtendedThemeInfo(slug: string) {
+	const theme = getThemeBySlug(slug);
+	if (!theme) return null;
+
+	return {
+		...theme,
+		name: theme.label,
+		color: "from-purple-400 to-pink-500", // 기본 그라데이션
+		description: `${theme.label} 테마의 다양한 코스를 만나보세요`,
+	};
+}

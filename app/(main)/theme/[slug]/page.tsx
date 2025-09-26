@@ -5,106 +5,22 @@ import { Card } from "@/app/_components/ui/Card";
 import { Button } from "@/app/_components/ui/Button";
 import { MapPin, Clock, Users, Star, ArrowLeft } from "lucide-react";
 import Link from "next/link";
-import Image from "next/image";
+import { SafeImage } from "@/app/_components/ui/SafeImage";
+import { getExtendedThemeInfo } from "@/app/_constants/themes";
+import { fetchCoursesByTheme } from "@/app/_libs/themes";
+import type { PopularCourse } from "@/app/_types/post";
 
-interface Course {
-	id: string;
-	title: string;
-	description: string;
-	location: string;
-	duration: string;
-	distance: string;
-	participants: number;
-	tags: string[];
-	image: string;
-	author: string;
-}
 
-const THEME_COURSES: Record<string, Course[]> = {
-	nature: [
-		{
-			id: "nature-1",
-			title: "한강공원 숨은 길",
-			description: "한강공원의 숨겨진 산책로를 따라 걷는 힐링 코스",
-			location: "마포구 망원동",
-			duration: "45분",
-			distance: "2.1km",
-			participants: 128,
-			tags: ["강변", "공원", "힐링"],
-			image: "/nature-path.png",
-			author: "자연러버",
-		},
-		{
-			id: "nature-2",
-			title: "남산 둘레길 탐방",
-			description: "남산의 아름다운 자연을 만끽할 수 있는 코스",
-			location: "중구 남산공원길",
-			duration: "60분",
-			distance: "3.2km",
-			participants: 89,
-			tags: ["산", "전망", "자연"],
-			image: "/mountain-trail.png",
-			author: "산책왕",
-		},
-	],
-	history: [
-		{
-			id: "history-1",
-			title: "북촌 한옥마을 둘러보기",
-			description: "전통 한옥의 아름다움을 느낄 수 있는 문화 코스",
-			location: "종로구 계동길",
-			duration: "60분",
-			distance: "1.8km",
-			participants: 156,
-			tags: ["한옥", "전통", "문화"],
-			image: "/historic-street.png",
-			author: "역사탐험가",
-		},
-	],
-	cafe: [
-		{
-			id: "cafe-1",
-			title: "홍대 숨은 카페 탐방",
-			description: "홍대 골목 속 특별한 카페들을 찾아가는 여행",
-			location: "마포구 홍익로",
-			duration: "90분",
-			distance: "2.5km",
-			participants: 203,
-			tags: ["카페", "디저트", "힙스터"],
-			image: "/cozy-cafe.png",
-			author: "카페마니아",
-		},
-	],
-};
-
-const THEME_INFO: Record<string, { name: string; emoji: string; color: string; description: string }> = {
-	nature: {
-		name: "자연 힐링",
-		emoji: "🌳",
-		color: "from-green-400 to-emerald-500",
-		description: "도심 속 자연을 만나는 힐링 코스",
-	},
-	history: {
-		name: "역사 탐방",
-		emoji: "🏛️",
-		color: "from-amber-400 to-orange-500",
-		description: "서울의 역사와 문화를 느끼는 코스",
-	},
-	cafe: {
-		name: "카페 투어",
-		emoji: "☕",
-		color: "from-orange-400 to-red-500",
-		description: "특별한 카페들을 찾아가는 여행",
-	},
-};
 
 type PageParams = Promise<{ slug: string }>;
 
 export default async function ThemeCoursesPage({ params }: { params: PageParams }) {
 	const { slug } = await params;
-	const themeInfo = THEME_INFO[slug];
-	const courses = THEME_COURSES[slug] || [];
-
+	
+	// 테마 정보 가져오기
+	const themeInfo = getExtendedThemeInfo(slug);
+	
+	// 테마가 존재하지 않는 경우
 	if (!themeInfo) {
 		return (
 			<div className="min-h-screen bg-gradient-to-b from-purple-50 to-pink-50">
@@ -122,6 +38,18 @@ export default async function ThemeCoursesPage({ params }: { params: PageParams 
 				<BottomNavigation />
 			</div>
 		);
+	}
+
+	// DB에서 테마별 코스 가져오기
+	let courses: PopularCourse[] = [];
+	let error = null;
+	
+	try {
+		courses = await fetchCoursesByTheme(slug, 20);
+	} catch (err) {
+		console.error('Failed to fetch courses by theme:', err);
+		courses = [];
+		error = '코스를 불러오는데 실패했습니다.';
 	}
 
 	return (
@@ -160,12 +88,23 @@ export default async function ThemeCoursesPage({ params }: { params: PageParams 
 
 				{/* Course list */}
 				<div className="px-4 py-6">
-					{courses.length === 0 ? (
+					{error ? (
+						<div className="text-center py-12">
+							<CatCharacter size="lg" animation="wiggle" />
+							<h3 className="text-lg font-bold text-gray-800 mt-4 mb-2">코스를 불러올 수 없어요</h3>
+							<p className="text-gray-600 mb-6">{error}</p>
+							<Button onClick={() => window.location.reload()}>
+								다시 시도
+							</Button>
+						</div>
+					) : courses.length === 0 ? (
 						<div className="text-center py-12">
 							<CatCharacter size="lg" animation="wiggle" />
 							<h3 className="text-lg font-bold text-gray-800 mt-4 mb-2">아직 코스가 없어요</h3>
-							<p className="text-gray-600 mb-6">첫 번째 코스를 만들어보시겠어요?</p>
-							<Button>코스 만들기</Button>
+							<p className="text-gray-600 mb-6">{themeInfo.name} 테마의 첫 번째 코스를 만들어보시겠어요?</p>
+							<Link href="/walk">
+								<Button>코스 만들기</Button>
+							</Link>
 						</div>
 					) : (
 						<div className="space-y-4">
@@ -173,8 +112,8 @@ export default async function ThemeCoursesPage({ params }: { params: PageParams 
 								<Card key={course.id} className="overflow-hidden shadow-md hover:shadow-lg transition-shadow">
 									<div className="flex">
 										<div className="w-24 h-24 bg-gray-200 overflow-hidden">
-											<Image
-												src={course.image || "/placeholder.svg"}
+											<SafeImage
+												src={course.imageUrl}
 												alt={course.title}
 												width={96}
 												height={96}
@@ -187,15 +126,16 @@ export default async function ThemeCoursesPage({ params }: { params: PageParams 
 												<h3 className="font-bold text-gray-800 text-lg">{course.title}</h3>
 												<div className="flex items-center gap-1 text-sm text-orange-600">
 													<Star className="h-4 w-4 fill-current" />
+													<span>{course.likeCount}</span>
 												</div>
 											</div>
 
-											<p className="text-sm text-gray-600 mb-3 line-clamp-2">{course.description}</p>
+											<p className="text-sm text-gray-600 mb-3 line-clamp-2">{course.theme} 테마 코스</p>
 
 											<div className="flex items-center gap-4 text-xs text-gray-500 mb-3">
 												<div className="flex items-center gap-1">
 													<MapPin className="h-3 w-3" />
-													<span>{course.location}</span>
+													<span>{course.region}</span>
 												</div>
 												<div className="flex items-center gap-1">
 													<Clock className="h-3 w-3" />
@@ -203,17 +143,18 @@ export default async function ThemeCoursesPage({ params }: { params: PageParams 
 												</div>
 												<div className="flex items-center gap-1">
 													<Users className="h-3 w-3" />
-													<span>{course.participants}명</span>
+													<span>{course.distance}</span>
 												</div>
 											</div>
 
 											<div className="flex items-center justify-between">
 												<div className="flex flex-wrap gap-1">
-													{course.tags.slice(0, 2).map(tag => (
-														<span key={tag} className="text-xs px-2 py-1 bg-gray-100 text-gray-600 rounded">
-															#{tag}
-														</span>
-													))}
+													<span className="text-xs px-2 py-1 bg-gray-100 text-gray-600 rounded">
+														#{course.theme}
+													</span>
+													<span className="text-xs px-2 py-1 bg-gray-100 text-gray-600 rounded">
+														#{course.region}
+													</span>
 												</div>
 												<Link href={`/course/${course.id}`}>
 													<Button size="sm" className="bg-gray-800 hover:bg-gray-900 text-white">
