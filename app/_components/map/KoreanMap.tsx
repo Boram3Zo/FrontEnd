@@ -116,33 +116,33 @@ const KoreanMap: React.FC = () => {
 							const getLabelPosition = (id: string) => {
 								switch (id) {
 									case "jongno":
-										return { x: 493, y: 329 };
+										return { x: 510, y: 360 };
 									case "jung":
-										return { x: 521, y: 398 };
+										return { x: 548, y: 425 };
 									case "yongsan":
-										return { x: 493, y: 457 };
+										return { x: 520, y: 500 };
 									case "seongdong":
-										return { x: 612, y: 439 };
+										return { x: 655, y: 450 };
 									case "gwangjin":
-										return { x: 721, y: 430 };
+										return { x: 760, y: 465 };
 									case "dongdaemun":
-										return { x: 639, y: 329 };
+										return { x: 680, y: 360 };
 									case "jungnang":
-										return { x: 712, y: 311 };
+										return { x: 775, y: 320 };
 									case "seongbuk":
-										return { x: 566, y: 284 };
+										return { x: 600, y: 315 };
 									case "gangbuk":
-										return { x: 529, y: 239 };
+										return { x: 585, y: 200 };
 									case "dobong":
-										return { x: 640, y: 120 };
+										return { x: 638, y: 110 };
 									case "nowon":
-										return { x: 675, y: 175 };
+										return { x: 730, y: 160 };
 									case "eunpyeong":
-										return { x: 366, y: 257 };
+										return { x: 390, y: 257 };
 									case "seodaemun":
-										return { x: 402, y: 366 };
+										return { x: 410, y: 375 };
 									case "mapo":
-										return { x: 430, y: 402 };
+										return { x: 360, y: 440 };
 									case "yangcheon":
 										return { x: 225, y: 545 };
 									case "gangseo":
