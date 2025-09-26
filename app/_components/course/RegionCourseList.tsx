@@ -6,7 +6,7 @@ import { Button } from "@/app/_components/ui/Button";
 import { MapPin, Clock, Loader2, Heart } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { SafeImage } from "@/app/_components/ui/SafeImage";
-import { getPostList, convertPostToPopularCourse, type PopularCourse, getImageUrl } from "@/app/_libs/postService";
+import { getPostList, convertPostToPopularCourse, type PopularCourse } from "@/app/_libs/postService";
 
 interface RegionCourseListProps {
 	selectedRegion?: string | null;
