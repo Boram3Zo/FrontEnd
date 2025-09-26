@@ -144,27 +144,27 @@ const KoreanMap: React.FC = () => {
 									case "mapo":
 										return { x: 430, y: 402 };
 									case "yangcheon":
-										return { x: 275, y: 521 };
+										return { x: 225, y: 545 };
 									case "gangseo":
-										return { x: 220, y: 402 };
+										return { x: 150, y: 422 };
 									case "guro":
-										return { x: 311, y: 548 };
+										return { x: 206, y: 617 };
 									case "geumcheon":
-										return { x: 366, y: 612 };
+										return { x: 331, y: 727 };
 									case "yeongdeungpo":
-										return { x: 402, y: 530 };
+										return { x: 352, y: 540 };
 									case "dongjak":
-										return { x: 448, y: 566 };
+										return { x: 448, y: 596 };
 									case "gwanak":
-										return { x: 475, y: 612 };
+										return { x: 435, y: 692 };
 									case "seocho":
-										return { x: 602, y: 657 };
+										return { x: 582, y: 637 };
 									case "gangnam":
-										return { x: 675, y: 566 };
+										return { x: 675, y: 586 };
 									case "songpa":
-										return { x: 748, y: 502 };
+										return { x: 828, y: 582 };
 									case "gangdong":
-										return { x: 821, y: 411 };
+										return { x: 901, y: 451 };
 									default:
 										return { x: 25, y: 25 };
 								}
