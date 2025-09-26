@@ -6,7 +6,11 @@ import { getDistrictDongInfo } from "./data/districtDongMap";
 import { Button } from "@/app/_components/ui/Button";
 import { ChevronLeft, Info, MapPin } from "lucide-react";
 
-const KoreanMap: React.FC = () => {
+interface KoreanMapProps {
+	onRegionSelect?: (regionName: string | null) => void;
+}
+
+const KoreanMap: React.FC<KoreanMapProps> = ({ onRegionSelect }) => {
 	const [selectedDistrict, setSelectedDistrict] = useState<SeoulDistrict | null>(null);
 	const [hoveredDistrict, setHoveredDistrict] = useState<string | null>(null);
 	const [showDongDetails, setShowDongDetails] = useState<boolean>(false);
@@ -14,6 +18,11 @@ const KoreanMap: React.FC = () => {
 	const handleDistrictClick = (district: SeoulDistrict) => {
 		setSelectedDistrict(district);
 		setShowDongDetails(false); // 새로운 구 선택 시 동 상세 화면 초기화
+		
+		// 지역 선택 콜백 호출
+		if (onRegionSelect) {
+			onRegionSelect(district.koreanName);
+		}
 	};
 
 	const handleDistrictHover = (districtId: string | null) => {

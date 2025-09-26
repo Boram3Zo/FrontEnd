@@ -1,3 +1,6 @@
+"use client";
+
+import { useState } from "react";
 import { Header } from "@/app/_components/layout/Header";
 import { BottomNavigation } from "@/app/_components/layout/BottomNavigation";
 import KoreanMap from "@/app/_components/map/KoreanMap";
@@ -5,6 +8,7 @@ import { RegionCourseList } from "@/app/_components/course/RegionCourseList";
 import { CatCharacter } from "@/app/_components/cat/CatCharacter";
 
 export default function RegionPage() {
+	const [selectedRegion, setSelectedRegion] = useState<string | null>(null);
 	return (
 		<div className="min-h-screen bg-gradient-to-b from-blue-50 to-green-50">
 			<Header />
@@ -21,11 +25,11 @@ export default function RegionPage() {
 
 				{/* Korean Map Section */}
 				<div className="px-4 py-6">
-					<KoreanMap />
+					<KoreanMap onRegionSelect={setSelectedRegion} />
 				</div>
 
 				{/* Course List Section */}
-				<RegionCourseList />
+				<RegionCourseList selectedRegion={selectedRegion} limit={2} />
 			</main>
 
 			<BottomNavigation />
