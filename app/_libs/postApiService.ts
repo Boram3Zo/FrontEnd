@@ -44,8 +44,7 @@ export async function sharePost(postData: SharePostRequest): Promise<SharePostRe
  */
 export async function getPostList(page: number = 0, size: number = 10): Promise<PostListResponse> {
 	try {
-		// 전체 목록 조회를 위해 "전체" 검색어로 region API 사용
-		const response = await ApiClient.get<PostListResponse>(`/post/region?page=${page}&size=${size}&searchWord=전체`);
+		const response = await ApiClient.get<PostListResponse>(`/post/list?page=${page}&size=${size}`);
 		return response;
 	} catch (error) {
 		console.error("게시글 목록 조회 실패:", error);
