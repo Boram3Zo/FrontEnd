@@ -1,5 +1,5 @@
 // API Base URL - 환경 변수 사용
-export const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || "https://localhost:9988";
+export const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || "https://myungjinki.com:9988";
 
 // API Endpoints
 export const API_ENDPOINTS = {
@@ -11,7 +11,7 @@ export const API_ENDPOINTS = {
 	// Post/Course related endpoints
 	POSTS: "/post/list",
 	POST_BY_ID: (id: string) => `/post/${id}`,
-	POSTS_BY_REGION: (region: string) => `/post/list?region=${region}`,
+	POSTS_BY_REGION: (region: string) => `/post/region?page=1&searchWord=${encodeURIComponent(region)}`,
 	POPULAR_POSTS: "/post/popular",
 	
 	// Theme related endpoints
