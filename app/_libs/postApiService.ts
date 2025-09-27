@@ -44,7 +44,9 @@ export async function sharePost(postData: SharePostRequest): Promise<SharePostRe
  */
 export async function getPostList(page: number = 0, size: number = 10): Promise<PostListResponse> {
 	try {
-		const response = await ApiClient.get<PostListResponse>(`/post/list?page=${page}&size=${size}`);
+		// 서버는 1부터 시작하는 페이지를 사용하므로 +1
+		const serverPage = page + 1;
+		const response = await ApiClient.get<PostListResponse>(`/post/list?page=${serverPage}&size=${size}`);
 		return response;
 	} catch (error) {
 		console.error("게시글 목록 조회 실패:", error);
