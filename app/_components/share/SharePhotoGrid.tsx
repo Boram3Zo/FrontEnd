@@ -5,6 +5,7 @@ import { Card } from "@/app/_components/ui/Card";
 import { Textarea } from "@/app/_components/ui/Textarea";
 import { Plus, X, MapPin, Upload, Check } from "lucide-react";
 import { SpotPhoto } from "@/app/_types/photoTypes";
+import { useWalking } from "@/app/_providers";
 import { formatGpsCoordinates } from "@/app/_libs/photoUtils";
 import { PHOTO_CONSTANTS } from "@/app/_constants/constants";
 
@@ -44,6 +45,7 @@ export const SharePhotoGrid: React.FC<SharePhotoGridProps> = ({
 	uploadedPhotoIds = new Set(),
 	uploadingPhotoIds = new Set(),
 }) => {
+	const { removePhotoFromRoute } = useWalking();
 	return (
 		<div className="space-y-4">
 			{/* 업로드된 사진들을 각각 카드로 표시 */}
@@ -59,12 +61,25 @@ export const SharePhotoGrid: React.FC<SharePhotoGridProps> = ({
 								className="w-full h-full object-cover rounded-lg"
 							/>
 							<button
-								onClick={() => {
+								onClick={async () => {
 									// 서버 삭제 핸들러가 있고 사진이 업로드되었다면 서버 삭제, 아니면 로컬 삭제
 									if (onDeletePhoto && (photo.photoId || uploadedPhotoIds.has(photo.id))) {
-										onDeletePhoto(photo);
+										try {
+											await onDeletePhoto(photo);
+											// 서버 삭제 성공 시 세션에서도 핀 제거
+											removePhotoFromRoute(photo.id);
+										} catch (err) {
+											console.error("onDeletePhoto failed", err);
+										}
 									} else {
+										// 로컬 제거
 										onRemovePhoto(photo.id);
+										// 세션에서도 핀 제거
+										try {
+											removePhotoFromRoute(photo.id);
+										} catch (err) {
+											console.error("removePhotoFromRoute failed", err);
+										}
 									}
 								}}
 								className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs hover:bg-red-600 transition-colors shadow-md"
