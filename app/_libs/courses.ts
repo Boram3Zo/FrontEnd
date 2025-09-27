@@ -6,6 +6,7 @@
 import type { Course } from "@/app/_types/course";
 import { getPostList, getPostById, convertPostToPopularCourse } from "./postService";
 import type { PopularCourse } from "@/app/_types/post";
+import { API_ENDPOINTS, getApiUrl } from "@/app/_constants/api";
 
 /**
  * 모든 코스 목록 가져오기 (DB API)
@@ -25,9 +26,15 @@ export async function fetchAllCourses(page: number = 0, size: number = 20): Prom
  */
 export async function fetchCoursesByRegion(region: string, limit: number = 10): Promise<PopularCourse[]> {
 	try {
-		const response = await getPostList(0, 100); // 먼저 많은 데이터를 가져온 후 필터링
-		const regionCourses = response.data.boardPage.content
-			.filter(post => post.region.includes(region))
+		const url = getApiUrl(API_ENDPOINTS.POSTS_BY_REGION(region));
+		const response = await fetch(url);
+		
+		if (!response.ok) {
+			throw new Error(`지역별 코스 API 호출 실패: ${response.status}`);
+		}
+		
+		const data = await response.json();
+		const regionCourses = (data.data?.boardPage?.content || [])
 			.slice(0, limit)
 			.map(convertPostToPopularCourse);
 		
