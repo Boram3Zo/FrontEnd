@@ -3,10 +3,13 @@ export type RoutePoint = { lat: number; lng: number; timestamp: string }; // ISO
 export type WalkingPin = {
 	lat: number;
 	lng: number;
-	type: "start" | "end";
+	type: "start" | "end" | "photo" | "spot";
 	timestamp: string; // ISO
 	// Optional human-readable address (e.g. 구/동 or formatted address)
 	address?: string;
+	// If this pin is a photo pin, link to photo ids
+	photoId?: number;
+	photoClientId?: string;
 	// Short parsed pieces for easy display
 	guName?: string;
 	roadName?: string;

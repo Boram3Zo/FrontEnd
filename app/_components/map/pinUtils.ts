@@ -3,10 +3,12 @@ import { WalkingPin } from "@/app/_types/walking";
 /**
  * 커스텀 핀 아이콘을 생성하는 함수
  */
-export function createPinIcon(type: "start" | "end") {
+export function createPinIcon(type: "start" | "end" | "spot" | "photo") {
 	const isStart = type === "start";
-	const color = isStart ? "#22c55e" : "#ef4444";
-	const letter = isStart ? "S" : "E";
+	const isEnd = type === "end";
+
+	const color = isStart ? "#22c55e" : isEnd ? "#ef4444" : "#f59e0b"; // spot/photo = yellow
+	const letter = isStart ? "S" : isEnd ? "E" : "P";
 
 	return {
 		url: `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(`
@@ -26,14 +28,16 @@ export function createPinIcon(type: "start" | "end") {
  * 핀 정보창 HTML을 생성하는 함수
  */
 export function createPinInfoWindowContent(
-	type: "start" | "end",
+	type: "start" | "end" | "spot" | "photo",
 	position: { lat: number; lng: number },
 	timestamp?: string
 ) {
 	const isStart = type === "start";
-	const emoji = isStart ? "🟢" : "🔴";
-	const title = isStart ? "시작 지점" : "종료 지점";
-	const colorClass = isStart ? "text-green-600" : "text-red-600";
+	const isEnd = type === "end";
+	const isSpot = type === "spot" || type === "photo";
+	const emoji = isStart ? "🟢" : isEnd ? "🔴" : "📸";
+	const title = isStart ? "시작 지점" : isEnd ? "종료 지점" : isSpot ? "사진 지점" : "스팟";
+	const colorClass = isStart ? "text-green-600" : isEnd ? "text-red-600" : "text-yellow-600";
 
 	return `
 		<div class="p-2">
@@ -43,10 +47,10 @@ export function createPinInfoWindowContent(
 			${
 				timestamp
 					? `
-				<p class="text-xs text-gray-600">
-					${new Date(timestamp).toLocaleString("ko-KR")}
-				</p>
-			`
+					<p class="text-xs text-gray-600">
+						${new Date(timestamp).toLocaleString("ko-KR")}
+					</p>
+					`
 					: ""
 			}
 			<p class="text-xs text-gray-500">
@@ -62,19 +66,20 @@ export function createPinInfoWindowContent(
  */
 export function createPinMarker(
 	map: google.maps.Map,
-	type: "start" | "end",
+	type: "start" | "end" | "spot" | "photo",
 	position: { lat: number; lng: number },
 	timestamp?: string
 ) {
 	const isStart = type === "start";
+	const isEnd = type === "end";
 	const icon = createPinIcon(type);
 
 	const marker = new google.maps.Marker({
 		position,
 		map,
 		icon,
-		title: isStart ? "시작 지점" : "종료 지점",
-		zIndex: isStart ? 1000 : 1001,
+		title: isStart ? "시작 지점" : isEnd ? "종료 지점" : "사진 지점",
+		zIndex: isStart ? 1000 : isEnd ? 1001 : 1002,
 	});
 
 	const infoWindow = new google.maps.InfoWindow({
@@ -100,7 +105,7 @@ export function addRoutePins(map: google.maps.Map, route: { lat: number; lng: nu
 	const startPin = pins?.find(p => p.type === "start");
 	const endPin = pins?.find(p => p.type === "end");
 
-	const markers = [];
+	const markers: Array<{ marker: google.maps.Marker; infoWindow: google.maps.InfoWindow }> = [];
 
 	// 시작점 마커
 	const startMarkerInfo = createPinMarker(map, "start", startPosition, startPin?.timestamp);
@@ -110,6 +115,19 @@ export function addRoutePins(map: google.maps.Map, route: { lat: number; lng: nu
 	if (route.length > 1) {
 		const endMarkerInfo = createPinMarker(map, "end", endPosition, endPin?.timestamp);
 		markers.push(endMarkerInfo);
+	}
+
+	// photo/spot 핀 추가 (노란색)
+	if (pins && pins.length > 0) {
+		for (const p of pins) {
+			if (p.type === "photo" || p.type === "spot") {
+				// 사진 핀은 좌표가 있어야 함
+				if (typeof p.lat === "number" && typeof p.lng === "number") {
+					const info = createPinMarker(map, "photo", { lat: p.lat, lng: p.lng }, p.timestamp);
+					markers.push(info);
+				}
+			}
+		}
 	}
 
 	return markers;
