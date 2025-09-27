@@ -4,6 +4,8 @@ import React from "react";
 import { Camera, Upload } from "lucide-react";
 import { SharePhotoGrid } from "./SharePhotoGrid";
 import { usePhotoManager } from "@/app/_hooks/usePhotoManager";
+import { loadLatestSession } from "@/app/_libs/walkingStorage";
+import { useWalking } from "@/app/_providers/WalkingProvider";
 import { PhotoUploaderOptions, SpotPhoto } from "@/app/_types/photoTypes";
 import { UploadPhotoResponse, DeletePhotoResponse } from "@/app/_libs/photoService";
 import { PHOTO_CONSTANTS } from "@/app/_constants/constants";
@@ -47,6 +49,24 @@ export const SharePhotoUploader: React.FC<SharePhotoUploaderProps> = ({
 		acceptedFileTypes,
 		gridColumns,
 	});
+
+	// walking context (used to add pins to current session)
+	const { addPhotoToRoute } = useWalking();
+
+	React.useEffect(() => {
+		try {
+			const persisted = loadLatestSession();
+			console.debug("[SharePhotoUploader] mounted - latest persisted session:", persisted);
+		} catch (err) {
+			console.error("[SharePhotoUploader] failed to load persisted session for debug", err);
+		}
+	}, []);
+
+	// 로그: context의 session이 변경될 때마다 출력
+	const { session } = useWalking();
+	React.useEffect(() => {
+		console.debug("[SharePhotoUploader] session changed (context):", session);
+	}, [session]);
 
 	// 업로드 상태 관리
 	const [uploading, setUploading] = React.useState(false);
@@ -176,8 +196,44 @@ export const SharePhotoUploader: React.FC<SharePhotoUploaderProps> = ({
 
 	const handleFileSelect = async (event: React.ChangeEvent<HTMLInputElement>) => {
 		const files = event.target.files;
+		console.debug("[SharePhotoUploader] handleFileSelect called", { filesCount: files?.length });
 		if (files) {
-			await addPhotos(files);
+			const prevIds = new Set(photos.map(p => p.id));
+			try {
+				console.debug("[SharePhotoUploader] calling addPhotos");
+				await addPhotos(files);
+				console.debug("[SharePhotoUploader] addPhotos resolved");
+			} catch (err) {
+				console.error("[SharePhotoUploader] addPhotos threw an error", err);
+			}
+
+			// 새로 추가된 사진을 찾아서 walking 세션에 추가
+			console.debug(photos);
+			const newPhotos = photos.filter(p => !prevIds.has(p.id));
+			console.debug("[SharePhotoUploader] newPhotos to add:", newPhotos);
+			if (addPhotoToRoute) {
+				console.debug("[SharePhotoUploader] calling addPhotoToRoute for new photos");
+				console.debug("[SharePhotoUploader] newPhotos to add:", newPhotos);
+				for (const np of newPhotos) {
+					if (np.exifData && typeof np.exifData.latitude === "number" && typeof np.exifData.longitude === "number") {
+						try {
+							addPhotoToRoute(np);
+						} catch (err) {
+							console.error("addPhotoToRoute error for new photo", np.id, err);
+						}
+					}
+				}
+			}
+
+			// 디버그: addPhotos 완료 후 최신 세션 로그 찍기
+			try {
+				const sess = loadLatestSession();
+				console.debug("[SharePhotoUploader] latest session after addPhotos:", sess);
+			} catch (err) {
+				console.error("Failed to load latest session for debug", err);
+			}
+		} else {
+			console.debug("[SharePhotoUploader] no files were selected");
 		}
 
 		// 파일 입력 초기화 (같은 파일 재선택 가능하도록)

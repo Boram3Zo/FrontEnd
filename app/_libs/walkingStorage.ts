@@ -6,6 +6,7 @@ const KEY = "walking:latest";
 export function saveLatestSession(s: WalkingSession) {
 	if (typeof window === "undefined") return;
 	sessionStorage.setItem(KEY, JSON.stringify(s));
+	console.debug("[saveLatestSession] saved:", s);
 }
 
 export function loadLatestSession(): WalkingSession | null {

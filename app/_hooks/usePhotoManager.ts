@@ -10,6 +10,7 @@ import {
 	findPhotoById,
 } from "@/app/_libs/photoUtils";
 import { PHOTO_CONSTANTS } from "@/app/_constants/constants";
+import { useWalking } from "@/app/_providers";
 
 /**
  * 스팟 사진 관리를 위한 커스텀 훅
@@ -23,6 +24,10 @@ export const usePhotoManager = (options: PhotoUploaderOptions = {}): UsePhotoMan
 	const [photos, setPhotos] = useState<SpotPhoto[]>([]);
 	const fileInputRef = useRef<HTMLInputElement>(null);
 
+	// 방식 B: 훅 내부에서 WalkingProvider에 자동으로 사진을 붙이기 위해 provider 훅을 최상단에서 가져옵니다.
+	// 이 훅은 반드시 `WalkingProvider` 내부에서 사용해야 합니다.
+	const { addPhotoToRoute } = useWalking();
+
 	/**
 	 * 파일 목록을 받아 사진으로 추가 (EXIF 데이터 추출 포함)
 	 */
@@ -30,33 +35,49 @@ export const usePhotoManager = (options: PhotoUploaderOptions = {}): UsePhotoMan
 		async (files: FileList) => {
 			const imageFiles = filterImageFiles(files);
 
-			setPhotos(prev => {
-				const availableSlots = maxPhotos - prev.length;
-				const filesToAdd = imageFiles.slice(0, availableSlots);
+			// 계산은 현재 상태(photos)를 기반으로 함
+			const availableSlots = Math.max(0, maxPhotos - photos.length);
+			const filesToAdd = imageFiles.slice(0, availableSlots);
 
-				// 먼저 동기적으로 사진을 추가 (미리보기용)
-				const tempPhotos = filesToAdd.map(createPhotoFromFileSync);
-				const newPhotos = [...prev, ...tempPhotos];
+			// 먼저 동기적으로 사진을 추가 (미리보기용)
+			const tempPhotos = filesToAdd.map(createPhotoFromFileSync);
+			setPhotos(prev => [...prev, ...tempPhotos]);
 
-				// 비동기적으로 EXIF 데이터 추출 후 업데이트
-				Promise.all(
-					filesToAdd.map(async (file, index) => {
-						const photoWithExif = await createPhotoFromFile(file);
-						return { ...photoWithExif, id: tempPhotos[index].id }; // 기존 ID 유지
-					})
-				).then(photosWithExif => {
-					setPhotos(currentPhotos =>
-						currentPhotos.map(photo => {
-							const exifPhoto = photosWithExif.find(p => p.id === photo.id);
-							return exifPhoto ? { ...photo, exifData: exifPhoto.exifData } : photo;
-						})
-					);
-				});
+			// 비동기적으로 EXIF 데이터 추출 후 업데이트 (await)
+			const photosWithExif: SpotPhoto[] = await Promise.all(
+				filesToAdd.map(async (file, index) => {
+					const photoWithExif = await createPhotoFromFile(file);
+					return { ...photoWithExif, id: tempPhotos[index].id } as SpotPhoto; // 기존 ID 유지
+				})
+			);
 
-				return newPhotos;
-			});
+			// exif 데이터를 병합
+			setPhotos(currentPhotos =>
+				currentPhotos.map(photo => {
+					const exifPhoto = photosWithExif.find(p => p.id === photo.id);
+					return exifPhoto ? { ...photo, exifData: exifPhoto.exifData } : photo;
+				})
+			);
+
+			// 방식 B: EXIF가 채워진 새 사진들을 WalkingProvider에 자동으로 추가
+			try {
+				for (const p of photosWithExif) {
+					if (p.exifData && typeof p.exifData.latitude === "number" && typeof p.exifData.longitude === "number") {
+						try {
+							addPhotoToRoute(p);
+						} catch (err) {
+							console.error("usePhotoManager: addPhotoToRoute failed", err, p.id);
+						}
+					}
+				}
+			} catch (err) {
+				console.error("usePhotoManager: error while auto-attaching photos to route", err);
+			}
+
+			// 반환값 없음 (void)
+			return;
 		},
-		[maxPhotos]
+		[maxPhotos, photos.length, addPhotoToRoute]
 	);
 
 	/**

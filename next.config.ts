@@ -2,6 +2,8 @@ import type { NextConfig } from "next";
 import path from "path";
 
 const nextConfig: NextConfig = {
+	// Disable React Strict Mode to avoid double mounting/logs in development
+	reactStrictMode: false,
 	webpack: config => {
 		config.resolve.alias = {
 			...config.resolve.alias,
