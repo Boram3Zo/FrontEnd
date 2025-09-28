@@ -31,7 +31,9 @@ export async function createPost(postData: CreatePostRequest): Promise<CreatePos
  */
 export async function sharePost(postData: SharePostRequest): Promise<SharePostResponse> {
 	try {
+		console.debug("Sharing post with data:", postData);
 		const response = await ApiClient.post<SharePostResponse>("/post/share", postData);
+		console.debug("Share post response:", response);
 		return response;
 	} catch (error) {
 		console.error("게시글 공유 실패:", error);
@@ -58,6 +60,7 @@ export async function getPostList(page: number = 0, size: number = 10): Promise<
 export async function getPostById(postId: number): Promise<PostReadResponse> {
 	try {
 		const response = await ApiClient.get<PostReadResponse>(`/post/read?postId=${postId}`);
+		console.debug("Get post by ID response:", response);
 		return response;
 	} catch (error) {
 		console.error("게시글 조회 실패:", error);

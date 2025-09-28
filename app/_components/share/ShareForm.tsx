@@ -10,6 +10,7 @@ import { ShareThemeSelection } from "./ShareThemeSelection";
 import { ShareHashtagSection } from "./ShareHashtagSection";
 import { ShareContentSection } from "./ShareContentSection";
 import { useWalking } from "@/app/_providers";
+import { useAuth } from "@/app/_providers";
 import { SpotPhoto } from "@/app/_types/photoTypes";
 import { ShareFormData } from "@/app/_types/shareTypes";
 import { PHOTO_CONSTANTS } from "@/app/_constants/constants";
@@ -27,6 +28,7 @@ export function ShareForm({ postId: propsPostId }: ShareFormProps = {}) {
 	const router = useRouter();
 	const searchParams = useSearchParams();
 	const { session, spotPhotos, setSpotPhotos } = useWalking();
+	const { user } = useAuth();
 
 	// postId 우선순위: props > URL 파라미터 > sessionStorage
 	const urlPostId = searchParams.get("post_id") || searchParams.get("postId");
@@ -162,6 +164,13 @@ export function ShareForm({ postId: propsPostId }: ShareFormProps = {}) {
 		}
 
 		try {
+			// 로그인된 사용자 확인
+			if (!user || !user.memberId) {
+				alert("공유하려면 로그인해야 합니다.");
+				// 로그인 페이지로 이동
+				router.push("/login");
+				return;
+			}
 			// 시작점의 실제 주소 가져오기
 			const startPoint = session.route[0];
 			const actualRegion = startPoint
@@ -170,7 +179,7 @@ export function ShareForm({ postId: propsPostId }: ShareFormProps = {}) {
 
 			// 산책 세션 데이터를 게시글 공유 요청 형식으로 변환
 			const shareRequest = convertWalkingSessionToShareRequest(parseInt(postId), session, {
-				memberId: 1, // TODO: 실제 사용자 ID로 대체
+				memberId: user?.memberId,
 				title: formData.title,
 				region: actualRegion,
 				content: formData.content,
