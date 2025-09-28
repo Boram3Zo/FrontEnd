@@ -103,7 +103,6 @@ export function ShareForm({ postId: propsPostId }: ShareFormProps = {}) {
 	 * GPS 좌표에서 실제 주소를 가져오는 함수
 	 */
 	const getAddressFromCoordinates = async (lat: number, lng: number): Promise<string> => {
-		try {
 			if (window.google?.maps && window.google.maps.Geocoder) {
 				const geocoder = new window.google.maps.Geocoder();
 				const results = await new Promise<google.maps.GeocoderResult[] | null>(resolve => {
@@ -133,8 +132,6 @@ export function ShareForm({ postId: propsPostId }: ShareFormProps = {}) {
 					return addressParts.length > 0 ? addressParts.join(" ") : first.formatted_address;
 				}
 			}
-		} catch (error) {}
-		return "알 수 없는 지역";
 	};
 
 	/**
@@ -152,7 +149,7 @@ export function ShareForm({ postId: propsPostId }: ShareFormProps = {}) {
 			return;
 		}
 
-		try {
+
 			// 로그인된 사용자 확인
 			if (!user || !user.memberId) {
 				alert("공유하려면 로그인해야 합니다.");
@@ -186,9 +183,6 @@ export function ShareForm({ postId: propsPostId }: ShareFormProps = {}) {
 			} else {
 				alert(`공유 실패: ${result.message}`);
 			}
-		} catch (error) {
-			alert("공유 중 오류가 발생했습니다. 다시 시도해주세요.");
-		}
 	};
 
 	// 필수 항목 체크

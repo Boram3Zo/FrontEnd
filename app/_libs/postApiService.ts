@@ -44,7 +44,7 @@ export async function sharePost(postData: SharePostRequest): Promise<SharePostRe
 /**
  * 게시글 목록 조회 API 호출
  */
-export async function getPostList(page: number = 1, size: number = 10): Promise<PostListResponse> {
+export async function getPostList(page: number = 0, size: number = 10): Promise<PostListResponse> {
 	try {
 		const response = await ApiClient.get<PostListResponse>(`/post/list?page=${page}&size=${size}`);
 		return response;

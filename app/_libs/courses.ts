@@ -11,7 +11,7 @@ import { API_ENDPOINTS, getApiUrl } from "@/app/_constants/api";
 /**
  * 모든 코스 목록 가져오기 (DB API)
  */
-export async function fetchAllCourses(page: number = 1, size: number = 20): Promise<PopularCourse[]> {
+export async function fetchAllCourses(page: number = 0, size: number = 20): Promise<PopularCourse[]> {
 	try {
 		const response = await getPostList(page, size);
 		return response.data.boardPage.content.map(convertPostToPopularCourse);
@@ -62,7 +62,7 @@ export async function fetchCourseById(id: number): Promise<import("@/app/_types/
  */
 export async function fetchPopularCourses(limit: number = 10): Promise<PopularCourse[]> {
 	try {
-		const response = await getPostList(1, limit);
+		const response = await getPostList(0, limit);
 		return response.data.boardPage.content.map(convertPostToPopularCourse);
 	} catch (error) {
 		console.error('Failed to fetch popular courses:', error);

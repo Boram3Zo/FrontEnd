@@ -32,7 +32,7 @@ export function RegionCourseList({ selectedRegion, limit = 2 }: RegionCourseList
 				setError(null);
 
 				// API에서 게시글 목록을 가져옴 (더 많은 데이터를 가져와서 필터링)
-				const response = await getPostList(1, 20); // 충분한 데이터 가져옴
+				const response = await getPostList(0, 20); // 충분한 데이터 가져옴
 
 				// 선택된 지역의 코스만 필터링 (다양한 형태의 지역명 매칭)
 				const regionCourses = response.data.boardPage.content
