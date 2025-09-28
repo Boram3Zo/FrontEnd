@@ -6,27 +6,21 @@
  * 이미지 파일 경로를 완전한 URL로 변환하는 함수
  */
 export function getImageUrl(filePath: string | null | undefined): string {
-	console.log(`📝 getImageUrl 호출 - 입력 경로:`, filePath);
-
 	if (!filePath) {
-		console.log(`📝 getImageUrl - 기본 이미지 반환`);
 		return "/hangang-park-walkway.png"; // 기본 이미지
 	}
 
 	// 이미 완전한 URL인 경우 그대로 반환
 	if (filePath.startsWith("http://") || filePath.startsWith("https://")) {
-		console.log(`📝 getImageUrl - 완전한 URL 그대로 반환:`, filePath);
 		return filePath;
 	}
 
 	// 절대 경로에서 파일명만 추출
 	const fileName = filePath.split("/").pop() || filePath;
-	console.log(`📝 getImageUrl - 추출된 파일명:`, fileName);
 
 	// API 베이스 URL + /static/ 경로로 구성
 	const apiBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:9988";
 	const finalUrl = `${apiBaseUrl}/static/${fileName}`;
-	console.log(`📝 getImageUrl - 최종 URL:`, finalUrl);
 
 	return finalUrl;
 }
@@ -85,10 +79,8 @@ export function convertPostToPopularCourse(
 
 	// 대표 이미지 URL 결정
 	const originalFilePath = post.photoList?.[0]?.filePath;
-	console.log(`🔄 convertPostToPopularCourse - 원본 파일 경로:`, originalFilePath);
 
 	const imageUrl = getImageUrl(originalFilePath);
-	console.log(`🔄 convertPostToPopularCourse - 변환된 이미지 URL:`, imageUrl);
 
 	return {
 		id: post.postId,

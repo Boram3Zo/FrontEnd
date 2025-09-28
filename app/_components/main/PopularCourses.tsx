@@ -17,22 +17,7 @@ export function PopularCourses() {
 			try {
 				setLoading(true);
 				const response = await getPostList(1, 5); // 인기 코스 5개만 가져오기
-				console.log("🔍 API 응답 원본 데이터:", response.data.boardPage.content);
-
-				// 각 포스트의 사진 정보 로그
-				response.data.boardPage.content.forEach((post, index) => {
-					console.log(`📷 Post ${index + 1} 사진 정보:`, post.photoList);
-					if (post.photoList && post.photoList.length > 0) {
-						console.log(`📂 첫 번째 사진 경로:`, post.photoList[0].filePath);
-					}
-				});
-
 				const popularCourses = response.data.boardPage.content.map(convertPostToPopularCourse);
-
-				// 변환된 코스의 이미지 URL 로그
-				popularCourses.forEach((course, index) => {
-					console.log(`🖼️ Course ${index + 1} 변환된 이미지 URL:`, course.imageUrl);
-				});
 
 				setCourses(popularCourses);
 			} catch (err) {

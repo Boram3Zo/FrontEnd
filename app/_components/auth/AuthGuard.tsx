@@ -19,7 +19,6 @@ export function withAuthGuard<P extends object>(Component: ComponentType<P>) {
 
 			// 로그인되지 않은 상태면 로그인 페이지로 리다이렉트
 			if (isLoggedIn === false) {
-				console.log("🔒 인증되지 않은 사용자 - 로그인 페이지로 리다이렉트");
 				router.push("/login");
 				return;
 			}
@@ -57,7 +56,6 @@ export function withGuestOnlyGuard<P extends object>(Component: ComponentType<P>
 
 			// 이미 로그인된 상태면 메인 페이지로 리다이렉트
 			if (isLoggedIn === true) {
-				console.log("🔑 이미 로그인된 사용자 - 메인 페이지로 리다이렉트");
 				router.push("/");
 				return;
 			}

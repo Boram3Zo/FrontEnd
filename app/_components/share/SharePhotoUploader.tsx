@@ -96,7 +96,6 @@ export const SharePhotoUploader: React.FC<SharePhotoUploaderProps> = ({
 					successCount++;
 					setUploadedPhotos(prev => new Set([...prev, p.id]));
 					updatePhotoId(p.id, result.data.photoId); // photoId 저장
-					console.log(`✅ 사진 업로드 성공: ${p.file.name}`, result.data);
 				} else {
 					failCount++;
 					console.error(`❌ 사진 업로드 실패: ${p.file.name}`, result.message);
@@ -133,7 +132,6 @@ export const SharePhotoUploader: React.FC<SharePhotoUploaderProps> = ({
 			if (result.success) {
 				setUploadedPhotos(prev => new Set([...prev, photo.id]));
 				updatePhotoId(photo.id, result.data.photoId); // photoId 저장
-				console.log(`✅ 사진 업로드 성공: ${photo.file.name}`, result.data);
 			} else {
 				console.error(`❌ 사진 업로드 실패: ${photo.file.name}`, result.message);
 				alert(`업로드 실패: ${result.message}`);
@@ -178,7 +176,6 @@ export const SharePhotoUploader: React.FC<SharePhotoUploaderProps> = ({
 					newSet.delete(photo.id);
 					return newSet;
 				});
-				console.log(`✅ 사진 삭제 성공: ${photo.file.name}`);
 			} else {
 				console.error(`❌ 사진 삭제 실패: ${photo.file.name}`, result.message);
 				alert(`삭제 실패: ${result.message}`);

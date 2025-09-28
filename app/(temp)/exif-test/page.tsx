@@ -12,7 +12,6 @@ export default function ExifTestPage() {
 
 	const handlePhotosChange = (photos: SpotPhoto[]) => {
 		setUploadedPhotos(photos);
-		console.log("사진 업데이트:", photos);
 	};
 
 	return (

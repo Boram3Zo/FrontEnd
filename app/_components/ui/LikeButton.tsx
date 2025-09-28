@@ -30,7 +30,6 @@ export function LikeButton({ postId, className }: LikeButtonProps) {
 
 			if (response.success) {
 				setIsLiked(!isLiked);
-				console.log("좋아요 처리 성공:", response.data);
 			} else {
 				console.error("좋아요 처리 실패:", response.message);
 				alert("좋아요 처리에 실패했습니다.");

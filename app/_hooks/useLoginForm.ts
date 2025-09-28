@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { LoginFormData } from "@/app/_types/auth";
-import { AuthService } from "@/app/_libs/authService";
 import { validateLoginForm } from "@/app/_utils/validation";
 import { useAuth } from "@/app/_providers";
 
@@ -27,13 +26,11 @@ export function useLoginForm() {
 
 	const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		const { id, value } = e.target;
-		console.log("🔄 Input Change:", { id, value }); // 디버깅용 로그
 		setFormData(prev => {
 			const newData = {
 				...prev,
 				[id]: value,
 			};
-			console.log("📝 Updated Form Data:", newData); // 디버깅용 로그
 			return newData;
 		});
 	};
@@ -50,25 +47,14 @@ export function useLoginForm() {
 		setIsLoading(true);
 		setError("");
 
-		console.log("📤 Login Attempt:", {
-			email: formData.email,
-			password: formData.password,
-			emailLength: formData.email?.length || 0,
-			passwordLength: formData.password?.length || 0,
-		}); // 디버깅용 로그
-
 		try {
-			const response = await AuthService.login(formData.email, formData.password);
-
 			// 세션 기반 인증: JSESSIONID 쿠키가 자동으로 설정됨 (credentials: 'include'로 처리)
-			console.log("✅ 로그인 성공:", response);
 
 			// 로그인 성공 후 상태를 즉시 업데이트
 			login(); // 먼저 상태를 true로 설정
 
 			// 디버깅용: LocalStorage에 수동 로그인 플래그 설정
 			localStorage.setItem("manualLogin", "true");
-			console.log("🔧 수동 로그인 플래그 설정됨");
 
 			// 그 다음 쿠키 상태도 다시 확인
 			setTimeout(() => {

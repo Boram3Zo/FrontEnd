@@ -47,24 +47,16 @@ export function ShareForm({ postId: propsPostId }: ShareFormProps = {}) {
 	// postId 처리 및 검증
 	useEffect(() => {
 		if (postId) {
-			console.log("🎯 ShareForm에서 받은 postId:", postId);
-			console.log("🎯 URL에서:", urlPostId);
-			console.log("🎯 SessionStorage에서:", sessionPostId);
-			console.log("🎯 최종 사용할 postId:", postId);
-
 			// sessionStorage 정리 (한 번 사용했으면 제거)
 			if (sessionPostId) {
 				sessionStorage.removeItem("created:postId");
 			}
 		} else {
 			console.warn("⚠️ ShareForm이 postId 없이 접근됨");
-
 			// 동적 라우트(/share/[id])가 아닌 기본 /share 경로인 경우 허용
 			// 하지만 일반적으로는 postId가 있어야 함을 로그로 남김
 			if (window.location.pathname === "/share") {
-				console.log("📝 기본 /share 페이지 접근 - 새 게시글 작성 모드");
 			} else {
-				console.log("📝 동적 라우트이지만 postId 없음 - 메인으로 리다이렉트");
 				alert("잘못된 접근입니다. 메인 페이지로 이동합니다.");
 				router.push("/");
 			}
@@ -86,7 +78,6 @@ export function ShareForm({ postId: propsPostId }: ShareFormProps = {}) {
 	 */
 	const handlePhotosChange = (photos: SpotPhoto[]) => {
 		setSpotPhotos(photos);
-		console.log("현재 사진 개수:", photos.length);
 	};
 
 	/**
@@ -142,9 +133,7 @@ export function ShareForm({ postId: propsPostId }: ShareFormProps = {}) {
 					return addressParts.length > 0 ? addressParts.join(" ") : first.formatted_address;
 				}
 			}
-		} catch (error) {
-			console.error("주소 변환 실패:", error);
-		}
+		} catch (error) {}
 		return "알 수 없는 지역";
 	};
 
@@ -187,8 +176,6 @@ export function ShareForm({ postId: propsPostId }: ShareFormProps = {}) {
 				hashtags: formData.hashtags.length > 0 ? formData.hashtags : [],
 			});
 
-			console.log("공유 API 요청 데이터:", shareRequest);
-
 			// 게시글 공유 완료 API 호출
 			const result = await sharePost(shareRequest);
 
@@ -200,7 +187,6 @@ export function ShareForm({ postId: propsPostId }: ShareFormProps = {}) {
 				alert(`공유 실패: ${result.message}`);
 			}
 		} catch (error) {
-			console.error("공유 중 오류 발생:", error);
 			alert("공유 중 오류가 발생했습니다. 다시 시도해주세요.");
 		}
 	};

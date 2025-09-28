@@ -302,12 +302,6 @@ export function useWalkTracker({ onStop }: UseWalkTrackerProps): UseWalkTrackerR
 		// 로컬스토리지 대신 DB에 경로 저장 (향후 구현)
 		try {
 			if (pathRef.current.length > 1) {
-				console.log('경로 데이터가 DB에 저장됩니다:', {
-					path: pathRef.current,
-					pointCount: pathRef.current.length,
-					session: completedSession
-				});
-				
 				// TODO: DB 저장 API 호출 구현
 				// await saveRouteToDatabase({
 				//   path: pathRef.current,
@@ -315,7 +309,7 @@ export function useWalkTracker({ onStop }: UseWalkTrackerProps): UseWalkTrackerR
 				// });
 			}
 		} catch (error) {
-			console.error('경로 저장 중 오류 발생:', error);
+			console.error("경로 저장 중 오류 발생:", error);
 		}
 
 		onStop();

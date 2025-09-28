@@ -91,19 +91,12 @@ export class ApiClient {
 
 		try {
 			// 디버깅용 로깅 (더 상세하게)
-			console.log("🚀 API Request Details:", {
-				url,
-				method: config.method || "GET",
-				headers: config.headers,
-				rawBody: config.body,
-				bodyType: typeof config.body,
-			});
 
 			// JSON 파싱하여 실제 데이터 확인
 			if (config.body && typeof config.body === "string") {
 				try {
 					const parsedBody = JSON.parse(config.body);
-					console.log("📋 Parsed Body Data:", parsedBody);
+					console.debug("📋 Parsed Body Data:", parsedBody);
 				} catch {
 					console.warn("⚠️ Body는 JSON이 아닙니다:", config.body);
 				}
