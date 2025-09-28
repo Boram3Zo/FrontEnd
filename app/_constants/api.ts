@@ -8,10 +8,10 @@ export const API_ENDPOINTS = {
 	LOGOUT: "/member/logout",
 	PROFILE: "/member/profile", // 현재 로그인된 사용자 정보 확인용
 	
-	// Post/Course related endpoints
-	POSTS: "/post/list",
+	// Post/Course related endpoints  
+	POSTS: (page: number = 0, size: number = 20) => `/post/list?page=${page}&size=${size}`,
 	POST_BY_ID: (id: string) => `/post/${id}`,
-	POSTS_BY_REGION: (region: string) => `/post/region?page=1&searchWord=${encodeURIComponent(region)}`,
+	POSTS_BY_REGION: (region: string) => `/post/region?page=0&searchWord=${encodeURIComponent(region)}`,
 	POPULAR_POSTS: "/post/popular",
 	
 	// Theme related endpoints
