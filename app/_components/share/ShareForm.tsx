@@ -133,7 +133,9 @@ export function ShareForm({ postId: propsPostId }: ShareFormProps = {}) {
 					return addressParts.length > 0 ? addressParts.join(" ") : first.formatted_address;
 				}
 			}
-		} catch (error) {}
+		} catch (error) {
+			console.error("주소 변환 실패:", error);
+		}
 		return "알 수 없는 지역";
 	};
 
@@ -187,6 +189,7 @@ export function ShareForm({ postId: propsPostId }: ShareFormProps = {}) {
 				alert(`공유 실패: ${result.message}`);
 			}
 		} catch (error) {
+			console.error("공유 중 오류:", error);
 			alert("공유 중 오류가 발생했습니다. 다시 시도해주세요.");
 		}
 	};
