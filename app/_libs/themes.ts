@@ -49,7 +49,7 @@ export async function fetchThemeById(id: string): Promise<Theme | null> {
  */
 export async function fetchCoursesByTheme(themeId: string, limit: number = 10): Promise<PostPopularCourse[]> {
 	// 실제 API를 사용하여 테마별 포스트 가져오기
-	const response = await getPostList(0, limit);
+	const response = await getPostList(1, limit);
 	
 	// 테마별 필터링 (실제 API에서 테마 파라미터를 지원하지 않는 경우)
 	const filteredPosts = response.data?.boardPage?.content ? 

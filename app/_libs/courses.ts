@@ -62,7 +62,7 @@ export async function fetchCourseById(id: number): Promise<import("@/app/_types/
  */
 export async function fetchPopularCourses(limit: number = 10): Promise<PopularCourse[]> {
 	try {
-		const response = await getPostList(0, limit);
+		const response = await getPostList(1, limit);
 		return response.data.boardPage.content.map(convertPostToPopularCourse);
 	} catch (error) {
 		console.error('Failed to fetch popular courses:', error);
