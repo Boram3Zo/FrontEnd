@@ -6,23 +6,29 @@ import { Button } from "@/app/_components/ui/Button";
 import { MapPin, Clock, Loader2, Heart } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { SafeImage } from "@/app/_components/ui/SafeImage";
-import { getPostList, convertPostToPopularCourse, type PopularCourse } from "@/app/_libs/postService";
+import { fetchCoursesByRegion } from "@/app/_libs/courses";
+import { type PopularCourse } from "@/app/_libs/postService";
 
 interface RegionCourseListProps {
 	selectedRegion?: string | null;
 	limit?: number;
 }
 
-export function RegionCourseList({ selectedRegion, limit = 2 }: RegionCourseListProps) {
+export function RegionCourseList({ selectedRegion, limit = 5 }: RegionCourseListProps) {
 	const router = useRouter();
 	const [courses, setCourses] = useState<PopularCourse[]>([]);
 	const [loading, setLoading] = useState(false);
 	const [error, setError] = useState<string | null>(null);
+	const [currentLimit, setCurrentLimit] = useState(limit);
+	const [hasMoreCourses, setHasMoreCourses] = useState(false);
+	const [allCourses, setAllCourses] = useState<PopularCourse[]>([]);
 
 	// 지역별 코스 로드
 	useEffect(() => {
 		if (!selectedRegion) {
 			setCourses([]);
+			setAllCourses([]);
+			setHasMoreCourses(false);
 			return;
 		}
 
@@ -31,27 +37,17 @@ export function RegionCourseList({ selectedRegion, limit = 2 }: RegionCourseList
 				setLoading(true);
 				setError(null);
 
-				// API에서 게시글 목록을 가져옴 (더 많은 데이터를 가져와서 필터링)
-				const response = await getPostList(0, 20); // 충분한 데이터 가져옴
-
-				// 선택된 지역의 코스만 필터링 (다양한 형태의 지역명 매칭)
-				const regionCourses = response.data.boardPage.content
-					.filter(post => {
-						if (!post.region) return false;
-
-						// 정확한 매칭
-						if (post.region === selectedRegion) return true;
-
-						// 한국어 지역명 매칭 (예: "강남구" vs "강남")
-						if (post.region.includes(selectedRegion.replace("구", ""))) return true;
-						if (selectedRegion.includes(post.region.replace("구", ""))) return true;
-
-						return false;
-					})
-					.slice(0, limit) // 최대 개수 제한
-					.map(convertPostToPopularCourse);
-
-				setCourses(regionCourses);
+				// 서버 사이드 필터링을 통해 해당 지역의 모든 코스를 가져옴 (충분히 많이 요청)
+				const regionCourses = await fetchCoursesByRegion(selectedRegion, 50); // 최대 50개까지 가져옴
+				
+				// 모든 코스를 저장
+				setAllCourses(regionCourses);
+				
+				// 현재 limit만큼만 표시
+				setCourses(regionCourses.slice(0, currentLimit));
+				
+				// 더 많은 코스가 있는지 확인
+				setHasMoreCourses(regionCourses.length > currentLimit);
 			} catch (err) {
 				console.error("지역 코스 로딩 실패:", err);
 				setError("코스를 불러오는데 실패했습니다.");
@@ -60,15 +56,22 @@ export function RegionCourseList({ selectedRegion, limit = 2 }: RegionCourseList
 			}
 		};
 
+		// 지역이 변경될 때 currentLimit 초기화
+		setCurrentLimit(limit);
 		loadRegionCourses();
 	}, [selectedRegion, limit]);
 
-	const handleViewMoreCourses = () => {
-		if (selectedRegion) {
-			router.push(`/region/${selectedRegion}`);
-		} else {
-			router.push("/region");
+	// currentLimit이 변경될 때 표시할 코스 업데이트
+	useEffect(() => {
+		if (allCourses.length > 0) {
+			setCourses(allCourses.slice(0, currentLimit));
+			setHasMoreCourses(allCourses.length > currentLimit);
 		}
+	}, [currentLimit, allCourses]);
+
+	// 더 많은 코스 보기 함수 (페이지 이동 대신 limit 증가)
+	const handleLoadMoreCourses = () => {
+		setCurrentLimit(prev => prev + 5); // 5개씩 추가로 표시
 	};
 
 	const handleCourseClick = (courseId: number | string) => {
@@ -91,7 +94,7 @@ export function RegionCourseList({ selectedRegion, limit = 2 }: RegionCourseList
 		);
 	}
 
-	if (loading) {
+	if (loading && courses.length === 0) {
 		return (
 			<div className="px-4">
 				<div className="flex items-center justify-between mb-4">
@@ -127,7 +130,9 @@ export function RegionCourseList({ selectedRegion, limit = 2 }: RegionCourseList
 		<div className="px-4">
 			<div className="flex items-center justify-between mb-4">
 				<h2 className="text-lg font-bold text-gray-800">{selectedRegion}의 산책 코스</h2>
-				<span className="text-sm text-gray-500">{courses.length}개 코스</span>
+				<span className="text-sm text-gray-500">
+					{courses.length}{allCourses.length > courses.length ? `/${allCourses.length}` : ''}개 코스
+				</span>
 			</div>
 
 			{courses.length === 0 ? (
@@ -202,12 +207,25 @@ export function RegionCourseList({ selectedRegion, limit = 2 }: RegionCourseList
 						))}
 					</div>
 
-					{/* Load more button - 코스가 limit보다 많을 가능성이 있을 때만 표시 */}
-					{courses.length === limit && (
+					{/* Load more button - 더 많은 코스가 있을 때만 표시 */}
+					{hasMoreCourses && (
 						<div className="text-center mt-4">
-							<Button variant="outline" className="px-6 bg-transparent text-sm" onClick={handleViewMoreCourses}>
-								{selectedRegion}의 더 많은 코스 보기
+							<Button 
+								variant="outline" 
+								className="px-6 bg-transparent text-sm" 
+								onClick={handleLoadMoreCourses}
+							>
+								더 많은 코스 보기 ({allCourses.length - courses.length}개 더)
 							</Button>
+						</div>
+					)}
+
+					{/* 모든 코스를 다 보여준 경우 */}
+					{!hasMoreCourses && allCourses.length > limit && (
+						<div className="text-center mt-4">
+							<p className="text-sm text-gray-500">
+								{selectedRegion}의 모든 코스를 확인했습니다 ✅
+							</p>
 						</div>
 					)}
 				</>

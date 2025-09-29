@@ -21,7 +21,12 @@ const KoreanMap: React.FC<KoreanMapProps> = ({ onRegionSelect }) => {
 		
 		// 지역 선택 콜백 호출
 		if (onRegionSelect) {
-			onRegionSelect(district.koreanName);
+			// 강남구 선택시 삼성동으로 검색
+			if (district.id === 'gangnam') {
+				onRegionSelect('삼성동');
+			} else {
+				onRegionSelect(district.koreanName);
+			}
 		}
 	};
 

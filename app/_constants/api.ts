@@ -8,16 +8,17 @@ export const API_ENDPOINTS = {
 	LOGOUT: "/member/logout",
 	PROFILE: "/member/profile", // 현재 로그인된 사용자 정보 확인용
 
-	// Post/Course related endpoints 
+	// Post/Course related endpoints
 	POSTS: (page: number = 0, size: number = 20) => `/post/list?page=${page}&size=${size}`,
 	POST_BY_ID: (id: string) => `/post/${id}`,
-	POSTS_BY_REGION: (region: string) => `/post/region?page=0&searchWord=${encodeURIComponent(region)}`,
+	POSTS_BY_REGION: (region: string, size: number = 50) => `/post/region?page=0&size=${size}&regionName=${encodeURIComponent(region)}`,
 	POPULAR_POSTS: "/post/popular",
 
 	// Theme related endpoints
 	THEMES: "/theme/list",
 	THEME_BY_ID: (id: string) => `/theme/${id}`,
-	POSTS_BY_THEME: (themeId: string) => `/post/list?theme=${themeId}`,
+	POSTS_BY_THEME: (themeId: string, size: number = 50) => `/post/theme?page=0&theme=${encodeURIComponent(themeId)}&size=${size}`,
+	POSTS_COUNT_BY_THEME: (themeId: string) => `/post/theme/count?theme=${encodeURIComponent(themeId)}`,
 } as const;
 
 // API Helper function

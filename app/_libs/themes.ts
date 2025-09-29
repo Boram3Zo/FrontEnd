@@ -1,11 +1,13 @@
-import { 
+	import { 
 	Theme, 
 	ThemeListResponse, 
 	GetThemesParams, 
 	ThemeWithCourses
 } from "@/app/_types/theme";
-import { getPostList, convertPostToPopularCourse, type PopularCourse as PostPopularCourse } from "./postService";
+import { convertPostToPopularCourse, type PopularCourse as PostPopularCourse } from "./postService";
 import { API_ENDPOINTS, getApiUrl } from "@/app/_constants/api";
+import { THEME_OPTIONS } from "@/app/_constants/themes";
+import type { ThemeOption } from "@/app/_types/shareTypes";
 
 // Mock 데이터 제거 - 순수 DB API 전용
 
@@ -45,17 +47,89 @@ export async function fetchThemeById(id: string): Promise<Theme | null> {
 }
 
 /**
- * 특정 테마의 코스들을 가져옵니다 (순수 DB API 전용)
+ * 특정 테마의 코스들을 가져옵니다 - 새로운 /post/theme API 엔드포인트 사용
  */
-export async function fetchCoursesByTheme(themeId: string, limit: number = 10): Promise<PostPopularCourse[]> {
-	// 실제 API를 사용하여 테마별 포스트 가져오기
-	const response = await getPostList(0, limit);
+export async function fetchCoursesByTheme(themeId: string, limit: number = 100): Promise<PostPopularCourse[]> {
+	console.log(`[fetchCoursesByTheme] Starting fetch for theme: "${themeId}" with limit: ${limit}`);
 	
-	// 테마별 필터링 (실제 API에서 테마 파라미터를 지원하지 않는 경우)
-	const filteredPosts = response.data?.boardPage?.content ? 
-		response.data.boardPage.content.filter(post => post.theme === themeId) : [];
-	
-	return filteredPosts.map(convertPostToPopularCourse);
+	try {
+		// 1. 새로운 테마 전용 API 엔드포인트 사용
+		const url = getApiUrl(API_ENDPOINTS.POSTS_BY_THEME(themeId, limit));
+		console.log(`[fetchCoursesByTheme] API URL: ${url}`);
+		
+		// 2. API 호출 (10초 타임아웃 포함)
+		const controller = new AbortController();
+		const timeoutId = setTimeout(() => controller.abort(), 10000);
+		
+		const response = await fetch(url, {
+			signal: controller.signal,
+			headers: {
+				'Content-Type': 'application/json',
+			}
+		});
+		
+		clearTimeout(timeoutId);
+		
+		if (!response.ok) {
+			throw new Error(`테마별 코스 API 호출 실패: ${response.status} ${response.statusText}`);
+		}
+		
+		const data = await response.json();
+		console.log(`[fetchCoursesByTheme] API response received:`, {
+			success: data?.success,
+			hasData: !!data?.data,
+			hasBoardPage: !!data?.data?.boardPage,
+			hasContent: !!data?.data?.boardPage?.content,
+			contentLength: data?.data?.boardPage?.content?.length
+		});
+		
+		// 3. API 응답 구조 처리
+		if (data?.success === false) {
+			console.warn(`[fetchCoursesByTheme] API returned error for theme ${themeId}:`, data.message);
+			return [];
+		}
+		
+		// 4. 응답 구조에서 포스트 배열 추출
+		let posts = [];
+		
+		if (data?.data?.boardPage?.content && Array.isArray(data.data.boardPage.content)) {
+			posts = data.data.boardPage.content;
+		} else if (data?.boardPage?.content && Array.isArray(data.boardPage.content)) {
+			posts = data.boardPage.content;
+		} else if (data?.content && Array.isArray(data.content)) {
+			posts = data.content;
+		} else if (Array.isArray(data)) {
+			posts = data;
+		} else {
+			console.warn(`[fetchCoursesByTheme] Unexpected API response structure for theme ${themeId}:`, data);
+			console.warn(`[fetchCoursesByTheme] Response keys:`, Object.keys(data || {}));
+			posts = [];
+		}
+		
+		console.log(`[fetchCoursesByTheme] Extracted ${posts.length} posts from API response`);
+		
+		if (!Array.isArray(posts)) {
+			console.error(`[fetchCoursesByTheme] Posts is not an array. Type: ${typeof posts}, Value:`, posts);
+			return [];
+		}
+		
+		if (posts.length === 0) {
+			console.warn(`[fetchCoursesByTheme] No posts found for theme "${themeId}"`);
+			return [];
+		}
+		
+		// 5. PopularCourse 형태로 변환
+		const popularCourses = posts.map(convertPostToPopularCourse);
+		console.log(`[fetchCoursesByTheme] Successfully converted ${popularCourses.length} posts to PopularCourse format for theme "${themeId}"`);
+		
+		return popularCourses;
+	} catch (error) {
+		console.error(`[fetchCoursesByTheme] Error occurred:`, {
+			message: error instanceof Error ? error.message : 'Unknown error',
+			error: error
+		});
+		return [];
+	}
 }
 
 
@@ -105,4 +179,80 @@ export async function getThemesByCategory(category: string): Promise<Theme[]> {
 		console.error('getThemesByCategory failed:', error);
 		return [];
 	}
+}
+
+/**
+ * 특정 테마의 포스트 개수를 가져옵니다
+ */
+export async function fetchPostCountByTheme(themeId: string): Promise<number> {
+	console.log(`[fetchPostCountByTheme] Fetching post count for theme: "${themeId}"`);
+	
+	try {
+		// 포스트 개수를 가져오기 위해 size를 1로 설정하고 전체 개수 정보를 확인
+		const url = getApiUrl(API_ENDPOINTS.POSTS_BY_THEME(themeId, 1));
+		console.log(`[fetchPostCountByTheme] API URL: ${url}`);
+		
+		const controller = new AbortController();
+		const timeoutId = setTimeout(() => controller.abort(), 10000);
+		
+		const response = await fetch(url, {
+			signal: controller.signal,
+			headers: {
+				'Content-Type': 'application/json',
+			}
+		});
+		
+		clearTimeout(timeoutId);
+		
+		if (!response.ok) {
+			throw new Error(`테마별 포스트 개수 API 호출 실패: ${response.status} ${response.statusText}`);
+		}
+		
+		const data = await response.json();
+		console.log(`[fetchPostCountByTheme] API response:`, data);
+		
+		// API 응답에서 전체 개수 정보 추출
+		if (data?.success && data?.data?.boardPage?.totalElements !== undefined) {
+			const count = data.data.boardPage.totalElements;
+			console.log(`[fetchPostCountByTheme] Found ${count} posts for theme "${themeId}"`);
+			return count;
+		} else {
+			console.warn(`[fetchPostCountByTheme] Unexpected API response structure for theme ${themeId}:`, data);
+			return 0;
+		}
+		
+	} catch (error) {
+		console.error(`[fetchPostCountByTheme] Error fetching post count for theme "${themeId}":`, error);
+		return 0;
+	}
+}
+
+/**
+ * 모든 테마의 포스트 개수를 가져옵니다
+ */
+export async function fetchAllThemePostCounts(): Promise<Record<string, number>> {
+	console.log(`[fetchAllThemePostCounts] Fetching post counts for all themes`);
+	
+	const counts: Record<string, number> = {};
+	
+	// 모든 테마에 대해 병렬로 포스트 개수 조회
+	const promises = THEME_OPTIONS.map(async (theme: ThemeOption) => {
+		try {
+			const count = await fetchPostCountByTheme(theme.label);
+			return { theme: theme.label, count };
+		} catch (error) {
+			console.error(`Error fetching count for theme ${theme.label}:`, error);
+			return { theme: theme.label, count: 0 };
+		}
+	});
+	
+	const results = await Promise.all(promises);
+	
+	// 결과를 객체로 변환
+	results.forEach(({ theme, count }: { theme: string; count: number }) => {
+		counts[theme] = count;
+	});
+	
+	console.log(`[fetchAllThemePostCounts] All theme post counts:`, counts);
+	return counts;
 }
