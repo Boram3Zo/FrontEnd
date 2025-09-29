@@ -5,7 +5,7 @@ import { Button } from "@/app/_components/ui/Button";
 import { Input } from "@/app/_components/ui/Input";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { MenuSidebar } from "./MenuSidebar";
 
 export function Header() {
@@ -23,6 +23,15 @@ export function Header() {
 	const handleMenuClose = () => {
 		setIsMenuOpen(false);
 	};
+
+	const searchRef = useRef<HTMLInputElement | null>(null);
+
+	useEffect(() => {
+		const handler = () => searchRef.current?.focus();
+		// listen to custom event
+		window.addEventListener("focusGlobalSearch", handler as EventListener);
+		return () => window.removeEventListener("focusGlobalSearch", handler as EventListener);
+	}, []);
 
 	return (
 		<header className="bg-white border-b border-border sticky top-0 z-50">
@@ -47,7 +56,11 @@ export function Header() {
 			<div className="px-4 pb-3">
 				<div className="relative">
 					<Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-					<Input placeholder="키워드로 산책 코스를 찾아보세요" className="pl-10 bg-muted/50 border-0 rounded-full" />
+					<Input
+						ref={searchRef}
+						placeholder="제목 키워드로 산책 코스를 찾아보세요"
+						className="pl-10 bg-muted/50 border-0 rounded-full"
+					/>
 				</div>
 			</div>
 
@@ -98,6 +111,13 @@ export function HeaderWithMenuSidebar() {
 
 function HeaderContent({ onMenuClick }: { onMenuClick: () => void }) {
 	const router = useRouter();
+	const searchRef = useRef<HTMLInputElement | null>(null);
+
+	useEffect(() => {
+		const handler = () => searchRef.current?.focus();
+		window.addEventListener("focusGlobalSearch", handler as EventListener);
+		return () => window.removeEventListener("focusGlobalSearch", handler as EventListener);
+	}, []);
 
 	const handleBackClick = () => {
 		router.back();
@@ -126,7 +146,11 @@ function HeaderContent({ onMenuClick }: { onMenuClick: () => void }) {
 			<div className="px-4 pb-3">
 				<div className="relative">
 					<Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-					<Input placeholder="키워드로 산책 코스를 찾아보세요" className="pl-10 bg-muted/50 border-0 rounded-full" />
+					<Input
+						ref={searchRef}
+						placeholder="제목 키워드로 산책 코스를 찾아보세요"
+						className="pl-10 bg-muted/50 border-0 rounded-full"
+					/>
 				</div>
 			</div>
 

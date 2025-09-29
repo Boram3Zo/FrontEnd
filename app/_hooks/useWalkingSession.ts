@@ -1,8 +1,10 @@
 import { useState, useEffect } from "react";
 import { WalkingSession } from "@/app/_types/walking";
 import { Cat } from "@/app/_types/cat";
+import { MOCK_CATS } from "@/app/_mocks/cats";
 import { WALKING_CONSTANTS } from "@/app/_constants/constants";
 import { saveLatestSession } from "@/app/_libs/walkingStorage";
+import { notifyCatDetected } from "@/app/_libs/catService";
 
 export function useWalkingSession() {
 	const [session, setSession] = useState<WalkingSession | null>(null);
@@ -41,28 +43,44 @@ export function useWalkingSession() {
 	// Simulate cat discovery during walk
 	useEffect(() => {
 		if (session?.isActive && !session.isPaused) {
-			const timer = setTimeout(() => {
+			const timer = setInterval(() => {
+				console.log("Checking for cat discovery...");
 				if (Math.random() > WALKING_CONSTANTS.CAT_DISCOVERY_THRESHOLD) {
-					// 30% chance of discovering a cat
-					setDiscoveredCat({
-						id: "random-cat",
-						name: "길냥이",
-						breed: "코리안 숏헤어",
-						personality: "호기심 많은",
+					const idx = Math.floor(Math.random() * MOCK_CATS.length);
+					const randomCat: Cat = {
+						...MOCK_CATS[idx],
+						// override discovered date and location with current context
 						discoveredAt: "현재 위치",
 						discoveredDate: new Date().toLocaleDateString("ko-KR"),
-						rarity: "common" as const,
-						description: "산책 중에 만난 귀여운 길고양이예요!",
-						favoriteFood: "참치",
-						hobby: "햇볕쬐기",
 						isDiscovered: true,
-					});
+					};
+					setDiscoveredCat(randomCat);
 				}
 			}, WALKING_CONSTANTS.CAT_CHECK_INTERVAL_MS);
 
-			return () => clearTimeout(timer);
+			return () => clearInterval(timer);
 		}
 	}, [session?.isActive, session?.isPaused]);
+
+	// Notify server when a cat is discovered
+	useEffect(() => {
+		if (!discoveredCat) return;
+
+		const notify = async () => {
+			try {
+				await notifyCatDetected({
+					id: discoveredCat.id,
+					discoveredAt: discoveredCat.discoveredAt,
+					discoveredDate: discoveredCat.discoveredDate,
+					name: discoveredCat.name,
+				});
+			} catch (err) {
+				console.error("Failed to notify backend about discovered cat:", err);
+			}
+		};
+
+		notify();
+	}, [discoveredCat]);
 
 	return {
 		session,
