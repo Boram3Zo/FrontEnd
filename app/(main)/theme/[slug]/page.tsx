@@ -1,3 +1,6 @@
+"use client";
+
+import { useState, useEffect } from "react";
 import { Header } from "@/app/_components/layout/Header";
 import { BottomNavigation } from "@/app/_components/layout/BottomNavigation";
 import { CatCharacter } from "@/app/_components/cat/CatCharacter";
@@ -14,14 +17,56 @@ import type { PopularCourse } from "@/app/_types/post";
 
 type PageParams = Promise<{ slug: string }>;
 
-export default async function ThemeCoursesPage({ params }: { params: PageParams }) {
-	const { slug } = await params;
-	
+export default function ThemeCoursesPage({ params }: { params: PageParams }) {
+	const [slug, setSlug] = useState<string>("");
+	const [courses, setCourses] = useState<PopularCourse[]>([]);
+	const [loading, setLoading] = useState(true);
+	const [error, setError] = useState<string | null>(null);
+
+	// params에서 slug 추출
+	useEffect(() => {
+		params.then(({ slug }) => {
+			console.log(`[Client] Loading theme page for slug: ${slug}`);
+			setSlug(slug);
+		});
+	}, [params]);
+
+	// 테마별 코스 데이터 로드
+	useEffect(() => {
+		if (!slug) {
+			console.log(`[Client] No slug provided, skipping data load`);
+			return;
+		}
+
+		console.log(`[Client] Starting data load for slug: ${slug}`);
+
+		const loadCourses = async () => {
+			setLoading(true);
+			setError(null);
+			
+			try {
+				console.log(`[Client] Calling fetchCoursesByTheme for theme: ${slug}`);
+				const fetchedCourses = await fetchCoursesByTheme(slug, 100);
+				console.log(`[Client] fetchCoursesByTheme returned ${fetchedCourses.length} courses:`, fetchedCourses);
+				setCourses(fetchedCourses);
+			} catch (err) {
+				console.error(`[Client] Error in fetchCoursesByTheme for theme ${slug}:`, err);
+				setError('코스를 불러오는데 실패했습니다.');
+				setCourses([]);
+			} finally {
+				console.log(`[Client] Finished loading courses for theme: ${slug}`);
+				setLoading(false);
+			}
+		};
+
+		loadCourses();
+	}, [slug]);
+
 	// 테마 정보 가져오기
-	const themeInfo = getExtendedThemeInfo(slug);
+	const themeInfo = slug ? getExtendedThemeInfo(slug) : null;
 	
 	// 테마가 존재하지 않는 경우
-	if (!themeInfo) {
+	if (slug && !themeInfo) {
 		return (
 			<div className="min-h-screen bg-gradient-to-b from-purple-50 to-pink-50">
 				<Header />
@@ -40,16 +85,20 @@ export default async function ThemeCoursesPage({ params }: { params: PageParams 
 		);
 	}
 
-	// DB에서 테마별 코스 가져오기
-	let courses: PopularCourse[] = [];
-	let error = null;
-	
-	try {
-		courses = await fetchCoursesByTheme(slug, 20);
-	} catch (err) {
-		console.error('Failed to fetch courses by theme:', err);
-		courses = [];
-		error = '코스를 불러오는데 실패했습니다.';
+	// 로딩 중이거나 테마 정보가 없는 경우
+	if (!themeInfo) {
+		return (
+			<div className="min-h-screen bg-gradient-to-b from-purple-50 to-pink-50">
+				<Header />
+				<main className="pb-20 px-4 py-8">
+					<div className="text-center">
+						<CatCharacter size="lg" animation="bounce" />
+						<h2 className="text-xl font-bold text-gray-800 mt-4 mb-2">테마를 로드하는 중...</h2>
+					</div>
+				</main>
+				<BottomNavigation />
+			</div>
+		);
 	}
 
 	return (
@@ -88,7 +137,13 @@ export default async function ThemeCoursesPage({ params }: { params: PageParams 
 
 				{/* Course list */}
 				<div className="px-4 py-6">
-					{error ? (
+					{loading ? (
+						<div className="text-center py-12">
+							<CatCharacter size="lg" animation="bounce" />
+							<h3 className="text-lg font-bold text-gray-800 mt-4 mb-2">코스를 불러오는 중...</h3>
+							<p className="text-gray-600">잠시만 기다려주세요</p>
+						</div>
+					) : error ? (
 						<div className="text-center py-12">
 							<CatCharacter size="lg" animation="wiggle" />
 							<h3 className="text-lg font-bold text-gray-800 mt-4 mb-2">코스를 불러올 수 없어요</h3>

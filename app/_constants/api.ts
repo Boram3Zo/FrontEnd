@@ -17,7 +17,7 @@ export const API_ENDPOINTS = {
 	// Theme related endpoints
 	THEMES: "/theme/list",
 	THEME_BY_ID: (id: string) => `/theme/${id}`,
-	POSTS_BY_THEME: (themeId: string) => `/post/list?theme=${themeId}`,
+	POSTS_BY_THEME: (themeId: string, size: number = 50) => `/post/theme?page=0&theme=${encodeURIComponent(themeId)}&size=${size}`,
 } as const;
 
 // API Helper function

@@ -1,16 +1,21 @@
 "use client";
 
-import { useMemo } from "react";
+import { useState, useEffect } from "react";
 import { Card } from "@/app/_components/ui/Card";
 import { Button } from "@/app/_components/ui/Button";
 import Link from "next/link";
 import { THEME_OPTIONS } from "@/app/_constants/themes";
 
 export function ThemeRecommendations() {
-	// THEME_OPTIONS에서 랜덤으로 2개 선택
-	const recommendedThemes = useMemo(() => {
+	// 클라이언트에서만 랜덤 선택을 수행하여 hydration 에러 방지
+	const [recommendedThemes, setRecommendedThemes] = useState(() => THEME_OPTIONS.slice(0, 2));
+	const [isClient, setIsClient] = useState(false);
+
+	useEffect(() => {
+		setIsClient(true);
+		// 클라이언트에서만 랜덤으로 2개 선택
 		const shuffled = [...THEME_OPTIONS].sort(() => 0.5 - Math.random());
-		return shuffled.slice(0, 2);
+		setRecommendedThemes(shuffled.slice(0, 2));
 	}, []);
 
 	return (
@@ -20,7 +25,9 @@ export function ThemeRecommendations() {
 					<span>✨</span>
 					오늘의 추천 테마
 				</h3>
-				<p className="text-sm text-gray-600">랜덤으로 선택된 {recommendedThemes.length}가지 특별한 테마를 만나보세요</p>
+				<p className="text-sm text-gray-600">
+					{isClient ? `랜덤으로 선택된 ${recommendedThemes.length}가지 특별한 테마를 만나보세요` : '특별한 테마를 준비 중입니다'}
+				</p>
 			</div>
 
 			<div className="space-y-4">
