@@ -6,14 +6,15 @@ import { Button } from "@/app/_components/ui/Button";
 import { MapPin, Clock, Loader2, Heart } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { SafeImage } from "@/app/_components/ui/SafeImage";
-import { getPostList, convertPostToPopularCourse, type PopularCourse } from "@/app/_libs/postService";
+import { fetchCoursesByRegion } from "@/app/_libs/courses";
+import { type PopularCourse } from "@/app/_libs/postService";
 
 interface RegionCourseListProps {
 	selectedRegion?: string | null;
 	limit?: number;
 }
 
-export function RegionCourseList({ selectedRegion, limit = 2 }: RegionCourseListProps) {
+export function RegionCourseList({ selectedRegion, limit = 4 }: RegionCourseListProps) {
 	const router = useRouter();
 	const [courses, setCourses] = useState<PopularCourse[]>([]);
 	const [loading, setLoading] = useState(false);
@@ -31,27 +32,11 @@ export function RegionCourseList({ selectedRegion, limit = 2 }: RegionCourseList
 				setLoading(true);
 				setError(null);
 
-				// API에서 게시글 목록을 가져옴 (더 많은 데이터를 가져와서 필터링)
-				const response = await getPostList(0, 20); // 충분한 데이터 가져옴
-
-				// 선택된 지역의 코스만 필터링 (다양한 형태의 지역명 매칭)
-				const regionCourses = response.data.boardPage.content
-					.filter(post => {
-						if (!post.region) return false;
-
-						// 정확한 매칭
-						if (post.region === selectedRegion) return true;
-
-						// 한국어 지역명 매칭 (예: "강남구" vs "강남")
-						if (post.region.includes(selectedRegion.replace("구", ""))) return true;
-						if (selectedRegion.includes(post.region.replace("구", ""))) return true;
-
-						return false;
-					})
-					.slice(0, limit) // 최대 개수 제한
-					.map(convertPostToPopularCourse);
-
-				setCourses(regionCourses);
+				// 서버 사이드 필터링을 통해 해당 지역의 코스만 가져옴
+				const regionCourses = await fetchCoursesByRegion(selectedRegion, limit * 2); // 여유분을 두어 더 많이 요청
+				
+				// 결과를 limit만큼 제한
+				setCourses(regionCourses.slice(0, limit));
 			} catch (err) {
 				console.error("지역 코스 로딩 실패:", err);
 				setError("코스를 불러오는데 실패했습니다.");
