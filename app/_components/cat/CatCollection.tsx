@@ -52,9 +52,9 @@ export function CatCollection() {
 		}
 	};
 
-	const simulateDiscovery = () => {
-		setShowDiscoveryModal(true);
-	};
+	// const simulateDiscovery = () => {
+	// 	setShowDiscoveryModal(true);
+	// };
 
 	const handleCatDiscovered = (catId: string) => {
 		setCats(prevCats =>
@@ -166,14 +166,14 @@ export function CatCollection() {
 			</div>
 
 			{/* Demo button */}
-			<div className="text-center mb-6">
+			{/* <div className="text-center mb-6">
 				<Button
 					onClick={simulateDiscovery}
 					className="bg-gradient-to-r from-orange-400 to-yellow-400 hover:from-orange-500 hover:to-yellow-500 text-white px-8 py-3 rounded-full shadow-lg"
 				>
 					새로운 고양이 발견 체험하기 🐱
 				</Button>
-			</div>
+			</div> */}
 
 			{/* Cat detail modal */}
 			{selectedCat && (
