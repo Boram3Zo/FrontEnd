@@ -7,6 +7,7 @@ import { Clock, Route, MapPin } from "lucide-react";
 import { getPostById, getImageUrl } from "@/app/_libs/postService";
 import { Post } from "@/app/_types/post";
 import RouteMap from "@/app/_components/map/RouteMap";
+import { WalkingPin } from "@/app/_types/walking";
 
 type PageParams = Promise<{ id: string }>;
 
@@ -142,6 +143,22 @@ export default async function CourseDetailPage({ params }: { params: PageParams 
 								// 경로 데이터 준비
 								const route = parseRouteFromSpots(course.map.spots);
 
+								// course.photoList에서 유효한 좌표를 가진 사진들을 pins 배열로 변환
+								const pins = (course.photoList || [])
+									.map(photo => {
+										const lat = parseFloat(photo.latitude);
+										const lng = parseFloat(photo.longitude);
+										if (isNaN(lat) || isNaN(lng)) return null;
+										return {
+											lat,
+											lng,
+											type: "photo" as const,
+											timestamp: new Date().toISOString(),
+											photoId: photo.photoId ?? undefined,
+										} as WalkingPin;
+									})
+									.filter((p): p is WalkingPin => p !== null);
+
 								// 경로가 없으면 시작점과 끝점으로 기본 경로 생성
 								if (route.length === 0) {
 									const startLat = parseFloat(course.map.startLatitude);
@@ -157,7 +174,7 @@ export default async function CourseDetailPage({ params }: { params: PageParams 
 
 								// 경로가 있으면 RouteMap 표시, 없으면 메시지 표시
 								if (route.length > 0) {
-									return <RouteMap route={route} height="h-48" />;
+									return <RouteMap route={route} pins={pins} height="h-48" />;
 								} else {
 									return (
 										<div className="bg-gray-100 h-full flex items-center justify-center">
