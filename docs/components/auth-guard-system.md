@@ -41,7 +41,6 @@ export default withGuestOnlyGuard(LoginPage);
 ### 🔓 Public Pages (누구나 접근 가능)
 
 - `/` - 메인 페이지
-- `/map` - 지도
 - `/search` - 검색
 - `/region` - 지역
 - `/theme` - 테마
