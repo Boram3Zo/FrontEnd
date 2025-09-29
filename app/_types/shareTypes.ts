@@ -9,4 +9,6 @@ export interface ShareFormData {
 export interface ThemeOption {
 	emoji: string;
 	label: string;
+	color?: string;
+	gradient?: string;
 }

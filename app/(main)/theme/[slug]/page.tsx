@@ -179,7 +179,7 @@ export default function ThemeCoursesPage({ params }: { params: PageParams }) {
 									{THEME_OPTIONS.filter(theme => theme.label !== decodeURIComponent(slug)).map((theme) => (
 										<Link key={theme.label} href={`/theme/${theme.label}`}>
 											<Card className="p-4 cursor-pointer transition-all duration-200 hover:shadow-lg hover:bg-gray-50">
-												<div className="bg-gradient-to-r from-purple-400 to-pink-500 rounded-lg p-3 text-white mb-3">
+												<div className={`bg-gradient-to-r ${theme.gradient || 'from-purple-400 to-pink-500'} rounded-lg p-3 text-white mb-3`}>
 													<div className="text-center">
 														<span className="text-2xl block mb-1">{theme.emoji}</span>
 													</div>

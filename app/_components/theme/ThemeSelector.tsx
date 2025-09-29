@@ -15,6 +15,29 @@ export function ThemeSelector({ onThemeSelect, selectedTheme }: ThemeSelectorPro
 		onThemeSelect?.(newSelection);
 	};
 
+	const getSelectedStyle = (themeLabel: string) => {
+		const theme = THEME_OPTIONS.find(t => t.label === themeLabel);
+		if (!theme) return 'ring-2 ring-purple-500 bg-purple-50';
+		
+		// 테마별 선택 스타일 반환
+		switch (theme.label) {
+			case '고양이':
+				return 'ring-2 ring-orange-500 bg-orange-50';
+			case '벚꽃':
+				return 'ring-2 ring-pink-500 bg-pink-50';
+			case '한옥':
+				return 'ring-2 ring-purple-500 bg-purple-50';
+			case '바다':
+				return 'ring-2 ring-blue-500 bg-blue-50';
+			case '숲길':
+				return 'ring-2 ring-green-500 bg-green-50';
+			case '일출':
+				return 'ring-2 ring-amber-500 bg-amber-50';
+			default:
+				return 'ring-2 ring-gray-500 bg-gray-50';
+		}
+	};
+
 	return (
 		<div className="px-4">
 			<div className="mb-4">
@@ -28,12 +51,12 @@ export function ThemeSelector({ onThemeSelect, selectedTheme }: ThemeSelectorPro
 						key={theme.label}
 						className={`p-4 cursor-pointer transition-all duration-200 hover:shadow-lg ${
 							selectedTheme === theme.label
-								? 'ring-2 ring-purple-500 bg-purple-50'
+								? getSelectedStyle(theme.label)
 								: 'hover:bg-gray-50'
 						}`}
 						onClick={() => handleThemeClick(theme.label)}
 					>
-						<div className={`bg-gradient-to-r from-purple-400 to-pink-500 rounded-lg p-3 text-white mb-3`}>
+						<div className={`bg-gradient-to-r ${theme.gradient || 'from-purple-400 to-pink-500'} rounded-lg p-3 text-white mb-3`}>
 							<div className="text-center">
 								<span className="text-2xl block mb-1">{theme.emoji}</span>
 								<span className="text-xs font-medium"></span>

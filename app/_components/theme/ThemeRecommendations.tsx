@@ -34,7 +34,7 @@ export function ThemeRecommendations() {
 				{recommendedThemes.map((theme) => (
 					<Card key={theme.label} className="overflow-hidden shadow-xl">
 						{/* Theme header */}
-						<div className="bg-gradient-to-r from-blue-500 to-purple-600 p-6 text-white">
+						<div className={`bg-gradient-to-r ${theme.gradient || 'from-blue-500 to-purple-600'} p-6 text-white`}>
 							<div className="flex items-center gap-3 mb-3">
 								<span className="text-3xl">{theme.emoji}</span>
 								<div>

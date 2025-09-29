@@ -5,12 +5,42 @@ import { ThemeOption } from "@/app/_types/shareTypes";
  * ShareThemeSelection과 동일한 테마를 사용하여 일관성을 유지합니다.
  */
 export const THEME_OPTIONS: ThemeOption[] = [
-	{ emoji: "🐱", label: "고양이" },
-	{ emoji: "🌸", label: "벚꽃" },
-	{ emoji: "🏠", label: "한옥" },
-	{ emoji: "🌊", label: "바다" },
-	{ emoji: "🌲", label: "숲길" },
-	{ emoji: "🌅", label: "일출" },
+	{ 
+		emoji: "🐱", 
+		label: "고양이",
+		color: "#f97316",
+		gradient: "from-orange-400 to-yellow-500"
+	},
+	{ 
+		emoji: "🌸", 
+		label: "벚꽃",
+		color: "#ec4899",
+		gradient: "from-pink-400 to-rose-500"
+	},
+	{ 
+		emoji: "🏠", 
+		label: "한옥",
+		color: "#a855f7",
+		gradient: "from-purple-400 to-indigo-500"
+	},
+	{ 
+		emoji: "🌊", 
+		label: "바다",
+		color: "#3b82f6",
+		gradient: "from-blue-400 to-cyan-500"
+	},
+	{ 
+		emoji: "🌲", 
+		label: "숲길",
+		color: "#22c55e",
+		gradient: "from-green-400 to-emerald-500"
+	},
+	{ 
+		emoji: "🌅", 
+		label: "일출",
+		color: "#f59e0b",
+		gradient: "from-amber-400 to-orange-500"
+	},
 ];
 
 /**
