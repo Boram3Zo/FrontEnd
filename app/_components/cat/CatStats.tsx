@@ -6,7 +6,7 @@ export function CatStats() {
 		discoveredCats: 13, // Actual number of discovered cats
 		remainingCats: 9, // total - discovered = remaining
 		recentDiscovery: "2024.01.15", // Most recent discovery date from the data
-		recentSpot: "한강공원", // Most frequent discovery location
+		favoriteSpot: "한강공원", // Most frequent discovery location
 	};
 
 	return (
@@ -37,8 +37,8 @@ export function CatStats() {
 
 				<Card className="p-4 text-center bg-gradient-to-br from-green-100 to-emerald-100 border-green-200">
 					<MapPin className="h-5 w-5 text-green-500 mx-auto mb-1" />
-					<div className="text-xs text-gray-600">최근 만난 곳</div>
-					<div className="text-sm font-medium text-green-600">{stats.recentSpot}</div>
+					<div className="text-xs text-gray-600">자주 만나는 곳</div>
+					<div className="text-sm font-medium text-green-600">{stats.favoriteSpot}</div>
 				</Card>
 			</div>
 		</div>
