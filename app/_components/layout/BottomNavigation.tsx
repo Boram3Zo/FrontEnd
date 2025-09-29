@@ -1,6 +1,6 @@
 "use client";
 
-import { Home, Search, User } from "lucide-react";
+import { Home, Search, Map, User } from "lucide-react";
 import { Button } from "@/app/_components/ui/Button";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -30,16 +30,29 @@ export function BottomNavigation() {
 					</Button>
 				</Link>
 
-				<button
-					onClick={() => window.dispatchEvent(new Event("focusGlobalSearch"))}
-					aria-label="검색 열기"
-					className={`flex flex-col items-center gap-1 py-3 px-4 btn-unstyled ${
-						isActive("/search") ? "text-orange-500" : "text-gray-600"
-					}`}
-				>
-					<Search className="h-5 w-5" />
-					<span className="text-xs">검색</span>
-				</button>
+				<Link href="/search">
+					<Button
+						variant="ghost"
+						className={`flex flex-col items-center gap-1 py-3 px-4 ${
+							isActive("/search") ? "text-orange-500" : "text-gray-600"
+						}`}
+					>
+						<Search className="h-5 w-5" />
+						<span className="text-xs">검색</span>
+					</Button>
+				</Link>
+
+				<Link href="/map">
+					<Button
+						variant="ghost"
+						className={`flex flex-col items-center gap-1 py-3 px-4 ${
+							isActive("/map") ? "text-orange-500" : "text-gray-600"
+						}`}
+					>
+						<Map className="h-5 w-5" />
+						<span className="text-xs">지도</span>
+					</Button>
+				</Link>
 
 				<Link href="/my">
 					<Button
