@@ -70,5 +70,20 @@ export const yongsanGu: Region = {
       name: "한남동",
       neighborhoods: ["한남동"],
     },
+    {
+      id: "bogwang",
+      name: "보광동",
+      neighborhoods: ["보광동"],
+    },
+    {
+      id: "cheongpa",
+      name: "청파동",
+      neighborhoods: ["청파동"],
+    },
+    {
+      id: "wonhyo",
+      name: "원효동",
+      neighborhoods: ["원효동"],
+    },
   ],
 };
