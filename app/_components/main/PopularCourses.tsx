@@ -16,7 +16,7 @@ export function PopularCourses() {
 		const loadPopularCourses = async () => {
 			try {
 				setLoading(true);
-				const response = await getPostList(1, 5); // 인기 코스 5개만 가져오기
+				const response = await getPostList(0, 5); // 인기 코스 5개만 가져오기
 				const popularCourses = response.data.boardPage.content.map(convertPostToPopularCourse);
 
 				setCourses(popularCourses);
