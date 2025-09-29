@@ -47,7 +47,10 @@ export function Header() {
 			<div className="px-4 pb-3">
 				<div className="relative">
 					<Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-					<Input placeholder="키워드로 산책 코스를 찾아보세요" className="pl-10 bg-muted/50 border-0 rounded-full" />
+					<Input
+						placeholder="제목 키워드로 산책 코스를 찾아보세요"
+						className="pl-10 bg-muted/50 border-0 rounded-full"
+					/>
 				</div>
 			</div>
 
@@ -126,7 +129,10 @@ function HeaderContent({ onMenuClick }: { onMenuClick: () => void }) {
 			<div className="px-4 pb-3">
 				<div className="relative">
 					<Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-					<Input placeholder="키워드로 산책 코스를 찾아보세요" className="pl-10 bg-muted/50 border-0 rounded-full" />
+					<Input
+						placeholder="제목 키워드로 산책 코스를 찾아보세요"
+						className="pl-10 bg-muted/50 border-0 rounded-full"
+					/>
 				</div>
 			</div>
 
