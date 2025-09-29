@@ -44,9 +44,6 @@ export function ThemeRecommendations() {
 							</div>
 							<div className="flex items-center justify-between">
 								<span className="text-sm text-white/90">다양한 코스 준비 중</span>
-								<Button variant="secondary" size="sm" className="bg-white/20 hover:bg-white/30 text-white border-0">
-									관심 테마
-								</Button>
 							</div>
 						</div>
 
