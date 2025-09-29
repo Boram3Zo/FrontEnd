@@ -1,9 +1,13 @@
+"use client";
+
+import { useState, useEffect } from "react";
 import { Header } from "@/app/_components/layout/Header";
 import { BottomNavigation } from "@/app/_components/layout/BottomNavigation";
 import { CatCharacter } from "@/app/_components/cat/CatCharacter";
 import { Card } from "@/app/_components/ui/Card";
 import { Button } from "@/app/_components/ui/Button";
 import { THEME_OPTIONS } from "@/app/_constants/themes";
+import { fetchAllThemePostCounts } from "@/app/_libs/themes";
 import Link from "next/link";
 
 // ThemeOption을 확장하여 추가 정보 포함
@@ -17,16 +21,18 @@ interface ExtendedTheme {
 	tags: string[];
 }
 
-// THEME_OPTIONS를 기반으로 확장된 테마 데이터 생성
-const ALL_THEMES: ExtendedTheme[] = THEME_OPTIONS.map((theme, index) => ({
-	id: theme.label.toLowerCase().replace(/\s+/g, '-'),
-	emoji: theme.emoji,
-	label: theme.label,
-	description: getThemeDescription(theme.label),
-	color: getThemeColor(index),
-	courseCount: Math.floor(Math.random() * 30) + 10, // 임시 코스 개수
-	tags: getThemeTags(theme.label),
-}));
+// 실제 DB 데이터를 사용하여 테마 데이터 생성
+function createExtendedThemes(postCounts: Record<string, number>): ExtendedTheme[] {
+	return THEME_OPTIONS.map((theme, index) => ({
+		id: theme.label.toLowerCase().replace(/\s+/g, '-'),
+		emoji: theme.emoji,
+		label: theme.label,
+		description: getThemeDescription(theme.label),
+		color: getThemeColor(index),
+		courseCount: postCounts[theme.label] || 0, // 실제 DB에서 가져온 포스트 개수
+		tags: getThemeTags(theme.label),
+	}));
+}
 
 function getThemeDescription(label: string): string {
 	const descriptions: Record<string, string> = {
@@ -65,6 +71,51 @@ function getThemeTags(label: string): string[] {
 }
 
 export default function AllThemesPage() {
+	const [allThemes, setAllThemes] = useState<ExtendedTheme[]>([]);
+	const [loading, setLoading] = useState(true);
+	const [error, setError] = useState<string | null>(null);
+
+	useEffect(() => {
+		const loadThemeData = async () => {
+			setLoading(true);
+			setError(null);
+			
+			try {
+				console.log('[AllThemePage] Loading theme post counts...');
+				const postCounts = await fetchAllThemePostCounts();
+				const themes = createExtendedThemes(postCounts);
+				setAllThemes(themes);
+				console.log('[AllThemePage] Theme data loaded successfully:', themes);
+			} catch (err) {
+				console.error('[AllThemePage] Error loading theme data:', err);
+				setError('테마 정보를 불러오는데 실패했습니다.');
+				// 에러 시 기본값으로 0개 설정
+				const defaultThemes = createExtendedThemes({});
+				setAllThemes(defaultThemes);
+			} finally {
+				setLoading(false);
+			}
+		};
+
+		loadThemeData();
+	}, []);
+
+	if (loading) {
+		return (
+			<div className="min-h-screen bg-gradient-to-b from-purple-50 to-pink-50">
+				<Header />
+				<main className="pb-20 px-4 py-8">
+					<div className="text-center">
+						<CatCharacter size="lg" animation="bounce" />
+						<h3 className="text-lg font-bold text-gray-800 mt-4 mb-2">테마 정보를 불러오는 중...</h3>
+						<p className="text-gray-600">잠시만 기다려주세요</p>
+					</div>
+				</main>
+				<BottomNavigation />
+			</div>
+		);
+	}
+
 	return (
 		<div className="min-h-screen bg-gradient-to-b from-purple-50 to-pink-50">
 			<Header />
@@ -81,16 +132,22 @@ export default function AllThemesPage() {
 
 				{/* Stats */}
 				<div className="px-4 py-6">
+					{error && (
+						<div className="text-center mb-4 p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
+							<p className="text-sm text-yellow-700">{error}</p>
+						</div>
+					)}
+					
 					<div className="text-center mb-6">
-						<h2 className="text-xl font-bold text-gray-800 mb-2">총 {ALL_THEMES.length}개의 다양한 테마</h2>
+						<h2 className="text-xl font-bold text-gray-800 mb-2">총 {allThemes.length}개의 다양한 테마</h2>
 						<p className="text-sm text-gray-600">
-							{ALL_THEMES.reduce((sum, theme) => sum + theme.courseCount, 0)}개의 산책 코스가 기다리고 있어요
+							{allThemes.reduce((sum: number, theme: ExtendedTheme) => sum + theme.courseCount, 0)}개의 산책 코스가 기다리고 있어요
 						</p>
 					</div>
 
 					{/* Theme grid */}
 					<div className="grid grid-cols-1 gap-4">
-						{ALL_THEMES.map(theme => (
+						{allThemes.map((theme: ExtendedTheme) => (
 							<Card key={theme.id} className="overflow-hidden shadow-md hover:shadow-lg transition-shadow">
 								<div className={`bg-gradient-to-r ${theme.color} p-4`}>
 									<div className="flex items-center justify-between text-white">
@@ -117,7 +174,7 @@ export default function AllThemesPage() {
 									</div>
 
 									<div className="flex flex-wrap gap-1 mb-4">
-										{theme.tags.map(tag => (
+										{theme.tags.map((tag: string) => (
 											<span key={tag} className="text-xs px-2 py-1 bg-gray-50 text-gray-600 rounded">
 												#{tag}
 											</span>

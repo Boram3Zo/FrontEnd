@@ -6,6 +6,8 @@
 } from "@/app/_types/theme";
 import { convertPostToPopularCourse, type PopularCourse as PostPopularCourse } from "./postService";
 import { API_ENDPOINTS, getApiUrl } from "@/app/_constants/api";
+import { THEME_OPTIONS } from "@/app/_constants/themes";
+import type { ThemeOption } from "@/app/_types/shareTypes";
 
 // Mock 데이터 제거 - 순수 DB API 전용
 
@@ -177,4 +179,80 @@ export async function getThemesByCategory(category: string): Promise<Theme[]> {
 		console.error('getThemesByCategory failed:', error);
 		return [];
 	}
+}
+
+/**
+ * 특정 테마의 포스트 개수를 가져옵니다
+ */
+export async function fetchPostCountByTheme(themeId: string): Promise<number> {
+	console.log(`[fetchPostCountByTheme] Fetching post count for theme: "${themeId}"`);
+	
+	try {
+		// 포스트 개수를 가져오기 위해 size를 1로 설정하고 전체 개수 정보를 확인
+		const url = getApiUrl(API_ENDPOINTS.POSTS_BY_THEME(themeId, 1));
+		console.log(`[fetchPostCountByTheme] API URL: ${url}`);
+		
+		const controller = new AbortController();
+		const timeoutId = setTimeout(() => controller.abort(), 10000);
+		
+		const response = await fetch(url, {
+			signal: controller.signal,
+			headers: {
+				'Content-Type': 'application/json',
+			}
+		});
+		
+		clearTimeout(timeoutId);
+		
+		if (!response.ok) {
+			throw new Error(`테마별 포스트 개수 API 호출 실패: ${response.status} ${response.statusText}`);
+		}
+		
+		const data = await response.json();
+		console.log(`[fetchPostCountByTheme] API response:`, data);
+		
+		// API 응답에서 전체 개수 정보 추출
+		if (data?.success && data?.data?.boardPage?.totalElements !== undefined) {
+			const count = data.data.boardPage.totalElements;
+			console.log(`[fetchPostCountByTheme] Found ${count} posts for theme "${themeId}"`);
+			return count;
+		} else {
+			console.warn(`[fetchPostCountByTheme] Unexpected API response structure for theme ${themeId}:`, data);
+			return 0;
+		}
+		
+	} catch (error) {
+		console.error(`[fetchPostCountByTheme] Error fetching post count for theme "${themeId}":`, error);
+		return 0;
+	}
+}
+
+/**
+ * 모든 테마의 포스트 개수를 가져옵니다
+ */
+export async function fetchAllThemePostCounts(): Promise<Record<string, number>> {
+	console.log(`[fetchAllThemePostCounts] Fetching post counts for all themes`);
+	
+	const counts: Record<string, number> = {};
+	
+	// 모든 테마에 대해 병렬로 포스트 개수 조회
+	const promises = THEME_OPTIONS.map(async (theme: ThemeOption) => {
+		try {
+			const count = await fetchPostCountByTheme(theme.label);
+			return { theme: theme.label, count };
+		} catch (error) {
+			console.error(`Error fetching count for theme ${theme.label}:`, error);
+			return { theme: theme.label, count: 0 };
+		}
+	});
+	
+	const results = await Promise.all(promises);
+	
+	// 결과를 객체로 변환
+	results.forEach(({ theme, count }: { theme: string; count: number }) => {
+		counts[theme] = count;
+	});
+	
+	console.log(`[fetchAllThemePostCounts] All theme post counts:`, counts);
+	return counts;
 }
