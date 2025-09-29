@@ -68,20 +68,24 @@ export function AuthProvider({ children }: AuthProviderProps) {
 						nickname: userData.data.nickname,
 						email: userData.data.email,
 					});
+					console.log("✅ 사용자 인증 확인됨:", userData.data.nickname);
 				}
 				setIsLoggedIn(true);
 			} else if (response.status === 401) {
+				console.log("🔐 사용자 미인증 상태 (정상)");
 				setIsLoggedIn(false);
 				setUser(null);
 			} else if (response.status === 403) {
+				console.log("🚫 접근 권한 없음");
 				setIsLoggedIn(false);
 				setUser(null);
 			} else {
+				console.log(`⚠️ 예상치 못한 응답: ${response.status}`);
 				setIsLoggedIn(false);
 				setUser(null);
 			}
 		} catch (error) {
-			console.error("🚨 인증 상태 확인 실패:", error);
+			console.log("인증 상태 확인 중 네트워크 오류:", error);
 
 			// 네트워크 에러 등의 경우
 			if (error instanceof TypeError && error.message.includes("fetch")) {

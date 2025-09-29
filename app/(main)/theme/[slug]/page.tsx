@@ -9,7 +9,7 @@ import { Button } from "@/app/_components/ui/Button";
 import { MapPin, Clock, Users, Star, ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import { SafeImage } from "@/app/_components/ui/SafeImage";
-import { getExtendedThemeInfo } from "@/app/_constants/themes";
+import { getExtendedThemeInfo, THEME_OPTIONS } from "@/app/_constants/themes";
 import { fetchCoursesByTheme } from "@/app/_libs/themes";
 import type { PopularCourse } from "@/app/_types/post";
 
@@ -45,8 +45,10 @@ export default function ThemeCoursesPage({ params }: { params: PageParams }) {
 			setError(null);
 			
 			try {
-				console.log(`[Client] Calling fetchCoursesByTheme for theme: ${slug}`);
-				const fetchedCourses = await fetchCoursesByTheme(slug, 100);
+				// URL 인코딩된 slug를 디코딩
+				const decodedSlug = decodeURIComponent(slug);
+				console.log(`[Client] Calling fetchCoursesByTheme for theme: ${slug} (decoded: ${decodedSlug})`);
+				const fetchedCourses = await fetchCoursesByTheme(decodedSlug, 100);
 				console.log(`[Client] fetchCoursesByTheme returned ${fetchedCourses.length} courses:`, fetchedCourses);
 				setCourses(fetchedCourses);
 			} catch (err) {
@@ -62,8 +64,8 @@ export default function ThemeCoursesPage({ params }: { params: PageParams }) {
 		loadCourses();
 	}, [slug]);
 
-	// 테마 정보 가져오기
-	const themeInfo = slug ? getExtendedThemeInfo(slug) : null;
+	// 테마 정보 가져오기 (URL 디코딩된 slug 사용)
+	const themeInfo = slug ? getExtendedThemeInfo(decodeURIComponent(slug)) : null;
 	
 	// 테마가 존재하지 않는 경우
 	if (slug && !themeInfo) {
@@ -153,13 +155,46 @@ export default function ThemeCoursesPage({ params }: { params: PageParams }) {
 							</Button>
 						</div>
 					) : courses.length === 0 ? (
-						<div className="text-center py-12">
-							<CatCharacter size="lg" animation="wiggle" />
-							<h3 className="text-lg font-bold text-gray-800 mt-4 mb-2">아직 코스가 없어요</h3>
-							<p className="text-gray-600 mb-6">{themeInfo.name} 테마의 첫 번째 코스를 만들어보시겠어요?</p>
-							<Link href="/walk">
-								<Button>코스 만들기</Button>
-							</Link>
+						<div className="space-y-8">
+							{/* 코스가 없을 때 메시지 */}
+							<div className="text-center py-8">
+								<CatCharacter size="lg" animation="wiggle" />
+								<h3 className="text-lg font-bold text-gray-800 mt-4 mb-2">아직 코스가 없어요</h3>
+								<p className="text-gray-600 mb-6">{themeInfo.name} 테마의 첫 번째 코스를 만들어보시겠어요?</p>
+								<div className="flex gap-2 justify-center">
+									<Link href="/walk">
+										<Button>코스 만들기</Button>
+									</Link>
+								</div>
+							</div>
+
+							{/* 다른 테마 둘러보기 섹션 */}
+							<div className="px-4">
+								<div className="mb-4">
+									<h3 className="text-lg font-bold text-gray-800 mb-2">다른 테마 둘러보기</h3>
+									<p className="text-sm text-gray-600">관심있는 다른 테마의 코스를 확인해보세요</p>
+								</div>
+
+								<div className="grid grid-cols-2 gap-3">
+									{THEME_OPTIONS.filter(theme => theme.label !== decodeURIComponent(slug)).map((theme) => (
+										<Link key={theme.label} href={`/theme/${theme.label}`}>
+											<Card className="p-4 cursor-pointer transition-all duration-200 hover:shadow-lg hover:bg-gray-50">
+												<div className="bg-gradient-to-r from-purple-400 to-pink-500 rounded-lg p-3 text-white mb-3">
+													<div className="text-center">
+														<span className="text-2xl block mb-1">{theme.emoji}</span>
+													</div>
+												</div>
+												<div className="text-center">
+													<h4 className="font-medium text-sm mb-1 text-gray-800">
+														{theme.label}
+													</h4>
+													<p className="text-xs text-gray-600">이 테마의 산책 코스</p>
+												</div>
+											</Card>
+										</Link>
+									))}
+								</div>
+							</div>
 						</div>
 					) : (
 						<div className="space-y-4">
