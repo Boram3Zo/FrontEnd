@@ -11,7 +11,7 @@ export const API_ENDPOINTS = {
 	// Post/Course related endpoints
 	POSTS: (page: number = 0, size: number = 20) => `/post/list?page=${page}&size=${size}`,
 	POST_BY_ID: (id: string) => `/post/${id}`,
-	POSTS_BY_REGION: (region: string) => `/post/region?page=0&regionName=${encodeURIComponent(region)}`,
+	POSTS_BY_REGION: (region: string, size: number = 50) => `/post/region?page=0&size=${size}&regionName=${encodeURIComponent(region)}`,
 	POPULAR_POSTS: "/post/popular",
 
 	// Theme related endpoints

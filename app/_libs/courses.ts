@@ -24,9 +24,11 @@ export async function fetchAllCourses(page: number = 0, size: number = 20): Prom
 /**
  * 특정 지역의 코스 가져오기 (DB API)
  */
-export async function fetchCoursesByRegion(region: string, limit: number = 10): Promise<PopularCourse[]> {
+export async function fetchCoursesByRegion(region: string, limit: number = 50): Promise<PopularCourse[]> {
 	try {
-		const url = getApiUrl(API_ENDPOINTS.POSTS_BY_REGION(region));
+		const url = getApiUrl(API_ENDPOINTS.POSTS_BY_REGION(region, limit));
+		console.log(`🔍 지역별 코스 요청: ${url} (요청 수량: ${limit}개)`);
+		
 		const response = await fetch(url);
 		
 		if (!response.ok) {
@@ -34,9 +36,13 @@ export async function fetchCoursesByRegion(region: string, limit: number = 10): 
 		}
 		
 		const data = await response.json();
+		console.log(`📊 서버에서 받은 데이터:`, data);
+		console.log(`📝 서버에서 받은 게시글 수: ${data.data?.boardPage?.content?.length || 0}개`);
+		
 		const regionCourses = (data.data?.boardPage?.content || [])
-			.slice(0, limit)
 			.map(convertPostToPopularCourse);
+		
+		console.log(`✅ 최종 변환된 코스 수: ${regionCourses.length}개 (DB에 12개 있다면 이 수치 확인!)`);
 		
 		return regionCourses;
 	} catch (error) {

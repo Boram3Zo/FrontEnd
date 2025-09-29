@@ -29,7 +29,7 @@ export default function RegionPage() {
 				</div>
 
 				{/* Course List Section */}
-				<RegionCourseList selectedRegion={selectedRegion} limit={2} />
+				<RegionCourseList selectedRegion={selectedRegion} limit={5} />
 			</main>
 
 			<BottomNavigation />

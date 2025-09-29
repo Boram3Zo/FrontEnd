@@ -14,16 +14,21 @@ interface RegionCourseListProps {
 	limit?: number;
 }
 
-export function RegionCourseList({ selectedRegion, limit = 4 }: RegionCourseListProps) {
+export function RegionCourseList({ selectedRegion, limit = 5 }: RegionCourseListProps) {
 	const router = useRouter();
 	const [courses, setCourses] = useState<PopularCourse[]>([]);
 	const [loading, setLoading] = useState(false);
 	const [error, setError] = useState<string | null>(null);
+	const [currentLimit, setCurrentLimit] = useState(limit);
+	const [hasMoreCourses, setHasMoreCourses] = useState(false);
+	const [allCourses, setAllCourses] = useState<PopularCourse[]>([]);
 
 	// 지역별 코스 로드
 	useEffect(() => {
 		if (!selectedRegion) {
 			setCourses([]);
+			setAllCourses([]);
+			setHasMoreCourses(false);
 			return;
 		}
 
@@ -32,11 +37,17 @@ export function RegionCourseList({ selectedRegion, limit = 4 }: RegionCourseList
 				setLoading(true);
 				setError(null);
 
-				// 서버 사이드 필터링을 통해 해당 지역의 코스만 가져옴
-				const regionCourses = await fetchCoursesByRegion(selectedRegion, limit * 2); // 여유분을 두어 더 많이 요청
+				// 서버 사이드 필터링을 통해 해당 지역의 모든 코스를 가져옴 (충분히 많이 요청)
+				const regionCourses = await fetchCoursesByRegion(selectedRegion, 50); // 최대 50개까지 가져옴
 				
-				// 결과를 limit만큼 제한
-				setCourses(regionCourses.slice(0, limit));
+				// 모든 코스를 저장
+				setAllCourses(regionCourses);
+				
+				// 현재 limit만큼만 표시
+				setCourses(regionCourses.slice(0, currentLimit));
+				
+				// 더 많은 코스가 있는지 확인
+				setHasMoreCourses(regionCourses.length > currentLimit);
 			} catch (err) {
 				console.error("지역 코스 로딩 실패:", err);
 				setError("코스를 불러오는데 실패했습니다.");
@@ -45,15 +56,22 @@ export function RegionCourseList({ selectedRegion, limit = 4 }: RegionCourseList
 			}
 		};
 
+		// 지역이 변경될 때 currentLimit 초기화
+		setCurrentLimit(limit);
 		loadRegionCourses();
 	}, [selectedRegion, limit]);
 
-	const handleViewMoreCourses = () => {
-		if (selectedRegion) {
-			router.push(`/region/${selectedRegion}`);
-		} else {
-			router.push("/region");
+	// currentLimit이 변경될 때 표시할 코스 업데이트
+	useEffect(() => {
+		if (allCourses.length > 0) {
+			setCourses(allCourses.slice(0, currentLimit));
+			setHasMoreCourses(allCourses.length > currentLimit);
 		}
+	}, [currentLimit, allCourses]);
+
+	// 더 많은 코스 보기 함수 (페이지 이동 대신 limit 증가)
+	const handleLoadMoreCourses = () => {
+		setCurrentLimit(prev => prev + 5); // 5개씩 추가로 표시
 	};
 
 	const handleCourseClick = (courseId: number | string) => {
@@ -76,7 +94,7 @@ export function RegionCourseList({ selectedRegion, limit = 4 }: RegionCourseList
 		);
 	}
 
-	if (loading) {
+	if (loading && courses.length === 0) {
 		return (
 			<div className="px-4">
 				<div className="flex items-center justify-between mb-4">
@@ -112,7 +130,9 @@ export function RegionCourseList({ selectedRegion, limit = 4 }: RegionCourseList
 		<div className="px-4">
 			<div className="flex items-center justify-between mb-4">
 				<h2 className="text-lg font-bold text-gray-800">{selectedRegion}의 산책 코스</h2>
-				<span className="text-sm text-gray-500">{courses.length}개 코스</span>
+				<span className="text-sm text-gray-500">
+					{courses.length}{allCourses.length > courses.length ? `/${allCourses.length}` : ''}개 코스
+				</span>
 			</div>
 
 			{courses.length === 0 ? (
@@ -187,12 +207,25 @@ export function RegionCourseList({ selectedRegion, limit = 4 }: RegionCourseList
 						))}
 					</div>
 
-					{/* Load more button - 코스가 limit보다 많을 가능성이 있을 때만 표시 */}
-					{courses.length === limit && (
+					{/* Load more button - 더 많은 코스가 있을 때만 표시 */}
+					{hasMoreCourses && (
 						<div className="text-center mt-4">
-							<Button variant="outline" className="px-6 bg-transparent text-sm" onClick={handleViewMoreCourses}>
-								{selectedRegion}의 더 많은 코스 보기
+							<Button 
+								variant="outline" 
+								className="px-6 bg-transparent text-sm" 
+								onClick={handleLoadMoreCourses}
+							>
+								더 많은 코스 보기 ({allCourses.length - courses.length}개 더)
 							</Button>
+						</div>
+					)}
+
+					{/* 모든 코스를 다 보여준 경우 */}
+					{!hasMoreCourses && allCourses.length > limit && (
+						<div className="text-center mt-4">
+							<p className="text-sm text-gray-500">
+								{selectedRegion}의 모든 코스를 확인했습니다 ✅
+							</p>
 						</div>
 					)}
 				</>
