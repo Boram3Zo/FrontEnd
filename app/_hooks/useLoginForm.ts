@@ -1,11 +1,10 @@
 import { useState, useEffect } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import { LoginFormData } from "@/app/_types/auth";
 import { validateLoginForm } from "@/app/_utils/validation";
 import { useAuth } from "@/app/_providers";
 
 export function useLoginForm() {
-	const router = useRouter();
 	const searchParams = useSearchParams();
 	const { login } = useAuth();
 	const [formData, setFormData] = useState<LoginFormData>({

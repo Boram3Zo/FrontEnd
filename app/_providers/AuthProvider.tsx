@@ -36,58 +36,58 @@ export function AuthProvider({ children }: AuthProviderProps) {
   const [isLoading, setIsLoading] = useState(true);
   const [user, setUser] = useState<UserProfile | null>(null);
 
-	const checkAuthStatus = async () => {
-		try {
-			setIsLoading(true);
-			const res = await fetch(`${API_BASE_URL}/member/profile`, {
-			method: "GET",
-			credentials: "include",
-			headers: { Accept: "application/json" },
-			});
+  const checkAuthStatus = async () => {
+    try {
+      setIsLoading(true);
+      const res = await fetch(`${API_BASE_URL}/member/profile`, {
+        method: "GET",
+        credentials: "include",
+        headers: { Accept: "application/json" },
+      });
 
-			if (!res.ok) {
-			setIsLoggedIn(false);
-			setUser(null);
-			return;
-			}
+      if (!res.ok) {
+        setIsLoggedIn(false);
+        setUser(null);
+        return;
+      }
 
-			const json: UserProfile = await res.json();
-			console.log("[AuthProvider.checkAuthStatus] 응답 JSON:", json);
+      const json: UserProfile = await res.json();
+      console.log("[AuthProvider.checkAuthStatus] 응답 JSON:", json);
 
-			if (json.memberId) {
-			setUser({
-				memberId: json.memberId,
-				name: json.name,
-				email: json.email,
-			});
-			setIsLoggedIn(true);
-			} else {
-			setIsLoggedIn(false);
-			setUser(null);
-			}
-		} catch (e) {
-			console.error("인증 상태 확인 중 오류:", e);
-			setIsLoggedIn(null);
-			setUser(null);
-		} finally {
-			setIsLoading(false);
-		}
-	};
+      if (json.memberId) {
+        setUser({
+          memberId: json.memberId,
+          name: json.name,
+          email: json.email,
+        });
+        setIsLoggedIn(true);
+      } else {
+        setIsLoggedIn(false);
+        setUser(null);
+      }
+    } catch (e) {
+      console.error("인증 상태 확인 중 오류:", e);
+      setIsLoggedIn(null);
+      setUser(null);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
-	const login = async (profile?: UserProfile | null) => {
-		console.log("[AuthProvider.login] 로그인 성공, 프로필:", profile);
-		if (profile && profile.memberId) {
-			setUser({
-				memberId: profile.memberId,
-				name: profile.name,
-				email: profile.email,
-			});
-			setIsLoggedIn(true);
-			return;
-		}
-		// 프로필을 못 받았으면 서버에서 다시 확인
-		await checkAuthStatus();
-	};
+  const login = async (profile?: UserProfile | null) => {
+    console.log("[AuthProvider.login] 로그인 성공, 프로필:", profile);
+    if (profile && profile.memberId) {
+      setUser({
+        memberId: profile.memberId,
+        name: profile.name,
+        email: profile.email,
+      });
+      setIsLoggedIn(true);
+      return;
+    }
+    // 프로필을 못 받았으면 서버에서 다시 확인
+    await checkAuthStatus();
+  };
 
   const logout = async () => {
     try {
@@ -107,12 +107,10 @@ export function AuthProvider({ children }: AuthProviderProps) {
     }
   };
 
-	useEffect(() => {
-	console.log("[Auth] mount");
-	checkAuthStatus().then(() => {
-		console.log("[Auth] isLoading:", isLoading, "isLoggedIn:", isLoggedIn, "user:", user);
-	});
-	}, []);
+  useEffect(() => {
+    console.log("[Auth] mount");
+    checkAuthStatus();
+  }, []); // 컴포넌트 마운트 시에만 실행
 
   const value: AuthContextType = {
     isLoggedIn,
