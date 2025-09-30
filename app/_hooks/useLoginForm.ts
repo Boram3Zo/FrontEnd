@@ -48,21 +48,26 @@ export function useLoginForm() {
 		setError("");
 
 		try {
-			// 세션 기반 인증: JSESSIONID 쿠키가 자동으로 설정됨 (credentials: 'include'로 처리)
+			// 실제 로그인 API 호출
+			const { AuthService } = await import("@/app/_libs/authService");
+			const response = await AuthService.login(formData.email, formData.password);
 
-			// 로그인 성공 후 상태를 즉시 업데이트
-			login(); // 먼저 상태를 true로 설정
+			console.log("로그인 응답:", response);
 
-			// 디버깅용: LocalStorage에 수동 로그인 플래그 설정
-			localStorage.setItem("manualLogin", "true");
+			if (response.success) {
+				// 로그인 성공 후 상태를 즉시 업데이트
+				login(); // 먼저 상태를 true로 설정
 
-			// 그 다음 쿠키 상태도 다시 확인
-			setTimeout(() => {
-				checkAuthStatus();
-			}, 100); // 쿠키 설정이 완료될 시간을 주기 위해 약간의 지연
+				// 그 다음 쿠키 상태도 다시 확인
+				setTimeout(() => {
+					checkAuthStatus();
+				}, 100); // 쿠키 설정이 완료될 시간을 주기 위해 약간의 지연
 
-			alert("로그인이 완료되었습니다!");
-			router.push("/"); // 메인 페이지로 이동
+				alert("로그인이 완료되었습니다!");
+				router.push("/"); // 메인 페이지로 이동
+			} else {
+				setError(response.message || "로그인에 실패했습니다.");
+			}
 		} catch (err) {
 			console.error("로그인 에러:", err);
 			setError(err instanceof Error ? err.message : "서버에 연결할 수 없습니다. 잠시 후 다시 시도해주세요.");
