@@ -73,9 +73,14 @@ export function convertRouteToJsonSpots(route: { lat: number; lng: number }[]): 
 export function convertPostToPopularCourse(
 	post: import("@/app/_types/post").Post
 ): import("@/app/_types/post").PopularCourse {
-	// 거리를 km 단위로 표시
-	const distanceKm =
-		typeof post.distance === "number" ? (post.distance / 1000).toFixed(1) + "km" : post.distance || "0km";
+	// 거리를 km 단위로 표시 - 안전한 처리
+	let distanceKm = "0km";
+	if (post.distance !== null && post.distance !== undefined) {
+		const numDistance = typeof post.distance === "string" ? parseFloat(post.distance) : post.distance;
+		if (!isNaN(numDistance)) {
+			distanceKm = numDistance >= 1 ? `${numDistance.toFixed(1)}km` : `${(numDistance * 1000).toFixed(0)}m`;
+		}
+	}
 
 	// 대표 이미지 URL 결정
 	const originalFilePath = post.photoList?.[0]?.filePath;

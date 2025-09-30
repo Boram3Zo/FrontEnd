@@ -116,7 +116,9 @@ export async function getCoursesByRegion(region: string): Promise<Course[]> {
 			title: course.title,
 			start: { lat: 37.5665, lng: 126.9780 }, // 기본 좌표 (실제로는 DB에서 가져와야 함)
 			spots: [],
-			distanceMeters: parseFloat(course.distance.replace('km', '')) * 1000,
+			distanceMeters: typeof course.distance === 'string' 
+				? parseFloat(course.distance.replace('km', '')) * 1000
+				: course.distance * 1000,
 			durationMinutes: parseInt(course.duration.split(':')[1]) || 0,
 		}));
 	} catch (error) {

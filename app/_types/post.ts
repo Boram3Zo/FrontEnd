@@ -175,7 +175,7 @@ export interface PopularCourse {
 	title: string;
 	region: string;
 	duration: string;
-	distance: string; // "2.1km" 형식
+	distance: string | number; // 문자열 또는 숫자 모두 허용
 	theme: string;
 	imageUrl: string; // 대표 이미지 URL
 	likeCount: number;

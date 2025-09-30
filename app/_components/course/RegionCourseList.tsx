@@ -83,6 +83,31 @@ export function RegionCourseList({
     router.push(`/course/${courseId}`);
   };
 
+  // 거리 포맷팅 함수 (search 페이지와 동일)
+  const formatDistance = (distance: number | string) => {
+    if (!distance) return "정보 없음";
+    const numDistance =
+      typeof distance === "string" ? parseFloat(distance) : distance;
+    if (isNaN(numDistance)) return "정보 없음";
+    if (numDistance >= 1) {
+      return `${numDistance.toFixed(1)}km`;
+    }
+    return `${(numDistance * 1000).toFixed(0)}m`;
+  };
+
+  // 시간 포맷팅 함수 (search 페이지와 동일)
+  const formatDuration = (duration: string) => {
+    if (!duration) return "정보 없음";
+    const parts = duration.split(":");
+    const hours = parseInt(parts[0]);
+    const minutes = parseInt(parts[1]);
+
+    if (hours > 0) {
+      return `${hours}시간 ${minutes}분`;
+    }
+    return `${minutes}분`;
+  };
+
   if (!selectedRegion) {
     return (
       <div className="px-4">
@@ -178,15 +203,15 @@ export function RegionCourseList({
                 className="p-4 bg-white shadow-md hover:shadow-lg transition-all duration-300 cursor-pointer"
                 onClick={() => handleCourseClick(course.id)}
               >
-                <div className="flex items-start gap-4">
+                <div className="flex items-center gap-3">
                   {/* Course image on the left */}
-                  <div className="w-20 h-20 bg-gradient-to-br from-green-200 to-green-400 rounded-lg overflow-hidden flex-shrink-0">
+                  <div className="w-16 h-16 bg-gradient-to-br from-green-200 to-green-400 rounded-lg overflow-hidden">
                     {course.imageUrl ? (
                       <SafeImage
                         src={course.imageUrl}
                         alt={course.title}
-                        width={80}
-                        height={80}
+                        width={64}
+                        height={64}
                         className="w-full h-full object-cover"
                       />
                     ) : (
@@ -198,34 +223,31 @@ export function RegionCourseList({
 
                   {/* Course information on the right */}
                   <div className="flex-1">
-                    <div className="flex items-start justify-between mb-2">
-                      <h3 className="font-bold text-gray-800 text-base leading-tight">
-                        {course.title}
-                      </h3>
-                      <div className="flex items-center gap-1 ml-2">
+                    <h3 className="text-sm font-semibold text-gray-800 mb-1 text-left">
+                      {course.title}
+                    </h3>
+                    <div className="flex items-center gap-3 text-xs text-gray-600 mb-1">
+                      <div className="flex items-center gap-1">
+                        <MapPin className="h-3 w-3" />
+                        <span>{course.region}</span>
+                      </div>
+                      <div className="flex items-center gap-1">
+                        <Clock className="h-3 w-3" />
+                        <span>{formatDuration(course.duration)}</span>
+                      </div>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-1">
+                        <span className="text-blue-500">📏</span>
+                        <span className="text-xs font-medium text-gray-800">
+                          {formatDistance(course.distance)}
+                        </span>
+                      </div>
+                      <div className="flex items-center gap-1">
                         <Heart className="h-3 w-3 text-gray-400" />
                         <span className="text-xs text-gray-500">
                           {course.likeCount}
                         </span>
-                      </div>
-                    </div>
-
-                    <div className="text-sm text-gray-600 mb-2">
-                      <div className="flex items-center gap-1 mb-1">
-                        <MapPin className="h-3 w-3" />
-                        <span className="text-xs">{course.region}</span>
-                      </div>
-                      <div className="flex items-center gap-4">
-                        <div className="flex items-center gap-1">
-                          <Clock className="h-3 w-3" />
-                          <span className="text-xs">{course.duration}</span>
-                        </div>
-                        <div className="flex items-center gap-1">
-                          <span className="text-blue-500">📏</span>
-                          <span className="text-xs font-medium">
-                            {course.distance}
-                          </span>
-                        </div>
                       </div>
                     </div>
                   </div>
