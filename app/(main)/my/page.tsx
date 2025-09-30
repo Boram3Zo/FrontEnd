@@ -10,15 +10,33 @@ import { CollectedCat } from "@/app/_components/cat/CollectedCat";
 import { withAuthGuard } from "@/app/_components/auth/AuthGuard";
 import { useRouter } from "next/navigation";
 
+import { useEffect } from "react";
+import { getMemberName } from "@/app/_libs/memberApiService";
+
 function MyPage() {
 	const [showCatSelection, setShowCatSelection] = useState(false);
 	const [selectedCatBreed, setSelectedCatBreed] = useState("코리안 숏헤어");
+	const [userName, setUserName] = useState<string>("");
 	const router = useRouter();
 
 	const handleCatChange = (breed: string) => {
 		setSelectedCatBreed(breed);
 		setShowCatSelection(false);
 	};
+
+	useEffect(() => {
+		// 현재 로그인한 유저 이름 요청
+		const fetchUserName = async () => {
+			try {
+				const name = await getMemberName();
+				setUserName(name || "");
+			} catch (err) {
+				console.error("유저 이름 로딩 실패:", err);
+				setUserName("");
+			}
+		};
+		fetchUserName();
+	}, []);
 
 	return (
 		<div className="min-h-screen bg-gradient-to-b from-purple-50 to-pink-50">
@@ -36,7 +54,7 @@ function MyPage() {
 						</button>
 					</div>
 
-					<h1 className="text-2xl font-bold text-gray-800 mb-2">고양이 탐험가</h1>
+					<h1 className="text-2xl font-bold text-gray-800 mb-2">{userName ? userName : "고양이 탐험가"}</h1>
 					<p className="text-gray-600 mb-4">길고양이처럼 자유롭게 탐험하는 산책러</p>
 
 					<div className="flex justify-center gap-4 mb-6">
@@ -97,25 +115,6 @@ function MyPage() {
 						</Card>
 					</div>
 				</div>
-
-				{/* Settings Menu */}
-				{/* <div className="space-y-2">
-					<h2 className="text-lg font-semibold text-gray-800 mb-3">설정</h2>
-
-					{[
-						{ icon: Bell, label: "알림 설정", color: "text-blue-500" },
-						{ icon: Settings, label: "앱 설정", color: "text-gray-500" },
-						{ icon: HelpCircle, label: "도움말", color: "text-green-500" },
-					].map((item, index) => (
-						<Card key={index} className="p-4 hover:bg-gray-50 cursor-pointer">
-							<div className="flex items-center gap-3">
-								<item.icon className={`h-5 w-5 ${item.color}`} />
-								<span className="text-gray-700">{item.label}</span>
-								<div className="ml-auto text-gray-400">›</div>
-							</div>
-						</Card>
-					))}
-				</div> */}
 			</main>
 
 			<BottomNavigation />

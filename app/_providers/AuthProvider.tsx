@@ -11,7 +11,7 @@ import { API_BASE_URL } from "@/app/_constants/api";
 
 interface UserProfile {
   memberId: number;
-  nickname?: string;
+  name?: string;
   email?: string;
   // 필요에 따라 다른 사용자 정보 추가
 }
@@ -20,7 +20,7 @@ interface AuthContextType {
   isLoggedIn: boolean | null;
   isLoading: boolean;
   user: UserProfile | null;
-  login: () => void;
+  login: (profile?: UserProfile | null) => Promise<void> | void;
   logout: () => Promise<void>;
   checkAuthStatus: () => Promise<void>;
 }
@@ -36,63 +36,58 @@ export function AuthProvider({ children }: AuthProviderProps) {
   const [isLoading, setIsLoading] = useState(true);
   const [user, setUser] = useState<UserProfile | null>(null);
 
-  const checkAuthStatus = async () => {
-    try {
-      setIsLoading(true);
+	const checkAuthStatus = async () => {
+		try {
+			setIsLoading(true);
+			const res = await fetch(`${API_BASE_URL}/member/profile`, {
+			method: "GET",
+			credentials: "include",
+			headers: { Accept: "application/json" },
+			});
 
-      // API를 통한 실제 인증 상태 확인
-      const response = await fetch(`${API_BASE_URL}/member/profile`, {
-        method: "GET",
-        credentials: "include", // HttpOnly 쿠키를 포함하여 요청
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-        },
-      });
+			if (!res.ok) {
+			setIsLoggedIn(false);
+			setUser(null);
+			return;
+			}
 
-      if (response.ok) {
-        const userData = await response.json();
+			const json: UserProfile = await res.json();
+			console.log("[AuthProvider.checkAuthStatus] 응답 JSON:", json);
 
-        // 사용자 정보 저장
-        if (userData.success && userData.data) {
-          setUser({
-            memberId: userData.data.memberId,
-            nickname: userData.data.nickname,
-            email: userData.data.email,
-          });
-          console.log("✅ 사용자 인증 확인됨:", userData.data.nickname);
-        }
-        setIsLoggedIn(true);
-      } else if (response.status === 401) {
-        console.log("🔐 사용자 미인증 상태 (정상)");
-        setIsLoggedIn(false);
-        setUser(null);
-      } else if (response.status === 403) {
-        console.log("🚫 접근 권한 없음");
-        setIsLoggedIn(false);
-        setUser(null);
-      } else {
-        console.log(`⚠️ 예상치 못한 응답: ${response.status}`);
-        setIsLoggedIn(false);
-        setUser(null);
-      }
-    } catch (error) {
-      console.log("인증 상태 확인 중 네트워크 오류:", error);
+			if (json.memberId) {
+			setUser({
+				memberId: json.memberId,
+				name: json.name,
+				email: json.email,
+			});
+			setIsLoggedIn(true);
+			} else {
+			setIsLoggedIn(false);
+			setUser(null);
+			}
+		} catch (e) {
+			console.error("인증 상태 확인 중 오류:", e);
+			setIsLoggedIn(null);
+			setUser(null);
+		} finally {
+			setIsLoading(false);
+		}
+	};
 
-      // 네트워크 에러 등의 경우
-      if (error instanceof TypeError && error.message.includes("fetch")) {
-        setIsLoggedIn(null);
-      } else {
-        setIsLoggedIn(false);
-      }
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const login = () => {
-    setIsLoggedIn(true);
-  };
+	const login = async (profile?: UserProfile | null) => {
+		console.log("[AuthProvider.login] 로그인 성공, 프로필:", profile);
+		if (profile && profile.memberId) {
+			setUser({
+				memberId: profile.memberId,
+				name: profile.name,
+				email: profile.email,
+			});
+			setIsLoggedIn(true);
+			return;
+		}
+		// 프로필을 못 받았으면 서버에서 다시 확인
+		await checkAuthStatus();
+	};
 
   const logout = async () => {
     try {
@@ -112,9 +107,12 @@ export function AuthProvider({ children }: AuthProviderProps) {
     }
   };
 
-  useEffect(() => {
-    checkAuthStatus();
-  }, []);
+	useEffect(() => {
+	console.log("[Auth] mount");
+	checkAuthStatus().then(() => {
+		console.log("[Auth] isLoading:", isLoading, "isLoggedIn:", isLoggedIn, "user:", user);
+	});
+	}, []);
 
   const value: AuthContextType = {
     isLoggedIn,

@@ -7,7 +7,7 @@ import { useAuth } from "@/app/_providers";
 export function useLoginForm() {
 	const router = useRouter();
 	const searchParams = useSearchParams();
-	const { checkAuthStatus, login } = useAuth();
+	const { login } = useAuth();
 	const [formData, setFormData] = useState<LoginFormData>({
 		email: "",
 		password: "",
@@ -54,19 +54,16 @@ export function useLoginForm() {
 
 			console.log("로그인 응답:", response);
 
-			if (response.success) {
-				// 로그인 성공 후 상태를 즉시 업데이트
-				login(); // 먼저 상태를 true로 설정
-
-				// 그 다음 쿠키 상태도 다시 확인
-				setTimeout(() => {
-					checkAuthStatus();
-				}, 100); // 쿠키 설정이 완료될 시간을 주기 위해 약간의 지연
-
-				alert("로그인이 완료되었습니다!");
-				router.push("/"); // 메인 페이지로 이동
+			// 1) 서버가 프로필을 반환하는 경우
+			if (response?.data?.memberId) {
+				await login({
+				memberId: response.data.memberId,
+				name: response.data.nickname,
+				email: response.data.email,
+				});
 			} else {
-				setError(response.message || "로그인에 실패했습니다.");
+				// 2) 200이지만 프로필을 안 주는 경우
+				await login(); // 내부에서 checkAuthStatus 호출
 			}
 		} catch (err) {
 			console.error("로그인 에러:", err);

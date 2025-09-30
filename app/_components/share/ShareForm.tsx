@@ -155,6 +155,8 @@ export function ShareForm({ postId: propsPostId }: ShareFormProps = {}) {
 		}
 
 		try {
+            // user 정보 로그 출력
+            console.log("[ShareForm] user 정보:", user);
 			// 로그인된 사용자 확인
 			if (!user || !user.memberId) {
 				alert("공유하려면 로그인해야 합니다.");
