@@ -9,37 +9,37 @@ export const THEME_OPTIONS: ThemeOption[] = [
 		emoji: "🐱", 
 		label: "고양이",
 		color: "#f97316",
-		gradient: "from-orange-400 to-yellow-500"
+		gradient: "from-orange-200 to-amber-200"
 	},
 	{ 
 		emoji: "🌸", 
 		label: "벚꽃",
 		color: "#ec4899",
-		gradient: "from-pink-400 to-rose-500"
+		gradient: "from-pink-200 to-rose-200"
 	},
 	{ 
 		emoji: "🏠", 
 		label: "한옥",
 		color: "#a855f7",
-		gradient: "from-purple-400 to-indigo-500"
+		gradient: "from-purple-200 to-indigo-200"
 	},
 	{ 
 		emoji: "🌊", 
 		label: "바다",
 		color: "#3b82f6",
-		gradient: "from-blue-400 to-cyan-500"
+		gradient: "from-blue-200 to-cyan-200"
 	},
 	{ 
 		emoji: "🌲", 
 		label: "숲길",
 		color: "#22c55e",
-		gradient: "from-green-400 to-emerald-500"
+		gradient: "from-green-200 to-emerald-200"
 	},
 	{ 
 		emoji: "🌅", 
 		label: "일출",
 		color: "#f59e0b",
-		gradient: "from-amber-400 to-orange-500"
+		gradient: "from-amber-200 to-orange-200"
 	},
 ];
 
