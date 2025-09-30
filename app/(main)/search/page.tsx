@@ -6,7 +6,8 @@ import { Card } from "@/app/_components/ui/Card";
 import { Input } from "@/app/_components/ui/Input";
 import { Button } from "@/app/_components/ui/Button";
 import { Search, MapPin, Clock, Heart, X } from "lucide-react";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
+import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { SafeImage } from "@/app/_components/ui/SafeImage";
 
@@ -50,43 +51,46 @@ interface SearchResponse {
 }
 
 export default function SearchPage() {
-  const [searchQuery, setSearchQuery] = useState("");
-  const [searchResults, setSearchResults] = useState<PostReadDTO[]>([]);
-  const [isSearching, setIsSearching] = useState(false);
-  const [hasSearched, setHasSearched] = useState(false);
-  const [recentSearches, setRecentSearches] = useState<string[]>([]);
-  const [searchKeyword, setSearchKeyword] = useState("");
+	const searchParams = useSearchParams();
+	const [searchQuery, setSearchQuery] = useState("");
+	const [searchResults, setSearchResults] = useState<PostReadDTO[]>([]);
+	const [isSearching, setIsSearching] = useState(false);
+	const [hasSearched, setHasSearched] = useState(false);
+	const [recentSearches, setRecentSearches] = useState<string[]>([]);
+	const [searchKeyword, setSearchKeyword] = useState("");
 
-  // 세션 스토리지에서 최근 검색어 불러오기
-  useEffect(() => {
-    const stored = sessionStorage.getItem("recentSearches");
-    if (stored) {
-      setRecentSearches(JSON.parse(stored));
-    }
-  }, []);
-
-  // 최근 검색어를 세션 스토리지에 저장
-  const saveRecentSearch = (query: string) => {
+	// 세션 스토리지에서 최근 검색어 불러오기
+	useEffect(() => {
+		const stored = sessionStorage.getItem("recentSearches");
+		if (stored) {
+			setRecentSearches(JSON.parse(stored));
+		}
+	}, []);  // 최근 검색어를 세션 스토리지에 저장
+  const saveRecentSearch = useCallback((query: string) => {
     if (!query.trim()) return;
 
     const trimmedQuery = query.trim();
-    const updated = [
-      trimmedQuery,
-      ...recentSearches.filter((item) => item !== trimmedQuery),
-    ].slice(0, 5);
-    setRecentSearches(updated);
-    sessionStorage.setItem("recentSearches", JSON.stringify(updated));
-  };
+    setRecentSearches(prevSearches => {
+      const updated = [
+        trimmedQuery,
+        ...prevSearches.filter((item) => item !== trimmedQuery),
+      ].slice(0, 5);
+      sessionStorage.setItem("recentSearches", JSON.stringify(updated));
+      return updated;
+    });
+  }, []);
 
   // 최근 검색어 삭제
-  const removeRecentSearch = (query: string) => {
-    const updated = recentSearches.filter((item) => item !== query);
-    setRecentSearches(updated);
-    sessionStorage.setItem("recentSearches", JSON.stringify(updated));
-  };
+  const removeRecentSearch = useCallback((query: string) => {
+    setRecentSearches(prevSearches => {
+      const updated = prevSearches.filter((item) => item !== query);
+      sessionStorage.setItem("recentSearches", JSON.stringify(updated));
+      return updated;
+    });
+  }, []);
 
   // 검색 API 호출
-  const performSearch = async (query: string) => {
+  const performSearch = useCallback(async (query: string) => {
     if (!query.trim()) return;
 
     setIsSearching(true);
@@ -128,7 +132,16 @@ export default function SearchPage() {
     } finally {
       setIsSearching(false);
     }
-  };
+  }, [saveRecentSearch]);
+
+  // URL 쿼리 파라미터에서 검색어 가져오기 및 자동 검색
+  useEffect(() => {
+    const queryFromUrl = searchParams.get("q");
+    if (queryFromUrl && queryFromUrl !== searchKeyword) {
+      setSearchQuery(queryFromUrl);
+      performSearch(queryFromUrl);
+    }
+  }, [searchParams, performSearch, searchKeyword]);
 
   // 엔터 키 검색
   const handleKeyPress = (e: React.KeyboardEvent) => {

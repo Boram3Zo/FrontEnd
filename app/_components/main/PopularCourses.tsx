@@ -90,6 +90,7 @@ export function PopularCourses() {
       <div className="space-y-2">
         {courses.length > 0 ? (
           courses.map((course) => (
+            <div className="space-y-2" key={course.id}>
             <Link key={course.id} href={`/course/${course.id}`}>
               <Card className="p-3 bg-white/90 backdrop-blur-sm shadow-md hover:shadow-lg transition-all duration-300 cursor-pointer">
                 <div className="flex items-center gap-3">
@@ -134,6 +135,7 @@ export function PopularCourses() {
                 </div>
               </Card>
             </Link>
+            </div>
           ))
         ) : (
           <Card className="p-4 text-center">

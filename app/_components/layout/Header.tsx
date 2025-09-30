@@ -11,6 +11,7 @@ import { MenuSidebar } from "./MenuSidebar";
 export function Header() {
 	const router = useRouter();
 	const [isMenuOpen, setIsMenuOpen] = useState(false);
+	const [searchQuery, setSearchQuery] = useState("");
 
 	const handleBackClick = () => {
 		router.back();
@@ -22,6 +23,16 @@ export function Header() {
 
 	const handleMenuClose = () => {
 		setIsMenuOpen(false);
+	};
+
+	const handleSearchKeyPress = (e: React.KeyboardEvent) => {
+		if (e.key === "Enter" && searchQuery.trim()) {
+			router.push(`/search?q=${encodeURIComponent(searchQuery.trim())}`);
+		}
+	};
+
+	const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+		setSearchQuery(e.target.value);
 	};
 
 	return (
@@ -47,7 +58,13 @@ export function Header() {
 			<div className="px-4 pb-3">
 				<div className="relative">
 					<Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-					<Input placeholder="키워드로 산책 코스를 찾아보세요" className="pl-10 bg-muted/50 border-0 rounded-full" />
+					<Input 
+						value={searchQuery}
+						onChange={handleSearchChange}
+						onKeyPress={handleSearchKeyPress}
+						placeholder="키워드로 산책 코스를 찾아보세요" 
+						className="pl-10 bg-muted/50 border-0 rounded-full" 
+					/>
 				</div>
 			</div>
 
@@ -98,9 +115,20 @@ export function HeaderWithMenuSidebar() {
 
 function HeaderContent({ onMenuClick }: { onMenuClick: () => void }) {
 	const router = useRouter();
+	const [searchQuery, setSearchQuery] = useState("");
 
 	const handleBackClick = () => {
 		router.back();
+	};
+
+	const handleSearchKeyPress = (e: React.KeyboardEvent) => {
+		if (e.key === "Enter" && searchQuery.trim()) {
+			router.push(`/search?q=${encodeURIComponent(searchQuery.trim())}`);
+		}
+	};
+
+	const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+		setSearchQuery(e.target.value);
 	};
 
 	return (
@@ -126,7 +154,13 @@ function HeaderContent({ onMenuClick }: { onMenuClick: () => void }) {
 			<div className="px-4 pb-3">
 				<div className="relative">
 					<Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-					<Input placeholder="키워드로 산책 코스를 찾아보세요" className="pl-10 bg-muted/50 border-0 rounded-full" />
+					<Input 
+						value={searchQuery}
+						onChange={handleSearchChange}
+						onKeyPress={handleSearchKeyPress}
+						placeholder="키워드로 산책 코스를 찾아보세요" 
+						className="pl-10 bg-muted/50 border-0 rounded-full" 
+					/>
 				</div>
 			</div>
 

@@ -46,15 +46,15 @@ export function useWalkingSession() {
 			const timer = setInterval(() => {
 				console.log("Checking for cat discovery...");
 				if (Math.random() > WALKING_CONSTANTS.CAT_DISCOVERY_THRESHOLD) {
-					const idx = Math.floor(Math.random() * MOCK_CATS.length);
-					const randomCat: Cat = {
-						...MOCK_CATS[idx],
+					// 항상 첫 번째 고양이 (치즈, id: 1)를 발견하도록 설정
+					const discoveredCat: Cat = {
+						...MOCK_CATS[0],
 						// override discovered date and location with current context
 						discoveredAt: "현재 위치",
 						discoveredDate: new Date().toLocaleDateString("ko-KR"),
 						isDiscovered: true,
 					};
-					setDiscoveredCat(randomCat);
+					setDiscoveredCat(discoveredCat);
 				}
 			}, WALKING_CONSTANTS.CAT_CHECK_INTERVAL_MS);
 
