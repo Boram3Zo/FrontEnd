@@ -19,8 +19,14 @@ export interface SignupRequest {
 }
 
 export interface AuthResponse {
+	success?: boolean;
 	message?: string;
 	token?: string;
+	data?: {
+		memberId: number;
+		nickname: string;
+		email: string;
+	};
 	user?: {
 		id: string;
 		name: string;
