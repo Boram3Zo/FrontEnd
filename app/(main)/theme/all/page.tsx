@@ -23,12 +23,12 @@ interface ExtendedTheme {
 
 // 실제 DB 데이터를 사용하여 테마 데이터 생성
 function createExtendedThemes(postCounts: Record<string, number>): ExtendedTheme[] {
-	return THEME_OPTIONS.map((theme, index) => ({
+	return THEME_OPTIONS.map((theme) => ({
 		id: theme.label.toLowerCase().replace(/\s+/g, '-'),
 		emoji: theme.emoji,
 		label: theme.label,
 		description: getThemeDescription(theme.label),
-		color: getThemeColor(index),
+		color: getThemeColor(theme.label),
 		courseCount: postCounts[theme.label] || 0, // 실제 DB에서 가져온 포스트 개수
 		tags: getThemeTags(theme.label),
 	}));
@@ -46,16 +46,10 @@ function getThemeDescription(label: string): string {
 	return descriptions[label] || `${label} 테마의 특별한 산책 코스`;
 }
 
-function getThemeColor(index: number): string {
-	const colors = [
-		"from-pink-400 to-rose-500",
-		"from-pink-400 to-purple-500", 
-		"from-amber-400 to-orange-500",
-		"from-blue-400 to-cyan-500",
-		"from-green-400 to-emerald-500",
-		"from-orange-400 to-red-500"
-	];
-	return colors[index % colors.length];
+function getThemeColor(label: string): string {
+	// THEME_OPTIONS에서 해당 테마의 그라데이션 찾기
+	const theme = THEME_OPTIONS.find(t => t.label === label);
+	return theme?.gradient || "from-purple-400 to-pink-500"; // 기본값
 }
 
 function getThemeTags(label: string): string[] {
