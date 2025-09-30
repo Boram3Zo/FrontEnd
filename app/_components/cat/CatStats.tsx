@@ -5,8 +5,8 @@ export function CatStats() {
 	const stats = {
 		discoveredCats: 13, // Actual number of discovered cats
 		remainingCats: 9, // total - discovered = remaining
-		recentDiscovery: "2024.01.15", // Most recent discovery date from the data
-		favoriteSpot: "한강공원", // Most frequent discovery location
+		recentDiscovery: "2025.10.01", // Most recent discovery date from the data
+		favoriteSpot: "코엑스", // Most frequent discovery location
 	};
 
 	return (
