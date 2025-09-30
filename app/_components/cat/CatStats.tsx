@@ -3,9 +3,9 @@ import { Trophy, MapPin, Clock, Search, Cat } from "lucide-react";
 
 export function CatStats() {
 	const stats = {
-		discoveredCats: 13, // Actual number of discovered cats
-		remainingCats: 9, // total - discovered = remaining
-		recentDiscovery: "2025.10.01", // Most recent discovery date from the data
+		discoveredCats: 12, // Actual number of discovered cats
+		remainingCats: 10, // total - discovered = remaining
+		recentDiscovery: "2025.09.29", // Most recent discovery date from the data
 		favoriteSpot: "코엑스", // Most frequent discovery location
 	};
 
