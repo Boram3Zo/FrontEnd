@@ -34,6 +34,7 @@ export interface Post {
 	hashtagList: string[];
 	map: PostMap;
 	photoList: PostPhoto[];
+	likeCount?: number; // 좋아요 수 (선택적 필드)
 }
 
 // ===== API 요청 타입 =====

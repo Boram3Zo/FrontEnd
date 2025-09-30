@@ -95,7 +95,7 @@ export function convertPostToPopularCourse(
 		distance: distanceKm,
 		theme: post.theme,
 		imageUrl: imageUrl,
-		likeCount: Math.floor(Math.random() * 500) + 50, // 임시 좋아요 수 (추후 실제 데이터로 교체)
+		likeCount: post.likeCount || 0, // 서버에서 likeCount가 없으면 0
 	};
 }
 
