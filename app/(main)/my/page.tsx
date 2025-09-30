@@ -11,12 +11,14 @@ import { withAuthGuard } from "@/app/_components/auth/AuthGuard";
 import { useRouter } from "next/navigation";
 
 import { useEffect } from "react";
-import { getMemberName } from "@/app/_libs/memberApiService";
+import { getMemberName, getMemberId  } from "@/app/_libs/memberApiService";
+import { getMyCourses } from "@/app/_libs/postService";
 
 function MyPage() {
 	const [showCatSelection, setShowCatSelection] = useState(false);
 	const [selectedCatBreed, setSelectedCatBreed] = useState("코리안 숏헤어");
 	const [userName, setUserName] = useState<string>("");
+	const [courseCount, setCourseCount] = useState<number>(0);
 	const router = useRouter();
 
 	const handleCatChange = (breed: string) => {
@@ -37,6 +39,26 @@ function MyPage() {
 		};
 		fetchUserName();
 	}, []);
+
+	useEffect(() => {
+    // 코스 개수 불러오기 (완주/내 코스 동일하게 표시)
+    const fetchCourseCount = async () => {
+      try {
+        const memberId = await getMemberId();
+
+        // 내 코스 불러오기
+        const myCoursesRes = await getMyCourses(memberId);
+        const myCourses = myCoursesRes.data ?? [];
+
+        setCourseCount(Array.isArray(myCourses) ? myCourses.length : 0);
+      } catch (err) {
+        console.error("마이페이지 코스 개수 로딩 실패:", err);
+        setCourseCount(0);
+	  }
+    };
+
+    fetchCourseCount();
+  }, []);
 
 	return (
 		<div className="min-h-screen bg-gradient-to-b from-purple-50 to-pink-50">
@@ -59,11 +81,11 @@ function MyPage() {
 
 					<div className="flex justify-center gap-4 mb-6">
 						<div className="text-center">
-							<div className="text-xl font-bold text-orange-600">47</div>
+							<div className="text-xl font-bold text-orange-600">{courseCount ? courseCount : "---"}</div>
 							<div className="text-xs text-gray-600">완주한 코스</div>
 						</div>
 						<div className="text-center">
-							<div className="text-xl font-bold text-pink-600">23</div>
+							<div className="text-xl font-bold text-pink-600">13</div>
 							<div className="text-xs text-gray-600">발견한 고양이</div>
 						</div>
 						<div className="text-center">
@@ -102,7 +124,7 @@ function MyPage() {
 						>
 							<MapPin className="h-6 w-6 text-orange-500 mx-auto mb-2" />
 							<div className="text-lg font-bold text-gray-800">내 코스</div>
-							<div className="text-sm text-gray-600">12개</div>
+							<div className="text-sm text-gray-600">{courseCount ? `${courseCount}개` : "---개" }</div>
 						</Card>
 
 						<Card
@@ -111,7 +133,7 @@ function MyPage() {
 						>
 							<Heart className="h-6 w-6 text-pink-500 mx-auto mb-2" />
 							<div className="text-lg font-bold text-gray-800">찜한 코스</div>
-							<div className="text-sm text-gray-600">28개</div>
+							<div className="text-sm text-gray-600">2개</div>
 						</Card>
 					</div>
 				</div>
