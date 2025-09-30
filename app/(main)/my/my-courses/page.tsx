@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 import { SafeImage } from "@/app/_components/ui/SafeImage";
 import { useEffect, useState } from "react";
 import { getMyCourses, convertPostToMyCourse } from "@/app/_libs/postService";
+import { getMemberId } from "@/app/_libs/memberApiService";
 import { withAuthGuard } from "@/app/_components/auth/AuthGuard";
 
 interface MyCourse {
@@ -27,12 +28,17 @@ function MyCoursesPage() {
 	const [error, setError] = useState<string | null>(null);
 
 	// 임시로 memberId를 1로 설정 (추후 실제 로그인 상태에서 가져와야 함)
-	const memberId = 1;
+	// const memberId = 1;
 
 	useEffect(() => {
 		const loadMyCourses = async () => {
 			try {
 				setLoading(true);
+
+				// 로그인한 유저의 memberId 가져오기
+				const memberId = await getMemberId();
+
+				 // 해당 유저의 코스 불러오기
 				const response = await getMyCourses(memberId);
 				const myCourses = response.data.map(convertPostToMyCourse);
 				setCourses(myCourses);
@@ -45,7 +51,7 @@ function MyCoursesPage() {
 		};
 
 		loadMyCourses();
-	}, [memberId]);
+	}, []);
 
 	if (loading) {
 		return (
