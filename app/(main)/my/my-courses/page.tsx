@@ -53,6 +53,17 @@ function MyCoursesPage() {
 		loadMyCourses();
 	}, []);
 
+	const formatDistance = (distance: number | string) => {
+    if (!distance) return "정보 없음";
+    const numDistance =
+      typeof distance === "string" ? parseFloat(distance) : distance;
+    if (isNaN(numDistance)) return "정보 없음";
+    if (numDistance >= 1) {
+      return `${numDistance.toFixed(1)}km`;
+    }
+    return `${(numDistance * 1000).toFixed(0)}m`;
+  };
+
 	if (loading) {
 		return (
 			<div className="min-h-screen bg-gray-50">
@@ -178,7 +189,7 @@ function MyCoursesPage() {
 													<Clock className="h-3 w-3" />
 													<span>{course.duration}</span>
 												</div>
-												<span>거리: {course.distance}</span>
+												<span>거리: {formatDistance(course.distance)}</span>
 											</div>
 										</div>
 										{course.content && <p className="text-xs text-gray-500 line-clamp-2">{course.content}</p>}
