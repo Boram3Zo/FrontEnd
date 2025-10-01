@@ -274,7 +274,12 @@ export function ShareForm({ postId: propsPostId }: ShareFormProps = {}) {
           region: actualRegion,
           content: formData.content,
           theme: formData.selectedTheme || "",
-          hashtags: formData.hashtags.length > 0 ? formData.hashtags : [],
+          hashtags:
+            formData.hashtags.length > 0
+              ? formData.hashtags.map((tag) =>
+                  tag.startsWith("#") ? tag.substring(1) : tag
+                )
+              : [],
         }
       );
 
