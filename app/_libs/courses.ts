@@ -42,7 +42,7 @@ export async function fetchCoursesByRegion(region: string, limit: number = 50): 
 		const regionCourses = (data.data?.boardPage?.content || [])
 			.map(convertPostToPopularCourse);
 		
-		console.log(`✅ 최종 변환된 코스 수: ${regionCourses.length}개 (DB에 12개 있다면 이 수치 확인!)`);
+		console.log(`✅ 최종 변환된 코스 수: ${regionCourses.length}개`);
 		
 		return regionCourses;
 	} catch (error) {

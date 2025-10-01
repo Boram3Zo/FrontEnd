@@ -170,6 +170,7 @@ export function convertPostToMyCourse(post: import("@/app/_types/post").Post) {
 		theme: post.theme,
 		content: post.content,
 		photoList: post.photoList,
+		likeCount: post.likeCount || 0, // 서버에서 likeCount가 없으면 0
 	};
 }
 
