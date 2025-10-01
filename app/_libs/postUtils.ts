@@ -99,13 +99,63 @@ export function convertPostToPopularCourse(
 	};
 }
 
+// ✅ 유닛/형식을 안전하게 정규화
+function toDistanceText(dist: unknown): string {
+  if (dist === null || dist === undefined) return "정보 없음";
+
+  // 문자열인 경우
+  if (typeof dist === "string") {
+    const s = dist.trim();
+
+    // 이미 단위가 붙어 있으면(1.2km, 850m 등) 공백만 제거하고 그대로 사용
+    if (/^\d+(\.\d+)?\s*(km|m)$/i.test(s)) {
+      return s.replace(/\s+/g, "");
+    }
+
+    // 숫자 문자열이면 숫자로 파싱해서 처리
+    const n = Number(s);
+    if (Number.isFinite(n)) {
+      return formatDistanceNumber(n);
+    }
+    return "정보 없음";
+  }
+
+  // 숫자인 경우
+  if (typeof dist === "number" && Number.isFinite(dist)) {
+    return formatDistanceNumber(dist);
+  }
+
+  return "정보 없음";
+}
+
+// 숫자(단위 불명)를 휴리스틱으로 포맷
+function formatDistanceNumber(n: number): string {
+  // 1000 이상이면 보통 '미터'라고 보고 km로 변환
+  if (n >= 1000) {
+    return (n / 1000).toFixed(1) + "km";
+  }
+
+  // 100~999면 '미터'로 표기
+  if (n >= 100) {
+    return Math.round(n) + "m";
+  }
+
+  // 1~99: 보통 '킬로미터' (예: 1.2 → 1.2km, 10 → 10.0km)
+  if (n >= 1) {
+    return n.toFixed(1) + "km";
+  }
+
+  // 1 미만 숫자면 km의 소수(예: 0.8 → 800m)
+  return Math.round(n * 1000) + "m";
+}
+
+
 /**
  * Post 데이터를 내 코스 UI용 형태로 변환
  */
 export function convertPostToMyCourse(post: import("@/app/_types/post").Post) {
-	// 거리를 km 단위로 표시
-	const distanceKm =
-		typeof post.distance === "number" ? (post.distance / 1000).toFixed(1) + "km" : post.distance + "km";
+	
+	const distanceText = toDistanceText(post.distance);
 
 	// 대표 이미지 URL 결정
 	const imageUrl = getImageUrl(post.photoList?.[0]?.filePath);
@@ -115,11 +165,12 @@ export function convertPostToMyCourse(post: import("@/app/_types/post").Post) {
 		title: post.title,
 		location: post.region,
 		duration: formatDurationForDisplay(post.duration),
-		distance: distanceKm,
+		distance: distanceText,
 		imageUrl: imageUrl,
 		theme: post.theme,
 		content: post.content,
 		photoList: post.photoList,
+		likeCount: post.likeCount || 0, // 서버에서 likeCount가 없으면 0
 	};
 }
 

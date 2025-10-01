@@ -11,18 +11,32 @@ import { withAuthGuard } from "@/app/_components/auth/AuthGuard";
 import { useRouter } from "next/navigation";
 
 import { useEffect } from "react";
-import { getMemberName } from "@/app/_libs/memberApiService";
+import { getMemberName, getMemberId  } from "@/app/_libs/memberApiService";
+import { getMyCourses, MyCourseResponse, Post } from "@/app/_libs/postService";
 
 function MyPage() {
 	const [showCatSelection, setShowCatSelection] = useState(false);
 	const [selectedCatBreed, setSelectedCatBreed] = useState("코리안 숏헤어");
 	const [userName, setUserName] = useState<string>("");
+	const [courseCount, setCourseCount] = useState<number>(0);
+	const [totalDistanceText, setTotalDistanceText] = useState<string>("---");
 	const router = useRouter();
 
 	const handleCatChange = (breed: string) => {
 		setSelectedCatBreed(breed);
 		setShowCatSelection(false);
 	};
+
+	function computeTotalDistanceKm(posts: Post[]): number {
+		// distance: number (km) 가 보장되므로 단순 합산
+		return posts.reduce((sum, p) => sum + p.distance, 0);
+	}
+
+	function formatTotalDistance(totalKm: number): string {
+		if (!Number.isFinite(totalKm) || totalKm <= 0) return "---";
+		// 소수점 둘째자리까지
+		return totalKm.toFixed(2) + "km";
+	}
 
 	useEffect(() => {
 		// 현재 로그인한 유저 이름 요청
@@ -36,6 +50,29 @@ function MyPage() {
 			}
 		};
 		fetchUserName();
+	}, []);
+
+	useEffect(() => {
+		const fetchCourseSummary = async () => {
+			try {
+			const memberId = await getMemberId();
+			const res: MyCourseResponse = await getMyCourses(memberId);
+
+			// 안전 가드
+			const posts: Post[] = Array.isArray(res?.data) ? res.data : [];
+
+			setCourseCount(posts.length);
+
+			const totalKm = computeTotalDistanceKm(posts);
+			setTotalDistanceText(formatTotalDistance(totalKm));
+			} catch (e) {
+			console.error("마이페이지 코스 요약 로딩 실패:", e);
+			setCourseCount(0);
+			setTotalDistanceText("---");
+			}
+		};
+
+		fetchCourseSummary();
 	}, []);
 
 	return (
@@ -59,15 +96,15 @@ function MyPage() {
 
 					<div className="flex justify-center gap-4 mb-6">
 						<div className="text-center">
-							<div className="text-xl font-bold text-orange-600">47</div>
+							<div className="text-xl font-bold text-orange-600">{courseCount ? courseCount : "---"}</div>
 							<div className="text-xs text-gray-600">완주한 코스</div>
 						</div>
 						<div className="text-center">
-							<div className="text-xl font-bold text-pink-600">23</div>
+							<div className="text-xl font-bold text-pink-600">13</div>
 							<div className="text-xs text-gray-600">발견한 고양이</div>
 						</div>
 						<div className="text-center">
-							<div className="text-xl font-bold text-blue-600">156km</div>
+							<div className="text-xl font-bold text-blue-600">{totalDistanceText}</div>
 							<div className="text-xs text-gray-600">총 걸은 거리</div>
 						</div>
 					</div>
@@ -80,15 +117,18 @@ function MyPage() {
 						최근 달성한 업적
 					</h2>
 
-					<Card className="p-4 bg-gradient-to-r from-yellow-100 to-orange-100 border-yellow-200">
+					{/* courseCount > 0 일 때만 카드 렌더링 */}
+					{courseCount > 0 && (
+						<Card className="p-4 bg-gradient-to-r from-yellow-100 to-orange-100 border-yellow-200">
 						<div className="flex items-center gap-3">
 							<div className="text-3xl">🏆</div>
 							<div>
-								<h3 className="font-semibold text-gray-800">산책 초보자</h3>
-								<p className="text-sm text-gray-600">50개 코스 완주 달성!</p>
+							<h3 className="font-semibold text-gray-800">산책 초보자</h3>
+							<p className="text-sm text-gray-600">1개 코스 완주 달성!</p>
 							</div>
 						</div>
-					</Card>
+						</Card>
+					)}
 				</div>
 
 				{/* My Activities */}
@@ -102,7 +142,7 @@ function MyPage() {
 						>
 							<MapPin className="h-6 w-6 text-orange-500 mx-auto mb-2" />
 							<div className="text-lg font-bold text-gray-800">내 코스</div>
-							<div className="text-sm text-gray-600">12개</div>
+							<div className="text-sm text-gray-600">{courseCount ? `${courseCount}개` : "---개" }</div>
 						</Card>
 
 						<Card
@@ -111,7 +151,7 @@ function MyPage() {
 						>
 							<Heart className="h-6 w-6 text-pink-500 mx-auto mb-2" />
 							<div className="text-lg font-bold text-gray-800">찜한 코스</div>
-							<div className="text-sm text-gray-600">28개</div>
+							<div className="text-sm text-gray-600">2개</div>
 						</Card>
 					</div>
 				</div>
